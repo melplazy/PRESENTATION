@@ -1,78 +1,458 @@
 ---
-title: 'Créer et exploiter une base de données sous R'
-author: 'Mickaël Canouil, *Ph.D.*'
+title: 'Créer et Exploiter<br>une<br>Base de Données<br>sous<br>![R](images/logo_R.png)'
+author: 'Mickaël CANOUIL, *Ph.D.*'
 date: 'Jeudi 03 mai - Vendredi 04 mai'
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 params:
-    outputCode: FALSE
-    theme_dark: FALSE
-    dpi: 120
-    ggFontSize: 9
+  theme_dark: TRUE
+  dpi: 120
+  ggFontSize: 9
 output:
-    slidy_presentation
+  ioslides_presentation:
+    css: template/shiny-slides.css
+    highlight: zenburn
+    incremental: false
+    logo: template/logo_UMR.png
+    smaller: true
+    self_contained: true
 ---
 
 ```{r setup, include = FALSE}
 options(stringsAsFactors = FALSE)
 
 ### Load packages and functions
-library(parallel)
+# library(parallel)
 library(grid)
 library(scales)
-library(tidyverse)
 library(broom)
 library(viridis)
-library(readxl)
-library(writexl)
-library(cowplot)
-library(ggrepel)
-library(ggsignif)
-library(tableone)
-library(Hmisc)
+# library(readxl)
+# library(writexl)
+# library(cowplot)
+# library(tableone)
+# library(Hmisc)
 library(knitr)
 library(rmarkdown)
 library(kableExtra)
+# library(tidyverse)
 
-sapply(list.files(path = "../../DEV/Rfunctions/", full.names = TRUE), source) %>% invisible()
+invisible(sapply(list.files(path = "../../DEV/Rfunctions/", full.names = TRUE), source))
 
-
+options("width" = 82)
 ### Set knitr rmarkdown chunk options
 opts_chunk$set(
-    size = 'small',
-    include = TRUE, #params$outputCode,
-    echo = params$outputCode,
-    warning = FALSE,
-    message = FALSE,
-    tidy = FALSE,
-    crop = TRUE,
-    autodep = TRUE,
-    # fig.width = 7.5,
-    # fig.height = 6,
-    fig.align = 'center',
-    fig.pos = 'H',
-    dpi = params$dpi,
-    fig.path = "./",
-    cache = FALSE,
-    cache.path = "./"
+  include = TRUE,
+  echo = TRUE,
+  warning = TRUE,
+  message = TRUE,
+  tidy = FALSE,
+  crop = TRUE,
+  autodep = FALSE,
+  dpi = params$dpi,
+  fig.path = "./images/",
+  cache = FALSE,
+  cache.path = "./",
+  width = getOption("width"),
+  comment = "#>"
 )
 
 ### Define theme
+library(ggplot2)
 theme_dark <- params$theme_dark
-if (theme_dark) {
-    ## Theme Black ON ##
-    theme_set(theme_black(base_size = params$ggFontSize))
-    plot_grid <- hijack(plot_grid, theme_dark = theme_dark)
-    scale_colour_viridis <- hijack(scale_colour_viridis, option = "viridis", begin = 2/5, end = 1, direction = -1)
-    scale_fill_viridis <- hijack(scale_fill_viridis, option = "viridis", begin = 2/5, end = 1, direction = -1)
-} else {
-    theme_set(theme_light(base_size = params$ggFontSize))
-    scale_colour_viridis <- hijack(scale_colour_viridis, option = "viridis", begin = 0, end = 4/5)
-    scale_fill_viridis <- hijack(scale_fill_viridis, option = "viridis", begin = 0, end = 4/5)
-}
+theme_set(theme_black(base_size = params$ggFontSize))
+plot_grid <- hijack(plot_grid, theme_dark = theme_dark)
+scale_colour_viridis <- hijack(scale_colour_viridis, option = "viridis", begin = 2/5, end = 1, direction = -1)
+scale_fill_viridis <- hijack(scale_fill_viridis, option = "viridis", begin = 2/5, end = 1, direction = -1)
+
+options(tibble.print_max = 3, tibble.print_min = 3)
 ```
 
-# Day 1
+# Préparer sa session {.flexbox .vcenter}
 
-# Day 2
+<img src="images/logo_Rbig.png" class="auto-fadein"></img> 
+
+
+## Trucs et astuces
+
+*  Eviter de changer votre répertoire de travail avec `setwd()`,  
+    c.-à-d. démarrer R directement au bon endroit ou définir un "Projet" dans Rstudio.
+*  Ne pas utiliser le `.Rprofile` avec des options modifiant le comportant de R.
+*  Désactiver la conversion automatique des chaînes de caractères en facteurs `options(stringsAsFactors = FALSE)`.
+*  Ne pas utiliser `rm(list = ls())` pour "rafraichir" votre session.
+*  Ne pas sauvegarder/charger `.Rdata` en quittant/démarrant votre session R.
+
+<div class="columns-2">
+<img src="images/rstudio_setup.png" width="350"></img>
+
+<img src="images/rwindows_setup.png" width="350"></img>
+</div>
+
+# Le *tidyverse* {.flexbox .vcenter}
+
+<img src="images/logo_tidyverse.png" class="auto-fadein"></img> 
+
+## Qu'est-ce-que le *tidyverse* ?
+
+Un ensemble d'outils basés sur une philosophie/grammaire commune.
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) {
+  install.packages("tidyverse")
+}
+library(tidyverse)
+```
+
+
+## Qu'est-ce-que le *tidyverse* ?
+
+`library(tidyverse)` chargera les packages : 
+
+* [readr](http://readr.tidyverse.org), importation.
+* [tibble](http://tibble.tidyverse.org), classe d'objet "tibble".
+* [dplyr](http://dplyr.tidyverse.org), manipulation.
+* [tidyr](http://tidyr.tidyverse.org), mise en forme.
+* [ggplot2](http://ggplot2.tidyverse.org), visualisation.
+* [purrr](http://purrr.tidyverse.org), programmation.
+
+Ces packages représentent la base du *tidyverse* et sont en constante évolution.
+```{r}
+tidyverse_update()
+```
+
+
+# *tibble* | comme un *data.frame*, mais en mieux ! {.flexbox .vcenter}
+
+<img src="images/logo_tibble.png" class="auto-fadein"></img>
+
+## Pré-requis
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) {
+  install.packages("tidyverse")
+}
+library(tidyverse)
+```
+
+```{r}
+tidyverse_conflicts()
+```
+
+## Construire un *tibble*
+
+```{r}
+tibble(
+  x = 1:5, 
+  y = 1, 
+  z = x ^ 2 + y
+)
+```
+
+```{r, error = TRUE}
+data.frame(
+  x = 1:5, 
+  y = 1, 
+  z = x ^ 2 + y
+)
+```
+
+
+## Construire un *tibble*
+Et avec des noms de variables "exotiques" ?
+```{r}
+data.frame(`1`= 1:3)
+```
+
+```{r}
+tibble(
+  `;)` = 1:5, 
+  `42` = "1", 
+  `€` = `;)` ^ 2 + as.numeric(`42`)
+)
+```
+
+## Afficher un *data.frame*
+Les méthodes `show()` et `print()` :  
+```{r}
+as.data.frame(mtcars)
+```
+```{r}
+print(as.data.frame(mtcars))
+```
+
+## Afficher un *tibble*
+Les méthodes `show()` et `print()` : 
+```{r}
+as_tibble(mtcars)
+```
+```{r}
+print(as_tibble(mtcars))
+```
+
+
+## Afficher un *tibble* : les options
+Changer les options d'affichages des `tibble`s:
+
+* via `options()`
+```{r, eval = FALSE}
+options(tibble.print_max = n, tibble.print_min = m, dplyr.print_min = p)
+```
+Afficher les `n` premières lignes, s'il y a plus de `m` ligneset sur `p` colonnes.
+
+* via `print()`
+```{r, eval = FALSE}
+print(x = DF, n = n, width = p))
+```
+
+* dans R Studio via `View()`
+```{r, eval = FALSE}
+View(mtcars)
+```
+![](images/Rstudio_View.png)
+
+
+## Sélectionner une variable : `$`, `[` et `[[`
+
+```{r}
+mtcars$mpg
+```
+
+```{r}
+mtcars[["mpg"]]
+```
+
+```{r}
+mtcars[, "mpg"]
+```
+
+## Sélectionner une variable : `$`, `[` et `[[`
+
+```{r}
+as_tibble(mtcars)$mpg
+```
+
+```{r}
+as_tibble(mtcars)[["mpg"]]
+```
+
+```{r}
+as_tibble(mtcars)[, "mpg"]
+```
+
+## Assurer la rétro-compatibilité du code
+De "vielles" fonctions limitées à la classe d'objet `data.frame` !
+```{r}
+tb <- as_tibble(mtcars)
+class(tb)
+class(as.data.frame(tb))
+```
+
+<br>
+__Pourquoi certaines fonctions ne fonctionnent pas ?__
+
+Une différence au niveau de l'opérateur `[`.
+
+## Exercices
+
+*  Comment savoir si un objet est de classe `tibble`, `data.frame`  ou encore `matrix` ?
+*  Comment se comporte les opérations suivantes sur un `data.frame` et l'équivalent `tibble` ?  
+    Quelle est la différence ?  
+    ```{r, eval = FALSE}
+    df <- data.frame(abc = 1, xyz = "a")
+    df$x
+    df[, "xyz"]
+    df[, c("abc", "xyz")]
+    ```
+  
+*  Comment extraire une colonne en utilisant une variable ? 
+    ```{r}
+    X <- "mpg"
+    ```
+
+## Exercices
+
+*  Manipuler des noms de variables non-conventionnelles :
+    ```{r}
+    annoying <- tibble(
+      `1` = 1:10,
+      `2` = `1` * 2 + rnorm(length(`1`))
+    )
+    ```
+    1.  Extraire la variable nommée `1`.
+    2.  Tracer un nuage de points de `1` par rapport à `2`.
+    3.  Ajouter une colonne nommée `3` contenant le résultat de `2` divisé par `1`.
+    4.  Renommer les colonnes avec leurs noms littéral: `"un"`, `"deux"` et `"trois"`.
+
+## Pour aller plus loin ...
+
+```{r, eval = FALSE}
+vignette("tibble")
+```
+<img src="images/screenshot_tibble.png" height="350"></img>
+
+
+# %>% | *magrittr* : "Ceci n'est pas un pipe." {.flexbox .vcenter}
+
+<img src="images/logo_magrittr.png" class="auto-fadein"></img>
+
+## Pré-requis
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
+library(tidyverse)
+```
+
+```{r}
+if (!"pryr"%in%rownames(installed.packages())) {install.packages("pryr")}
+library(pryr)
+```
+
+```{r}
+tidyverse_conflicts()
+```
+
+## Qu'est-ce-que le `%>%` ?
+L'opérateur "pipe" (`%>%`) provient du package __magrittr__ développé par Stefan Milton Bache.
+
+Par défaut `library(tidyverse)` s'occupe de charger l'opérateur "pipe".
+
+__Exemple :__
+
+*  `x %>% f` équivalent à `f(x)`
+*  `x %>% f(y)` équivalent à `f(x, y)`
+*  `x %>% f %>% g %>% h` équivalent à `h(g(f(x)))`
+*  `f <- . %>% cos %>% sin` équivalent à `f <- function(.) sin(cos(.))`
+
+Note : Raccourci `Ctrl+M` dans Rstudio pour faire apparaître un "pipe".
+
+## Le "pipe", mais pourquoi faire ?
+Une aide à :
+
+*  l'écriture du code.
+*  la lisibilité du code.
+
+__Exemple :__  
+Soit une variable `x` sur laquelle on souhaite effectuer différentes opérations successives.
+```{r}
+x <- rnorm(25)
+```
+
+
+## Conserver les étapes
+```{r, eval = FALSE}
+x1 <- ifelse(x<0, x*x, sqrt(x))
+x2 <- na.exclude(x1)
+x3 <- x2<0.05
+x4 <- table(x3)
+```
+
+<br>
+Les inconvénients de cette écriture :
+
+*  Obligation de nommer de façon explicite les différents objets.
+*  Environnement surchargé d'objets peu utiles (`ls()`).
+*  Utilisation plus importante de la mémoire vive ?
+    ```{r, eval = FALSE}
+    mtcars2 <- mtcars %>% 
+      dplyr::mutate(cyl_fac = factor(cyl))
+    
+    pryr::object_size(mtcars)
+    pryr::object_size(mtcars2)
+    pryr::object_size(mtcars, mtcars2)
+    ```
+
+## Ecraser l'objet original 
+```{r, eval = FALSE}
+x <- ifelse(x<0, x*x, sqrt(x))
+x <- na.exclude(x)
+x <- x<0.05
+x <- table(x)
+```
+
+<br>
+Les inconvénients de cette écriture :
+
+*  Obligation relancer tout le code pour débuguer.
+*  Répétition du nom de l'objet (11 fois).
+
+## Composer l'appel aux fonctions
+```{r, eval = FALSE}
+table(
+  na.exclude(
+    ifelse(
+      x<0, 
+      x*x, 
+      sqrt(x)
+    )
+  )<0.05
+)
+```
+
+<br>
+Les inconvénients de cette écriture :
+
+*  L'ordre des appels va de l'intérieur vers l'extérieur.
+*  Les arguments peuvent se situés "loin" de la fonction.
+
+
+## Utiliser le "pipe" 
+```{r, eval = FALSE}
+x %>% 
+  (function(y) { 
+    ifelse(
+      y<0, 
+      y*y, 
+      sqrt(y)
+    ) 
+  }) %>% 
+  na.exclude() %>% 
+  `<`(0.05) %>% 
+  table(.)
+```
+
+<br>
+A éviter si :
+
+*  le nombre d'étapes devient important (Utiliser des objets intermédiaires avec des noms claires).
+*  la séquence d'opération n'est pas linéaire.
+*  les opérations nécéssitent plusieurs objets en entrée et/ou sortie.
+
+
+## Pour aller plus loin ...
+
+```{r, eval = FALSE}
+vignette("magrittr")
+```
+
+<img src="images/screenshot_magrittr.png" height="350"></img>
+
+# *dplyr* | Manipuler simplement et efficacement les données {.flexbox .vcenter}
+
+<img src="images/logo_dplyr.png" class="auto-fadein"></img>
+
+## Pré-requis
+```{r}
+if (!"nycflights13"%in%rownames(installed.packages())) {
+  install.packages("nycflights13")
+}
+library(nycflights13)
+```
+
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) {
+  install.packages("tidyverse")
+}
+library(tidyverse)
+```
+
+```{r}
+tidyverse_conflicts()
+```
+
+
+## 
+
+# 
+
+<img src="images/logo_.png" class="auto-fadein"></img>
+
+##
+
 
