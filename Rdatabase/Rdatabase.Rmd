@@ -90,7 +90,7 @@ options(tibble.print_max = 3, tibble.print_min = 3)
 
 # Le *tidyverse* {.flexbox .vcenter}
 
-<img src="images/logo_tidyverse.png" class="auto-fadein"></img> 
+<img src="images/tidyverse.png" height="250" class="auto-fadein"></img> 
 
 ## Qu'est-ce-que le *tidyverse* ?
 
@@ -122,7 +122,7 @@ tidyverse_update()
 
 # *tibble* | comme un *data.frame*, mais en mieux ! {.flexbox .vcenter}
 
-<img src="images/logo_tibble.png" class="auto-fadein"></img>
+<img src="images/tibble.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
 ```{r}
@@ -291,7 +291,7 @@ vignette("tibble")
 
 # %>% | *magrittr* : "Ceci n'est pas un pipe." {.flexbox .vcenter}
 
-<img src="images/logo_magrittr.png" class="auto-fadein"></img>
+<img src="images/pipe.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
 ```{r}
@@ -423,9 +423,76 @@ vignette("magrittr")
 
 <img src="images/screenshot_magrittr.png" height="350"></img>
 
+# *readr* & *readxl* | Importer des données {.flexbox .vcenter}
+
+<div class="columns-2">
+<img src="images/readr.png" height="250" class="auto-fadein"></img>
+
+<img src="images/readxl.png" height="250" class="auto-fadein"></img>
+</div>
+
+
+## Pré-requis
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) {
+  install.packages("tidyverse")
+}
+library(tidyverse)
+```
+
+```{r}
+if (!"readxl"%in%rownames(installed.packages())) {
+  install.packages("readxl")
+}
+library(readxl)
+```
+
+```{r}
+tidyverse_conflicts()
+```
+
+## Les fonctions de bases de *readr*
+Lire des tableaux rectangulaires :
+
+* `read_csv()` : fichier avec séparateur virgule (".csv").
+* `read_tsv()` : fichier avec séparateur tabulation.
+* `read_table()` : fichier avec séparateur espace.
+* `read_delim()` : forme générale (`delim = ""`).
+
+Lire des données R (".rds") :
+
+* `read_rds()` : surcouche de `readRDS()` (sans compression).
+
+Lire des formats plus exotiques :
+    
+* `read_fwf()` : fichier à largeur fixe (nombre de caractères).
+* `read_log()` : fichier de log provenant de serveur web Apache.
+
+## Par rapport à celle de R
+
+* Nom homogène des arguments (p. ex. `col_names` et `col_types` au lieu de `header` et `colClasses`).
+* Plus rapide.
+* Pas de conversion en facteur.
+* Convertit dans les formats "date" / "time" classiques
+* Barre de progression.
+* L'importation ne dépend pas des variables "locale".
+```{r}
+locale()
+```
+
+
+## Les fichiers CSV dans la pratique
+
+```{r}
+mtcars <- read_csv(
+  file = system.file("extdata", "mtcars.csv", package = "readr")
+)
+```
+
+
 # *dplyr* | Manipuler simplement et efficacement les données {.flexbox .vcenter}
 
-<img src="images/logo_dplyr.png" class="auto-fadein"></img>
+<img src="images/dplyr.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
 ```{r}
@@ -447,12 +514,20 @@ tidyverse_conflicts()
 ```
 
 
-## 
 
 # 
 
-<img src="images/logo_.png" class="auto-fadein"></img>
+<img src="images/.png" class="auto-fadein"></img>
 
-##
+## Pré-requis
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) {
+  install.packages("tidyverse")
+}
+library(tidyverse)
+```
 
+```{r}
+tidyverse_conflicts()
+```
 

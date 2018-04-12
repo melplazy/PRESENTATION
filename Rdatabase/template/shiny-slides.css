@@ -78,6 +78,11 @@ aside.gdbar {
   top: 100px;
 }
 
+.segue h3 {
+  line-height: 1.5;
+  margin-top: 1.25em;
+}
+
 .notes {
   color: #000000;
 }
