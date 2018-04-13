@@ -31,7 +31,7 @@ library(viridis)
 # library(writexl)
 # library(cowplot)
 # library(tableone)
-# library(Hmisc)
+library(Hmisc)
 library(knitr)
 library(rmarkdown)
 library(kableExtra)
@@ -39,7 +39,7 @@ library(kableExtra)
 
 invisible(sapply(list.files(path = "../../DEV/Rfunctions/", full.names = TRUE), source))
 
-options("width" = 82)
+options("width" = 80)
 ### Set knitr rmarkdown chunk options
 opts_chunk$set(
   include = TRUE,
@@ -115,7 +115,7 @@ library(tidyverse)
 * [purrr](http://purrr.tidyverse.org), programmation.
 
 Ces packages représentent la base du *tidyverse* et sont en constante évolution.
-```{r}
+```{r, eval = FALSE}
 tidyverse_update()
 ```
 
@@ -125,10 +125,8 @@ tidyverse_update()
 <img src="images/tibble.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
-```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) {
-  install.packages("tidyverse")
-}
+```{r tibble}
+if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
@@ -185,6 +183,15 @@ as_tibble(mtcars)
 ```
 ```{r}
 print(as_tibble(mtcars))
+```
+
+## Afficher un *tibble*
+La fonction `rownames_to_column()` (et `column_to_rownames()`) : 
+```{r}
+as_tibble(rownames_to_column(mtcars))
+```
+```{r}
+print(as_tibble(rownames_to_column(mtcars)))
 ```
 
 
@@ -295,13 +302,13 @@ vignette("tibble")
 
 ## Pré-requis
 ```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
-library(tidyverse)
+if (!"pryr"%in%rownames(installed.packages())) {install.packages("pryr")}
+library(pryr)
 ```
 
 ```{r}
-if (!"pryr"%in%rownames(installed.packages())) {install.packages("pryr")}
-library(pryr)
+if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
+library(tidyverse)
 ```
 
 ```{r}
@@ -328,19 +335,17 @@ Une aide à :
 *  l'écriture du code.
 *  la lisibilité du code.
 
-__Exemple :__  
-Soit une variable `x` sur laquelle on souhaite effectuer différentes opérations successives.
-```{r}
-x <- rnorm(25)
-```
-
 
 ## Conserver les étapes
 ```{r, eval = FALSE}
-x1 <- ifelse(x<0, x*x, sqrt(x))
+x <- rnorm(25)
+x1 <- sqrt(x)
 x2 <- na.exclude(x1)
-x3 <- x2<0.05
+x3 <- x2<1
 x4 <- table(x3)
+x5 <- prop.table(x4)
+x6 <- which.max(x5)
+x7 <- names(x6)
 ```
 
 <br>
@@ -350,39 +355,49 @@ Les inconvénients de cette écriture :
 *  Environnement surchargé d'objets peu utiles (`ls()`).
 *  Utilisation plus importante de la mémoire vive ?
     ```{r, eval = FALSE}
-    mtcars2 <- mtcars %>% 
-      dplyr::mutate(cyl_fac = factor(cyl))
+    mtcars2 <- mtcars %>% mutate(cyl_fac = factor(cyl))
     
     pryr::object_size(mtcars)
     pryr::object_size(mtcars2)
     pryr::object_size(mtcars, mtcars2)
     ```
 
-## Ecraser l'objet original 
+## Remplacer l'objet original 
 ```{r, eval = FALSE}
-x <- ifelse(x<0, x*x, sqrt(x))
+x <- rnorm(25)
+
+x <- sqrt(x)
 x <- na.exclude(x)
-x <- x<0.05
+x <- x<1
 x <- table(x)
+x <- prop.table(x)
+x <- which.max(x)
+x <- names(x)
 ```
 
 <br>
 Les inconvénients de cette écriture :
 
 *  Obligation relancer tout le code pour débuguer.
-*  Répétition du nom de l'objet (11 fois).
+*  Répétition du nom de l'objet (14 fois).
 
 ## Composer l'appel aux fonctions
 ```{r, eval = FALSE}
-table(
-  na.exclude(
-    ifelse(
-      x<0, 
-      x*x, 
-      sqrt(x)
+x <- rnorm(25)
+
+names(
+  which.max(
+    prop.table(
+      table(
+        na.exclude(
+          sqrt(x)
+        )<1
+      )
     )
-  )<0.05
+  )
 )
+
+names(which.max(prop.table(table(na.exclude(sqrt(x))<1))))
 ```
 
 <br>
@@ -395,16 +410,13 @@ Les inconvénients de cette écriture :
 ## Utiliser le "pipe" 
 ```{r, eval = FALSE}
 x %>% 
-  (function(y) { 
-    ifelse(
-      y<0, 
-      y*y, 
-      sqrt(y)
-    ) 
-  }) %>% 
+  sqrt() %>% 
   na.exclude() %>% 
-  `<`(0.05) %>% 
-  table(.)
+  `<`(1) %>% 
+  table() %>% 
+  prop.table() %>% 
+  which.max() %>% 
+  names()
 ```
 
 <br>
@@ -434,24 +446,20 @@ vignette("magrittr")
 
 ## Pré-requis
 ```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) {
-  install.packages("tidyverse")
-}
-library(tidyverse)
+if (!"readxl"%in%rownames(installed.packages())) { install.packages("readxl") }
+library(readxl)
 ```
 
 ```{r}
-if (!"readxl"%in%rownames(installed.packages())) {
-  install.packages("readxl")
-}
-library(readxl)
+if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
+library(tidyverse)
 ```
 
 ```{r}
 tidyverse_conflicts()
 ```
 
-## Les fonctions de bases de *readr*
+## Les fonctions de base de *readr*
 Lire des tableaux rectangulaires :
 
 * `read_csv()` : fichier avec séparateur virgule (".csv").
@@ -468,44 +476,168 @@ Lire des formats plus exotiques :
 * `read_fwf()` : fichier à largeur fixe (nombre de caractères).
 * `read_log()` : fichier de log provenant de serveur web Apache.
 
-## Par rapport à celle de R
+## Par rapport à celles de R : Entrée
 
-* Nom homogène des arguments (p. ex. `col_names` et `col_types` au lieu de `header` et `colClasses`).
-* Plus rapide.
-* Pas de conversion en facteur.
-* Convertit dans les formats "date" / "time" classiques
-* Barre de progression.
-* L'importation ne dépend pas des variables "locale".
+* Nom homogène des fonctions et arguments .
+* Plus rapide (moins rapide que *data.table*).
+* ~~Auto-conversion en facteur.~~
+* L'importation ne dépend pas des variables locales.
 ```{r}
 locale()
 ```
 
+## Par rapport à celles de R : Sortie
 
-## Les fichiers CSV dans la pratique
+* Conversion des champs "date" au format `"%Y-%m-%d"`.
+* Conversion des champs date/heure dans la norme ISO8601.  
+    Par exemple : 
+    * 07:57:59Z
+    * 2018-04-13T07:57:59Z
+* Noms des colonnes inchangés.
+* Renvoie un objet *tibble*.
+* Pas de nom de ligne.
+
+
+## Dans la pratique | Lire un CSV avec *base*
 
 ```{r}
-mtcars <- read_csv(
-  file = system.file("extdata", "mtcars.csv", package = "readr")
+ratings <- read.csv(
+  file = "./materials/ratings.csv"
+)
+str(ratings[0, ])
+```
+
+## Dans la pratique | Lire un CSV avec *readr*
+
+```{r}
+ratings <- read_csv(
+  file = "./materials/ratings.csv"
 )
 ```
 
+## Dans la pratique | Lire un "texte" avec *base*
 
-# *dplyr* | Manipuler simplement et efficacement les données {.flexbox .vcenter}
+```{r}
+read.csv(
+  text = "a,b,c
+    1,2,3
+    4,5,6"
+)
+```
+
+## Dans la pratique | Lire un "texte" avec *readr*
+
+```{r}
+read_csv(
+  "a,b,c
+  1,2,3
+  4,5,6"
+)
+```
+
+## Les arguments de *readr*
+
+* L'argument `skip = n`
+    ```{r}
+    read_csv("Une ligne de métadonnées
+      x,y,z
+      1,2,3", skip = 1)
+    ```
+* L'argument `comment = "#"`
+    ```{r}
+    read_csv("# Une ligne de commentaires
+      x,y,z
+      1,2,3", comment = "#")
+    ```
+
+## Les arguments de *readr*
+
+* L'argument `col_names = FALSE`
+    ```{r}
+    read_csv("1,2,3\n4,5,6", col_names = FALSE)
+    ```
+    
+* Utiliser `col_names`pour nommer les colonnes
+    ```{r}
+    read_csv("1,2,3\n4,5,6", col_names = c("a", "b", "c"))
+    ```
+    
+## Les arguments de *readr*
+
+* L'argument `na = "."`
+    ```{r}
+    read_csv("a,b,c\n1,2,3\n4,.,6", na = ".")
+    ```
+    
+* L'argument `col_types`
+    ```{r}
+    read_csv(
+      "a,b,c\n1,x,2018-05-03\n4,y,2018-05-04", 
+      col_types = list(col_integer(), col_character(), col_date(format = "%Y-%m-%d"))
+    )
+    ```
+
+## Exercices
+* Quelle fonction utiliseriez-vous pour importer un document avec `|` en séparateur ?
+    
+* Un fichier CSV peut parfois contenir une virgule dans un champ.  
+    L'utilisation des guillemets simple `'` ou double `"` permet d'éviter que la virgule ne pose problème.
+      1. Quel est le caractère par défaut utiliser par `read_csv()` ?  
+      2. Quelle fonction et argument utiliser pour changer ce caractère ?
+      3. Quelle fonction et avec quel valeur argument liriez-vous la chaîne suivante ?
+    ```{r, eval = FALSE}
+    "x,y\n1,'a,b'"
+    ```
+    
+* Identifier les problèmes des lignes suivantes.  
+    Que se passe t'il lors de l'exécution ?
+    ```{r, eval = FALSE}
+    read_csv("a,b\n1,2,3\n4,5,6")
+    read_csv("a,b,c\n1,2\n1,2,3,4")
+    read_csv("a,b\n\"1")
+    read_csv("a,b\n1,2\na,b")
+    read_csv("a;b\n1;3")
+    ```
+
+## Les alternatives à *readr* {.flexbox .vcenter}
+
+```{r, echo = FALSE}
+data.frame(
+  check.names = FALSE,
+  "Type de données" = rev(c("Logiciel Statistique", "Excel", 'Fichier "Text"')),
+  Package = rev(c("__*haven*__", "__*readxl*__", "__*readr*__")),
+  Alternatives = rev(c("foreign, sas7bdat, readstata13", "gdata, openxlsx, XLConnect, xlsx", "base, data.table"))
+) %>% 
+  kable(font_size = 18, align = "c", row.names = FALSE)
+```
+
+## Exporter des données vers un fichier
+*readr* inclut également des fonctions d'écriture `write_*()`.
+
+* Les chaînes de caractères sont en UTF-8.
+* Les dates et date/heure sont au format ISO8601
+
+__Exemple__ :
+
+* Dans le cas d'un fichier CSV
+    ```{r, eval = FALSE}
+    write_csv(x = ratings, path = "ratings.csv")
+    ```
+
+* Dans le cas d'un fichier Excel
+    ```{r, eval = FALSE}
+    library(writexl)
+    write_xlsx(x = mtcars, path = "mtcars.xlsx")
+    ```
+
+
+# *dplyr* | Les rudiments {.flexbox .vcenter}
 
 <img src="images/dplyr.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
 ```{r}
-if (!"nycflights13"%in%rownames(installed.packages())) {
-  install.packages("nycflights13")
-}
-library(nycflights13)
-```
-
-```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) {
-  install.packages("tidyverse")
-}
+if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
@@ -513,21 +645,211 @@ library(tidyverse)
 tidyverse_conflicts()
 ```
 
+```{r, echo = FALSE}
+options(tibble.print_max = 10, tibble.print_min = 10)
+```
 
 
-# 
+## Les fonctions de base
 
-<img src="images/.png" class="auto-fadein"></img>
+5 (+1) fonctions clés de *dplyr* :
+
+1. Sélectionner des observations par valeur (`filter()`).
+2. Trier les lignes (`arrange()`).
+3. Sélectionner des colonnes (`select()`).
+4. Ajouter des colonnes en fonction des colonnes préexistantes (`mutate()`).
+5. Résumer des valeurs (`summarise()`).
+
+6. `group_by()` pour travailler sur des sous-ensembles d'un jeu de données.
+
+Une syntaxe commune :
+
+* le premier argument est un objet `data.frame`.
+* Le second argument décrit l'action à effectuer (noms de variable sans guillemets).
+* Renvoie un `data.frame` (ou `tibble`).
+
+
+## Sélectionner des lignes
+```{r, message = FALSE}
+ratings <- read_csv(file = "./materials/ratings.csv")
+```
+
+```{r, results = "hold"}
+### <b>
+filter(ratings, `Your Rating` >= 9, `IMDb Rating` >= 9)
+### </b>
+```
+
+```{r, message = FALSE, results = "hold"}
+read_csv(file = "./materials/ratings.csv") %>% 
+### <b>
+  filter(`Your Rating` >= 9 & `IMDb Rating` >= 9)
+### </b>
+```
+
+
+## Exercices
+
+1.  Find all flights that
+
+    1. Had an arrival delay of two or more hours
+    1. Flew to Houston (`IAH` or `HOU`)
+    1. Were operated by United, American, or Delta
+    1. Departed in summer (July, August, and September)
+    1. Arrived more than two hours late, but didn't leave late
+    1. Were delayed by at least an hour, but made up over 30 minutes in flight
+    1. Departed between midnight and 6am (inclusive)
+
+1.  Another useful dplyr filtering helper is `between()`. What does it do?
+    Can you use it to simplify the code needed to answer the previous 
+    challenges?
+
+1.  How many flights have a missing `dep_time`? What other variables are 
+    missing? What might these rows represent?
+
+1.  Why is `NA ^ 0` not missing? Why is `NA | TRUE` not missing?
+    Why is `FALSE & NA` not missing? Can you figure out the general
+    rule?  (`NA * 0` is a tricky counterexample!)
+
+
+## Réordonner des lignes
+```{r, message = FALSE, results = "hold"}
+read_csv(file = "./materials/ratings.csv") %>% 
+### <b>
+  arrange(desc(`Date Rated`)) ### </b>
+```
+
+
+## Exercices
+
+1.  How could you use `arrange()` to sort all missing values to the start?
+    (Hint: use `is.na()`).
+    
+1.  Sort `flights` to find the most delayed flights. Find the flights that
+    left earliest.
+
+1.  Sort `flights` to find the fastest flights.
+
+1.  Which flights travelled the longest? Which travelled the shortest?
+
+
+## Sélectionner des colonnes
+Des aides à la sélection :
+
+* `starts_with("abc")` : noms commençant par "abc".
+* `ends_with("xyz")` : noms finissant par "xyz".
+* `contains("ijk")` : noms contenant "ijk".
+* `matches("(.)\\1")` : noms correspondant à l'expression régulière.
+* `num_range("x", 1:3)`: noms correspondant à `x1`, `x2` et `x3`.
+
+```{r, message = FALSE, results = "hold"}
+read_csv(file = "./materials/ratings.csv") %>% 
+  arrange(desc(`Date Rated`)) %>% 
+### <b>
+  select(Title, ends_with("Rating")) %>% 
+### </b>
+  head(5)
+```
+
+
+## Exercices
+
+
+
+## Ajouter des colonnes
+```{r, message = FALSE, results = "hold"}
+read_csv(file = "./materials/ratings.csv") %>% 
+  arrange(desc(`Date Rated`)) %>% 
+### <b>
+  mutate(Rating_is_better = `Your Rating`>=`IMDb Rating`) %>% 
+### </b>
+  select(Title, `Your Rating`, `IMDb Rating`, Rating_is_better)
+```
+
+
+## Exercices
+
+
+
+## Résumer les données
+```{r, message = FALSE, results = "hold"}
+read_csv(file = "./materials/ratings.csv") %>%  
+### <b>
+  summarise(
+    n_movies = n(),
+    my_average_rating = mean(`Your Rating`),
+    users_average_rating = mean(`IMDb Rating`),
+    oldest_rating = min(`Date Rated`),
+    newest_rating =  max(`Date Rated`)
+  )
+### </b>
+```
+
+
+## Exercices
+
+
+
+## Utiliser `group_by()`
+```{r, message = FALSE, results = "hold"}
+read_csv(file = "./materials/ratings.csv") %>% 
+  mutate(
+    Year = lubridate::year(`Date Rated`)
+  ) %>% 
+  filter(Year!="2014") %>% 
+### <b>
+  group_by(Year) %>% 
+### </b>
+  summarise(
+    n_movies = n(),
+    my_average_rating = mean(`Your Rating`),
+    users_average_rating = mean(`IMDb Rating`)
+  ) %>% 
+  arrange(desc(Year))
+```
+
+
+## Exercice
+
+
+
+
+
+# Importer depuis une base de données
+
+<img src="images/database.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
 ```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) {
-  install.packages("tidyverse")
+if (!"nycflights13"%in%rownames(installed.packages())) { 
+  install.packages("nycflights13") 
 }
+  library(nycflights13)
+```
+
+```{r}
+if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
 ```{r}
 tidyverse_conflicts()
+```
+
+
+## 
+
+```{r, eval = FALSE}
+
+library(DBI)
+
+path <- system.file("db", "datasets.sqlite", package = "RSQLite")
+db <- dbConnect(RSQLite::SQLite(), path)
+
+dbListTables(db)
+str(dbGetQuery(db, "SELECT * FROM mtcars"))
+
+# Polite to disconnect from db when done
+dbDisconnect(db)
 ```
 
