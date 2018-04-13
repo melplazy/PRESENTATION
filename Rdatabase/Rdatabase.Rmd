@@ -815,7 +815,7 @@ read_csv(file = "./materials/ratings.csv") %>%
 
 
 
-# Importer depuis une base de données
+# *DBI* & *dbplyr* | Importer depuis une base de données  {.flexbox .vcenter}
 
 <img src="images/database.png" height="250" class="auto-fadein"></img>
 
