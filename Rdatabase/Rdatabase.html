@@ -25,7 +25,7 @@
         usePrettify: true,
         enableSlideAreas: true,
         enableTouch: true,
-                        favIcon: 'template/logo_UMR.png',
+                        favIcon: 'template\logo_UMR.png',
               },
 
       // Author information
@@ -85,7 +85,7 @@
       position: absolute;
       bottom: 20px;
       left: 60px;
-      background: url(template/logo_UMR.png) no-repeat 0 50%;
+      background: url(template\logo_UMR.png) no-repeat 0 50%;
       -webkit-background-size: 30px 30px;
       -moz-background-size: 30px 30px;
       -o-background-size: 30px 30px;
@@ -147,20 +147,20 @@
 }
 library(tidyverse)</pre>
 
-<pre >#&gt; ── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──</pre>
+<pre >#&gt; -- Attaching packages ------------------------------------- tidyverse 1.2.1 --</pre>
 
-<pre >#&gt; ✔ tibble  1.4.2     ✔ purrr   0.2.4
-#&gt; ✔ tidyr   0.8.0     ✔ dplyr   0.7.4
-#&gt; ✔ readr   1.1.1     ✔ stringr 1.3.0
-#&gt; ✔ tibble  1.4.2     ✔ forcats 0.3.0</pre>
+<pre >#&gt; v tibble  1.4.2     v purrr   0.2.4
+#&gt; v tidyr   0.8.0     v dplyr   0.7.4
+#&gt; v readr   1.1.1     v stringr 1.2.0
+#&gt; v tibble  1.4.2     v forcats 0.2.0</pre>
 
-<pre >#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#&gt; ✖ readr::col_factor() masks scales::col_factor()
-#&gt; ✖ purrr::discard()    masks scales::discard()
-#&gt; ✖ dplyr::filter()     masks stats::filter()
-#&gt; ✖ dplyr::lag()        masks stats::lag()
-#&gt; ✖ dplyr::src()        masks Hmisc::src()
-#&gt; ✖ dplyr::summarize()  masks Hmisc::summarize()</pre>
+<pre >#&gt; -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+#&gt; x readr::col_factor() masks scales::col_factor()
+#&gt; x purrr::discard()    masks scales::discard()
+#&gt; x dplyr::filter()     masks stats::filter()
+#&gt; x dplyr::lag()        masks stats::lag()
+#&gt; x dplyr::src()        masks Hmisc::src()
+#&gt; x dplyr::summarize()  masks Hmisc::summarize()</pre>
 
 </article></slide><slide class=""><hgroup><h2>Qu&#39;est-ce-que le <em>tidyverse</em> ?</h2></hgroup><article  id="quest-ce-que-le-tidyverse-1" class="smaller ">
 
@@ -190,13 +190,13 @@ library(tidyverse)</pre>
 
 <pre class = 'prettyprint lang-r'>tidyverse_conflicts()</pre>
 
-<pre >#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#&gt; ✖ readr::col_factor() masks scales::col_factor()
-#&gt; ✖ purrr::discard()    masks scales::discard()
-#&gt; ✖ dplyr::filter()     masks stats::filter()
-#&gt; ✖ dplyr::lag()        masks stats::lag()
-#&gt; ✖ dplyr::src()        masks Hmisc::src()
-#&gt; ✖ dplyr::summarize()  masks Hmisc::summarize()</pre>
+<pre >#&gt; -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+#&gt; x readr::col_factor() masks scales::col_factor()
+#&gt; x purrr::discard()    masks scales::discard()
+#&gt; x dplyr::filter()     masks stats::filter()
+#&gt; x dplyr::lag()        masks stats::lag()
+#&gt; x dplyr::src()        masks Hmisc::src()
+#&gt; x dplyr::summarize()  masks Hmisc::summarize()</pre>
 
 </article></slide><slide class=""><hgroup><h2>Construire un <em>tibble</em></h2></hgroup><article  id="construire-un-tibble" class="smaller ">
 
@@ -209,9 +209,9 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 5 x 3
 #&gt;       x     y     z
 #&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1     1    1.    2.
-#&gt; 2     2    1.    5.
-#&gt; 3     3    1.   10.
+#&gt; 1     1  1.00  2.00
+#&gt; 2     2  1.00  5.00
+#&gt; 3     3  1.00 10.0 
 #&gt; # ... with 2 more rows</pre>
 
 <pre class = 'prettyprint lang-r'>data.frame(
@@ -220,7 +220,7 @@ library(tidyverse)</pre>
   z = x ^ 2 + y
 )</pre>
 
-<pre >#&gt; Error in data.frame(x = 1:5, y = 1, z = x^2 + y): object &#39;x&#39; not found</pre>
+<pre >#&gt; Error in data.frame(x = 1:5, y = 1, z = x^2 + y): objet &#39;x&#39; introuvable</pre>
 
 </article></slide><slide class=""><hgroup><h2>Construire un <em>tibble</em></h2></hgroup><article  id="construire-un-tibble-1" class="smaller ">
 
@@ -242,9 +242,9 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 5 x 3
 #&gt;    `;)` `42`    `€`
 #&gt;   &lt;int&gt; &lt;chr&gt; &lt;dbl&gt;
-#&gt; 1     1 1        2.
-#&gt; 2     2 1        5.
-#&gt; 3     3 1       10.
+#&gt; 1     1 1      2.00
+#&gt; 2     2 1      5.00
+#&gt; 3     3 1     10.0 
 #&gt; # ... with 2 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Afficher un <em>data.frame</em></h2></hgroup><article  id="afficher-un-data.frame" class="smaller ">
@@ -332,9 +332,9 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 32 x 11
 #&gt;     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #&gt; * &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1  21.0    6.  160.  110.  3.90  2.62  16.5    0.    1.    4.    4.
-#&gt; 2  21.0    6.  160.  110.  3.90  2.88  17.0    0.    1.    4.    4.
-#&gt; 3  22.8    4.  108.   93.  3.85  2.32  18.6    1.    1.    4.    1.
+#&gt; 1  21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00  4.00
+#&gt; 2  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00  4.00
+#&gt; 3  22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00
 #&gt; # ... with 29 more rows</pre>
 
 <pre class = 'prettyprint lang-r'>print(as_tibble(mtcars))</pre>
@@ -342,9 +342,9 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 32 x 11
 #&gt;     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #&gt; * &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1  21.0    6.  160.  110.  3.90  2.62  16.5    0.    1.    4.    4.
-#&gt; 2  21.0    6.  160.  110.  3.90  2.88  17.0    0.    1.    4.    4.
-#&gt; 3  22.8    4.  108.   93.  3.85  2.32  18.6    1.    1.    4.    1.
+#&gt; 1  21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00  4.00
+#&gt; 2  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00  4.00
+#&gt; 3  22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00
 #&gt; # ... with 29 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Afficher un <em>tibble</em></h2></hgroup><article  id="afficher-un-tibble-1" class="smaller ">
@@ -356,9 +356,9 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 32 x 12
 #&gt;   rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 Mazda RX4    21.0    6.  160.  110.  3.90  2.62  16.5    0.    1.    4.    4.
-#&gt; 2 Mazda RX4 …  21.0    6.  160.  110.  3.90  2.88  17.0    0.    1.    4.    4.
-#&gt; 3 Datsun 710   22.8    4.  108.   93.  3.85  2.32  18.6    1.    1.    4.    1.
+#&gt; 1 Mazda RX4    21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00  4.00
+#&gt; 2 Mazda RX4 ~  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00  4.00
+#&gt; 3 Datsun 710   22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00
 #&gt; # ... with 29 more rows</pre>
 
 <pre class = 'prettyprint lang-r'>print(as_tibble(rownames_to_column(mtcars)))</pre>
@@ -366,9 +366,9 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 32 x 12
 #&gt;   rowname       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 #&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 Mazda RX4    21.0    6.  160.  110.  3.90  2.62  16.5    0.    1.    4.    4.
-#&gt; 2 Mazda RX4 …  21.0    6.  160.  110.  3.90  2.88  17.0    0.    1.    4.    4.
-#&gt; 3 Datsun 710   22.8    4.  108.   93.  3.85  2.32  18.6    1.    1.    4.    1.
+#&gt; 1 Mazda RX4    21.0  6.00   160 110    3.90  2.62  16.5  0     1.00  4.00  4.00
+#&gt; 2 Mazda RX4 ~  21.0  6.00   160 110    3.90  2.88  17.0  0     1.00  4.00  4.00
+#&gt; 3 Datsun 710   22.8  4.00   108  93.0  3.85  2.32  18.6  1.00  1.00  4.00  1.00
 #&gt; # ... with 29 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Afficher un <em>tibble</em> : les options</h2></hgroup><article  id="afficher-un-tibble-les-options" class="smaller ">
@@ -454,10 +454,6 @@ class(tb)</pre>
 
 <pre >#&gt; [1] &quot;data.frame&quot;</pre>
 
-<p><br> <strong>Pourquoi certaines fonctions ne fonctionnent pas ?</strong></p>
-
-<p>Une différence au niveau de l&#39;opérateur <code>[</code>.</p>
-
 </article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices" class="smaller ">
 
 <ul>
@@ -518,16 +514,16 @@ library(tidyverse)</pre>
 
 <pre class = 'prettyprint lang-r'>tidyverse_conflicts()</pre>
 
-<pre >#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#&gt; ✖ readr::col_factor() masks scales::col_factor()
-#&gt; ✖ purrr::discard()    masks scales::discard()
-#&gt; ✖ dplyr::filter()     masks stats::filter()
-#&gt; ✖ dplyr::lag()        masks stats::lag()
-#&gt; ✖ pryr::partial()     masks purrr::partial()
-#&gt; ✖ dplyr::src()        masks Hmisc::src()
-#&gt; ✖ dplyr::summarize()  masks Hmisc::summarize()</pre>
+<pre >#&gt; -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+#&gt; x readr::col_factor() masks scales::col_factor()
+#&gt; x purrr::discard()    masks scales::discard()
+#&gt; x dplyr::filter()     masks stats::filter()
+#&gt; x dplyr::lag()        masks stats::lag()
+#&gt; x pryr::partial()     masks purrr::partial()
+#&gt; x dplyr::src()        masks Hmisc::src()
+#&gt; x dplyr::summarize()  masks Hmisc::summarize()</pre>
 
-</article></slide><slide class=""><hgroup><h2>Qu&#39;est-ce-que le <code>%&gt;%</code> ?</h2></hgroup><article  id="quest-ce-que-le" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>Qu&#39;est-ce-que le &quot;pipe&quot; ?</h2></hgroup><article  id="quest-ce-que-le-pipe" class="smaller ">
 
 <p>L&#39;opérateur &quot;pipe&quot; (<code>%&gt;%</code>) provient du package <strong>magrittr</strong> développé par Stefan Milton Bache.</p>
 
@@ -542,16 +538,14 @@ library(tidyverse)</pre>
 <li><code>f &lt;- . %&gt;% cos %&gt;% sin</code> équivalent à <code>f &lt;- function(.) sin(cos(.))</code></li>
 </ul>
 
-<p>Note : Raccourci <code>Ctrl+M</code> dans Rstudio pour faire apparaître un &quot;pipe&quot;.</p>
-
-</article></slide><slide class=""><hgroup><h2>Le &quot;pipe&quot;, mais pourquoi faire ?</h2></hgroup><article  id="le-pipe-mais-pourquoi-faire" class="smaller ">
-
 <p>Une aide à :</p>
 
 <ul>
 <li>l&#39;écriture du code.</li>
 <li>la lisibilité du code.</li>
 </ul>
+
+<p>Note : Raccourci <code>Ctrl+M</code> dans Rstudio pour faire apparaître un &quot;pipe&quot;.</p>
 
 </article></slide><slide class=""><hgroup><h2>Conserver les étapes</h2></hgroup><article  id="conserver-les-etapes" class="smaller ">
 
@@ -664,14 +658,14 @@ library(tidyverse)</pre>
 
 <pre class = 'prettyprint lang-r'>tidyverse_conflicts()</pre>
 
-<pre >#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#&gt; ✖ readr::col_factor() masks scales::col_factor()
-#&gt; ✖ purrr::discard()    masks scales::discard()
-#&gt; ✖ dplyr::filter()     masks stats::filter()
-#&gt; ✖ dplyr::lag()        masks stats::lag()
-#&gt; ✖ pryr::partial()     masks purrr::partial()
-#&gt; ✖ dplyr::src()        masks Hmisc::src()
-#&gt; ✖ dplyr::summarize()  masks Hmisc::summarize()</pre>
+<pre >#&gt; -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+#&gt; x readr::col_factor() masks scales::col_factor()
+#&gt; x purrr::discard()    masks scales::discard()
+#&gt; x dplyr::filter()     masks stats::filter()
+#&gt; x dplyr::lag()        masks stats::lag()
+#&gt; x pryr::partial()     masks purrr::partial()
+#&gt; x dplyr::src()        masks Hmisc::src()
+#&gt; x dplyr::summarize()  masks Hmisc::summarize()</pre>
 
 </article></slide><slide class=""><hgroup><h2>Les fonctions de base de <em>readr</em></h2></hgroup><article  id="les-fonctions-de-base-de-readr" class="smaller ">
 
@@ -960,14 +954,14 @@ library(tidyverse)</pre>
 
 <pre class = 'prettyprint lang-r'>tidyverse_conflicts()</pre>
 
-<pre >#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#&gt; ✖ readr::col_factor() masks scales::col_factor()
-#&gt; ✖ purrr::discard()    masks scales::discard()
-#&gt; ✖ dplyr::filter()     masks stats::filter()
-#&gt; ✖ dplyr::lag()        masks stats::lag()
-#&gt; ✖ pryr::partial()     masks purrr::partial()
-#&gt; ✖ dplyr::src()        masks Hmisc::src()
-#&gt; ✖ dplyr::summarize()  masks Hmisc::summarize()</pre>
+<pre >#&gt; -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+#&gt; x readr::col_factor() masks scales::col_factor()
+#&gt; x purrr::discard()    masks scales::discard()
+#&gt; x dplyr::filter()     masks stats::filter()
+#&gt; x dplyr::lag()        masks stats::lag()
+#&gt; x pryr::partial()     masks purrr::partial()
+#&gt; x dplyr::src()        masks Hmisc::src()
+#&gt; x dplyr::summarize()  masks Hmisc::summarize()</pre>
 
 </article></slide><slide class=""><hgroup><h2>Les fonctions de base</h2></hgroup><article  id="les-fonctions-de-base" class="smaller ">
 
@@ -1000,7 +994,7 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 1 x 13
 #&gt;   Const  `Your Rating` `Date Rated` Title   URL      `Title Type` `IMDb Rating`
 #&gt;   &lt;chr&gt;          &lt;int&gt; &lt;date&gt;       &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;                &lt;dbl&gt;
-#&gt; 1 tt011…             9 2014-11-08   The Sh… https:/… movie                 9.30
+#&gt; 1 tt011~             9 2014-11-08   The Sh~ https:/~ movie                 9.30
 #&gt; # ... with 6 more variables: `Runtime (mins)` &lt;int&gt;, Year &lt;int&gt;, Genres &lt;chr&gt;,
 #&gt; #   `Num Votes` &lt;int&gt;, `Release Date` &lt;date&gt;, Directors &lt;chr&gt;</pre>
 
@@ -1011,28 +1005,11 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 1 x 13
 #&gt;   Const  `Your Rating` `Date Rated` Title   URL      `Title Type` `IMDb Rating`
 #&gt;   &lt;chr&gt;          &lt;int&gt; &lt;date&gt;       &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;                &lt;dbl&gt;
-#&gt; 1 tt011…             9 2014-11-08   The Sh… https:/… movie                 9.30
+#&gt; 1 tt011~             9 2014-11-08   The Sh~ https:/~ movie                 9.30
 #&gt; # ... with 6 more variables: `Runtime (mins)` &lt;int&gt;, Year &lt;int&gt;, Genres &lt;chr&gt;,
 #&gt; #   `Num Votes` &lt;int&gt;, `Release Date` &lt;date&gt;, Directors &lt;chr&gt;</pre>
 
 </article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices-3" class="smaller ">
-
-<ol>
-<li><p>Find all flights that</p>
-
-<ol>
-<li>Had an arrival delay of two or more hours</li>
-<li>Flew to Houston (<code>IAH</code> or <code>HOU</code>)</li>
-<li>Were operated by United, American, or Delta</li>
-<li>Departed in summer (July, August, and September)</li>
-<li>Arrived more than two hours late, but didn&#39;t leave late</li>
-<li>Were delayed by at least an hour, but made up over 30 minutes in flight</li>
-<li>Departed between midnight and 6am (inclusive)</li>
-</ol></li>
-<li><p>Another useful dplyr filtering helper is <code>between()</code>. What does it do? Can you use it to simplify the code needed to answer the previous challenges?</p></li>
-<li><p>How many flights have a missing <code>dep_time</code>? What other variables are missing? What might these rows represent?</p></li>
-<li><p>Why is <code>NA ^ 0</code> not missing? Why is <code>NA | TRUE</code> not missing? Why is <code>FALSE &amp; NA</code> not missing? Can you figure out the general rule? (<code>NA * 0</code> is a tricky counterexample!)</p></li>
-</ol>
 
 </article></slide><slide class=""><hgroup><h2>Réordonner des lignes</h2></hgroup><article  id="reordonner-des-lignes" class="smaller ">
 
@@ -1042,28 +1019,21 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 2,229 x 13
 #&gt;    Const  `Your Rating` `Date Rated` Title  URL      `Title Type` `IMDb Rating`
 #&gt;    &lt;chr&gt;          &lt;int&gt; &lt;date&gt;       &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;                &lt;dbl&gt;
-#&gt;  1 tt723…             2 2018-04-13   Taxi 5 https:/… movie                 5.60
-#&gt;  2 tt331…             2 2018-04-08   Game … https:/… movie                 5.40
-#&gt;  3 tt509…             5 2018-04-08   Dans … https:/… movie                 6.20
-#&gt;  4 tt287…             5 2018-04-05   Red S… https:/… movie                 6.80
-#&gt;  5 tt699…             2 2018-04-04   Gasto… https:/… movie                 3.90
-#&gt;  6 tt536…             5 2018-03-31   Mary … https:/… movie                 6.00
-#&gt;  7 tt167…             6 2018-03-28   Ready… https:/… movie                 7.90
-#&gt;  8 tt678…             3 2018-03-28   Dolph… https:/… movie                 6.40
-#&gt;  9 tt641…             2 2018-03-24   Eva    https:/… movie                 4.90
-#&gt; 10 tt714…             5 2018-03-24   La fi… https:/… movie                 6.20
+#&gt;  1 tt723~             2 2018-04-13   Taxi 5 https:/~ movie                 5.60
+#&gt;  2 tt331~             2 2018-04-08   Game ~ https:/~ movie                 5.40
+#&gt;  3 tt509~             5 2018-04-08   Dans ~ https:/~ movie                 6.20
+#&gt;  4 tt287~             5 2018-04-05   Red S~ https:/~ movie                 6.80
+#&gt;  5 tt699~             2 2018-04-04   Gasto~ https:/~ movie                 3.90
+#&gt;  6 tt536~             5 2018-03-31   Mary ~ https:/~ movie                 6.00
+#&gt;  7 tt167~             6 2018-03-28   Ready~ https:/~ movie                 7.90
+#&gt;  8 tt678~             3 2018-03-28   Dolph~ https:/~ movie                 6.40
+#&gt;  9 tt641~             2 2018-03-24   Eva    https:/~ movie                 4.90
+#&gt; 10 tt714~             5 2018-03-24   La fi~ https:/~ movie                 6.20
 #&gt; # ... with 2,219 more rows, and 6 more variables: `Runtime (mins)` &lt;int&gt;,
 #&gt; #   Year &lt;int&gt;, Genres &lt;chr&gt;, `Num Votes` &lt;int&gt;, `Release Date` &lt;date&gt;,
 #&gt; #   Directors &lt;chr&gt;</pre>
 
 </article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices-4" class="smaller ">
-
-<ol>
-<li><p>How could you use <code>arrange()</code> to sort all missing values to the start? (Hint: use <code>is.na()</code>).</p></li>
-<li><p>Sort <code>flights</code> to find the most delayed flights. Find the flights that left earliest.</p></li>
-<li><p>Sort <code>flights</code> to find the fastest flights.</p></li>
-<li><p>Which flights travelled the longest? Which travelled the shortest?</p></li>
-</ol>
 
 </article></slide><slide class=""><hgroup><h2>Sélectionner des colonnes</h2></hgroup><article  id="selectionner-des-colonnes" class="smaller ">
 
@@ -1079,17 +1049,17 @@ library(tidyverse)</pre>
 
 <pre class = 'prettyprint lang-r'>read_csv(file = &quot;./materials/ratings.csv&quot;) %&gt;% 
   arrange(desc(`Date Rated`)) %&gt;% 
-<b>  select(Title, ends_with(&quot;Rating&quot;)) %&gt;% 
-</b>  head(5)</pre>
+<b>  select(Title, ends_with(&quot;Rating&quot;))
+</b></pre>
 
-<pre >#&gt; # A tibble: 5 x 3
+<pre >#&gt; # A tibble: 2,229 x 3
 #&gt;   Title           `Your Rating` `IMDb Rating`
 #&gt;   &lt;chr&gt;                   &lt;int&gt;         &lt;dbl&gt;
 #&gt; 1 Taxi 5                      2          5.60
 #&gt; 2 Game Over, Man!             2          5.40
 #&gt; 3 Dans la brume               5          6.20
 #&gt; 4 Red Sparrow                 5          6.80
-#&gt; 5 Gaston Lagaffe              2          3.90</pre>
+#&gt; # ... with 2,225 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices-5" class="smaller ">
 
@@ -1103,16 +1073,16 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 2,229 x 4
 #&gt;    Title            `Your Rating` `IMDb Rating` Rating_is_better
 #&gt;    &lt;chr&gt;                    &lt;int&gt;         &lt;dbl&gt; &lt;lgl&gt;           
-#&gt;  1 Taxi 5                       2          5.60 FALSE           
-#&gt;  2 Game Over, Man!              2          5.40 FALSE           
-#&gt;  3 Dans la brume                5          6.20 FALSE           
-#&gt;  4 Red Sparrow                  5          6.80 FALSE           
-#&gt;  5 Gaston Lagaffe               2          3.90 FALSE           
-#&gt;  6 Mary Magdalene               5          6.00 FALSE           
-#&gt;  7 Ready Player One             6          7.90 FALSE           
-#&gt;  8 Dolphins                     3          6.40 FALSE           
-#&gt;  9 Eva                          2          4.90 FALSE           
-#&gt; 10 La finale                    5          6.20 FALSE           
+#&gt;  1 Taxi 5                       2          5.60 F               
+#&gt;  2 Game Over, Man!              2          5.40 F               
+#&gt;  3 Dans la brume                5          6.20 F               
+#&gt;  4 Red Sparrow                  5          6.80 F               
+#&gt;  5 Gaston Lagaffe               2          3.90 F               
+#&gt;  6 Mary Magdalene               5          6.00 F               
+#&gt;  7 Ready Player One             6          7.90 F               
+#&gt;  8 Dolphins                     3          6.40 F               
+#&gt;  9 Eva                          2          4.90 F               
+#&gt; 10 La finale                    5          6.20 F               
 #&gt; # ... with 2,219 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Exercices</h2></hgroup><article  id="exercices-6" class="smaller ">
@@ -1154,10 +1124,10 @@ library(tidyverse)</pre>
 <pre >#&gt; # A tibble: 4 x 4
 #&gt;    Year n_movies my_average_rating users_average_rating
 #&gt;   &lt;dbl&gt;    &lt;int&gt;             &lt;dbl&gt;                &lt;dbl&gt;
-#&gt; 1 2018.       52              4.98                 6.42
-#&gt; 2 2017.      204              5.12                 6.44
-#&gt; 3 2016.      238              5.13                 6.48
-#&gt; 4 2015.      374              5.07                 6.19</pre>
+#&gt; 1  2018       52              4.98                 6.42
+#&gt; 2  2017      204              5.12                 6.44
+#&gt; 3  2016      238              5.13                 6.48
+#&gt; 4  2015      374              5.07                 6.19</pre>
 
 </article></slide><slide class=""><hgroup><h2>Exercice</h2></hgroup><article  id="exercice" class="smaller ">
 
@@ -1177,14 +1147,14 @@ library(tidyverse)</pre>
 
 <pre class = 'prettyprint lang-r'>tidyverse_conflicts()</pre>
 
-<pre >#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#&gt; ✖ readr::col_factor() masks scales::col_factor()
-#&gt; ✖ purrr::discard()    masks scales::discard()
-#&gt; ✖ dplyr::filter()     masks stats::filter()
-#&gt; ✖ dplyr::lag()        masks stats::lag()
-#&gt; ✖ pryr::partial()     masks purrr::partial()
-#&gt; ✖ dplyr::src()        masks Hmisc::src()
-#&gt; ✖ dplyr::summarize()  masks Hmisc::summarize()</pre>
+<pre >#&gt; -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+#&gt; x readr::col_factor() masks scales::col_factor()
+#&gt; x purrr::discard()    masks scales::discard()
+#&gt; x dplyr::filter()     masks stats::filter()
+#&gt; x dplyr::lag()        masks stats::lag()
+#&gt; x pryr::partial()     masks purrr::partial()
+#&gt; x dplyr::src()        masks Hmisc::src()
+#&gt; x dplyr::summarize()  masks Hmisc::summarize()</pre>
 
 </article></slide><slide class=""><hgroup><h2></h2></hgroup><article  id="section" class="smaller ">
 
