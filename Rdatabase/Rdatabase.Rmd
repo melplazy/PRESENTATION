@@ -126,7 +126,6 @@ tidyverse_update()
 
 ## Pré-requis
 ```{r tibble}
-if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
@@ -196,7 +195,7 @@ print(as_tibble(rownames_to_column(mtcars)))
 
 
 ## Afficher un *tibble* : les options
-Changer les options d'affichages des `tibble`s:
+Changer les options d'affichages d'un *tibble* :
 
 * via `options()`
 ```{r, eval = FALSE}
@@ -298,12 +297,10 @@ vignette("tibble")
 
 ## Pré-requis
 ```{r}
-if (!"pryr"%in%rownames(installed.packages())) {install.packages("pryr")}
 library(pryr)
 ```
 
 ```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
@@ -441,12 +438,10 @@ vignette("magrittr")
 
 ## Pré-requis
 ```{r}
-if (!"readxl"%in%rownames(installed.packages())) { install.packages("readxl") }
 library(readxl)
 ```
 
 ```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
@@ -606,6 +601,28 @@ data.frame(
   kable(font_size = 18, align = "c", row.names = FALSE)
 ```
 
+## Quelques benchmark {.flexbox .vcenter}
+```{r, message = FALSE, echo = FALSE}
+filename <- "./materials/ratings.csv"
+microbenchmark::microbenchmark(
+  {dta <- read.csv(filename)},
+  {dta <- read_csv(filename)},
+  {dta <- data.table::fread(filename)},
+  times = 50, 
+  unit = "s"
+) %>% 
+  as.data.frame() %>% 
+  mutate(
+    t = microbenchmark:::convert_to_unit(time, "s")
+  ) %>% 
+    ggplot(aes(x = expr, y = t, fill = expr)) +
+      geom_violin(colour = "white") +
+      scale_fill_viridis(discrete = TRUE, guide = FALSE) +
+      labs(y = "Time (s)", x = NULL) +
+      coord_flip()
+```
+
+
 ## Exporter des données vers un fichier
 *readr* inclut également des fonctions d'écriture `write_*()`.
 
@@ -632,7 +649,6 @@ __Exemple__ :
 
 ## Pré-requis
 ```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
 library(tidyverse)
 ```
 
@@ -781,27 +797,20 @@ read_csv(file = "./materials/ratings.csv") %>%
 ```
 
 
-## Exercice
+## Exercices
 
 
 
 
 
-# *DBI* & *dbplyr* | Importer depuis une base de données  {.flexbox .vcenter}
+# *DBI* | Importer depuis une base de données  {.flexbox .vcenter}
 
 <img src="images/database.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
-```{r}
-if (!"nycflights13"%in%rownames(installed.packages())) { 
-  install.packages("nycflights13") 
-}
-  library(nycflights13)
-```
-
-```{r}
-if (!"tidyverse"%in%rownames(installed.packages())) { install.packages("tidyverse") }
-library(tidyverse)
+```{r, results = "hold"}
+library(DBI)
+library(odbc)
 ```
 
 ```{r}
@@ -809,19 +818,290 @@ tidyverse_conflicts()
 ```
 
 
-## 
+## Démarrer PostgreSQL
+Lancez PostgreSQL via le raccourci "SQL Shell (psql)".
 
-```{r, eval = FALSE}
+Laissez les valeurs par défaut (pressez "Entrée").
 
-library(DBI)
+<img src="images/pgsql_warning.png"></img>
 
-path <- system.file("db", "datasets.sqlite", package = "RSQLite")
-db <- dbConnect(RSQLite::SQLite(), path)
 
-dbListTables(db)
-str(dbGetQuery(db, "SELECT * FROM mtcars"))
+## Démarrer PostgreSQL
+Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".bat".
 
-# Polite to disconnect from db when done
-dbDisconnect(db)
+<img src="images/pgsql_bat.png"></img>
+
+
+## Commandes psql
+
+* `\?` pour l'aide des commandes psql.
+* `\q` quitter.
+* `\h` aide des commandes sql.
+* `\l` liste des bases de données.
+* `\c` se connecter à une base.
+* `\d` [nom] pour la description d'une table, d'un index, séquence, vue.
+* `\d` liste des relations (tables, vues et séquences).
+* `\i` nom_fichier.sql exécuter un fichier de commandes SQL.
+
+
+## Base, utilisateur et droits en SQL
+
+1. Créer un utilisateur
+    ```{sql, eval = FALSE}
+    CREATE ROLE rdb LOGIN password 'rdbpass';
+    ```
+
+2. Créer une base
+    ```{sql, eval = FALSE}
+    CREATE DATABASE datawarehouse;
+    ```
+
+3. Modifier le propriètaire d'une base
+    ```{sql, eval = FALSE}
+    ALTER DATABASE datawarehouse OWNER TO 'rdb';
+    ```
+
+
+## Base, utilisateur et droits en R
+
+Identifier le driver de connection
+```{r}
+odbcListDrivers() %>% 
+  filter(attribute=="DriverODBCVer") %>% 
+  select(-attribute)
 ```
 
+
+## Base, utilisateur et droits en R
+
+Initier la connection
+```{r}
+con <- dbConnect(
+  drv = odbc(),
+  driver = "PostgreSQL ODBC Driver(UNICODE)",
+  server = "localhost",
+  port = 5432,
+  database = "postgres",
+  uid = "postgres",
+  password = "password"
+)
+```
+  
+  
+## Base, utilisateur et droits en R
+* Créer un utilisateur
+    ```{r}
+    dbSendQuery(con, SQL("CREATE ROLE rdb LOGIN password 'rdbpass';"))
+    ```
+* Créer une base
+    ```{r}
+    dbSendQuery(con, SQL("CREATE DATABASE datawarehouse;"))
+    ```
+
+
+## Base, utilisateur et droits en R
+
+* Modifier le propriètaire d'une base
+    ```{r}
+    dbSendQuery(con, SQL("ALTER DATABASE datawarehouse OWNER TO rdb;"))
+    ```
+
+* Se déconnecter de la base
+    ```{r}
+    dbDisconnect(con)
+    ```
+    
+## Créer des tables en SQL depuis R
+* Se connecter en tant que "rdb"
+    ```{r}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "datawarehouse",
+      port = 5432,
+      uid = "rdb",
+      password = "rdbpass"
+    )
+    ```
+
+
+## Créer des tables en SQL depuis R
+
+* Lister les tables
+    ```{r}
+    dbListTables(con)
+    ```
+
+* Créer la table *mtcars*
+    ```{r, results = "hold"}
+    mtcars %>% 
+      rownames_to_column(var = "car") %>% 
+      mutate(const = gsub(" .*", "", car)) %>% 
+      select(const, everything()) %>% 
+      ### <b>
+      dbWriteTable(con, "mtcars", .)
+      ### </b>
+    ```
+
+* Lister les tables
+    ```{r}
+    dbListTables(con)
+    ```
+    
+
+## Faire des requêtes en SQL depuis R
+
+* Lister les champs d'une table
+    ```{r}
+    dbListFields(con, "mtcars")
+```
+
+* Lire une table
+    ```{r}
+    dbReadTable(con, "mtcars")
+    ```
+
+
+## Faire des requêtes en SQL depuis R
+
+* Sélectioner les voitures du constructeur Mercedes
+    ```{r}
+    res <- dbSendQuery(con, "SELECT * FROM mtcars WHERE const='Merc'")
+    dbFetch(res)
+    ```
+
+* Libérer les ressources occupées par la requête
+    ```{r, results = "hold", message = FALSE}
+    ### <b>
+    dbClearResult(res)
+    ### </b>
+    dbDisconnect(con)
+    ```
+
+
+## Exercices
+
+1. En tant qu'utilisateur "postgres", créez une base "movies".  
+    Faire de "imdb_user" le propriètaire de cette base.
+    ```{r, include = FALSE}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "datawarehouse",
+      port = 5432,
+      uid = "postgres",
+      password = "password"
+    )
+    dbSendQuery(con, SQL("CREATE ROLE imdb_user LOGIN password 'password';"))
+    dbSendQuery(con, SQL("CREATE DATABASE movies;"))
+    dbSendQuery(con, SQL("ALTER DATABASE Movies OWNER TO imdb_user;"))
+    dbDisconnect(con)
+    ```
+    
+
+2. En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
+    Remplacez les espaces par des underscores dans les noms de colonnes.
+    ```{r, message = FALSE}
+    ratings <- read_csv(file = "./materials/ratings.csv") %>% 
+      `colnames<-`(gsub(" ", "_", colnames(.)))
+    ```
+    ```{r, include = FALSE}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "movies",
+      port = 5432,
+      uid = "imdb_user",
+      password = "password"
+    )
+    dbWriteTable(con, "ratings", ratings)
+    ```
+3. Listez les noms de colonnes de la table créée.
+    ```{r, include = FALSE}
+    dbListFields(con, 'ratings')
+    ```
+4. Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`) et importer le résultat localement sous la forme d'un *tibble*.
+    ```{r, include = FALSE}
+    dbSendQuery(
+      conn = con, 
+      statement = SQL('SELECT "Your_Rating", COUNT(*) as count FROM ratings GROUP BY "Your_Rating";')
+    ) %>% 
+      dbFetch() %>% 
+      as_tibble()
+    ```
+5. Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
+    Exportez cette table vers la base de données.
+    ```{r, include = FALSE}
+    dbSendQuery(
+      conn = con, 
+      statement = SQL(
+        'SELECT * 
+          FROM ratings 
+          WHERE "Date_Rated">=\'2017-01-01\' AND "Date_Rated"<=\'2017-12-31\';'
+      )
+    ) %>% 
+      dbFetch()%>% 
+      dbWriteTable(con, "ratings2017", .)
+    
+    dbListTables(con)
+    ```
+    
+```{r, include = FALSE}
+dbDisconnect(con)
+```
+
+
+
+## Une base de données relationnel
+
+* Schéma des tables du package *nycflights13*
+
+![](images/nycflights13.png)
+
+## Une base de données relationnel
+```{r, message = FALSE}
+con <- dbConnect(
+  drv = odbc(),
+  driver = "PostgreSQL ODBC Driver(UNICODE)",
+  server = "localhost",
+  database = "datawarehouse",
+  port = 5432,
+  uid = "rdb",
+  password = "rdbpass"
+)
+library(nycflights13)
+dbSendQuery(con, "CREATE SCHEMA nycflights13;")
+dbWriteTable(con, SQL("nycflights13.flights"), flights)
+dbWriteTable(con, SQL("nycflights13.airports"), airports)
+dbWriteTable(con, SQL("nycflights13.planes"), planes)
+dbWriteTable(con, SQL("nycflights13.weather"), weather)
+dbWriteTable(con, SQL("nycflights13.airlines"), airlines)
+dbDisconnect(con)
+```
+
+
+
+
+## Clean PostgreSQL
+```{r, echo = FALSE, message = FALSE}
+con <- dbConnect(
+  drv = odbc(),
+  driver = "PostgreSQL ODBC Driver(UNICODE)",
+  server = "localhost",
+  port = 5432,
+  database = "postgres",
+  uid = "postgres",
+  password = "password"
+)
+
+dbSendQuery(con, SQL("DROP DATABASE datawarehouse;"))
+dbSendQuery(con, SQL("DROP ROLE rdb;"))
+
+dbSendQuery(con, SQL("DROP DATABASE movies;"))
+dbSendQuery(con, SQL("DROP ROLE imdb_user;"))
+
+dbDisconnect(con)
+```
