@@ -92,15 +92,47 @@ code {
   color: #515151;
   padding: 2px;
 }
-pre {
-  background-color: #fafafa;
-  margin-bottom: 5px;
+
+.prettyprint {
+  background-color: #e6e6e6;
+  width: 840px;
+  left: -60px;
+  position: relative;
 }
 
-li > pre {
-  margin-left: -2em;
-  width: 110.25%;
+pre {
+  font-family: 'Source Code Pro', 'Courier New', monospace;
+  font-size: 20px;
+  line-height: 28px;
+  padding: 10px 10px 10px 60px;
+  letter-spacing: -1px;
+  margin-bottom: 5px;
+  width: 840px;
+  left: -60px;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #fafafa;
+
 }
+
+ul {
+list-style: disc;
+}
+
+ol pre, ul pre {
+  margin-left: -24px;
+}
+
+ol pre {
+  margin-left: -28px;
+}
+
+ul li ul pre {
+  margin-left: -2em;
+}
+
 
 table.rmdtable th {
   color: white;
@@ -114,4 +146,9 @@ table.rmdtable th {
 
 table.rmdtable tr:nth-child(odd) {
   background-color: #e6e6e6;
+}
+
+#exe {
+  background-color: #f3f3f3;
+  padding: 5px 0px 5px 0px;
 }

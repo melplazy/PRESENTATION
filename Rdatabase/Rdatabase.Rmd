@@ -54,7 +54,8 @@ opts_chunk$set(
   cache = FALSE,
   cache.path = "./",
   width = getOption("width"),
-  comment = "#>"
+  comment = "#>",
+  results = "hold"
 )
 
 ### Define theme
@@ -252,7 +253,7 @@ class(as.data.frame(tb))
 ```
 
 
-## Exercices
+## Exercices {#exe}
 
 *  Comment savoir si un objet est de classe `tibble`, `data.frame`  ou encore `matrix` ?
 *  Comment se comporte les opérations suivantes sur un `data.frame` et l'équivalent `tibble` ?  
@@ -269,7 +270,7 @@ class(as.data.frame(tb))
     X <- "mpg"
     ```
 
-## Exercices
+## Exercices {#exe}
 
 *  Manipuler des noms de variables non-conventionnelles :
     ```{r}
@@ -567,7 +568,7 @@ read_csv(
     )
     ```
 
-## Exercices
+## Exercices {#exe}
 * Quelle fonction utiliseriez-vous pour importer un document avec `|` en séparateur ?
     
 * Un fichier CSV peut parfois contenir une virgule dans un champ.  
@@ -601,14 +602,34 @@ data.frame(
   kable(font_size = 18, align = "c", row.names = FALSE)
 ```
 
-## Quelques benchmark {.flexbox .vcenter}
-```{r, message = FALSE, echo = FALSE}
+## Quelques benchmark : Lecture {.flexbox .vcenter}
+```{r read_benchmark, message = FALSE, echo = FALSE}
 filename <- "./materials/ratings.csv"
 microbenchmark::microbenchmark(
   {dta <- read.csv(filename)},
   {dta <- read_csv(filename)},
   {dta <- data.table::fread(filename)},
-  times = 50, 
+  unit = "s"
+) %>% 
+  as.data.frame() %>% 
+  mutate(
+    t = microbenchmark:::convert_to_unit(time, "s")
+  ) %>% 
+    ggplot(aes(x = expr, y = t, fill = expr)) +
+      geom_violin(colour = "white") +
+      scale_fill_viridis(discrete = TRUE, guide = FALSE) +
+      labs(y = "Time (s)", x = NULL) +
+      coord_flip()
+```
+
+
+## Quelques benchmark : Ecriture {.flexbox .vcenter}
+```{r write_benchmark, message = FALSE, echo = FALSE}
+filename <- paste0(tempdir(), "/ratings.csv")
+microbenchmark::microbenchmark(
+  {write.csv(x = ratings, file = filename, row.names = FALSE)},
+  {write_csv(x = ratings, path = filename)},
+  {data.table::fwrite(x = ratings, file = filename)},
   unit = "s"
 ) %>% 
   as.data.frame() %>% 
@@ -685,13 +706,13 @@ Une syntaxe commune :
 ratings <- read_csv(file = "./materials/ratings.csv")
 ```
 
-```{r, results = "hold"}
+```{r}
 ### <b>
 filter(ratings, `Your Rating` >= 9, `IMDb Rating` >= 9)
 ### </b>
 ```
 
-```{r, message = FALSE, results = "hold"}
+```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>% 
 ### <b>
   filter(`Your Rating` >= 9 & `IMDb Rating` >= 9)
@@ -699,19 +720,19 @@ read_csv(file = "./materials/ratings.csv") %>%
 ```
 
 
-## Exercices
+## Exercices {#exe}
 
 
 
 ## Réordonner des lignes
-```{r, message = FALSE, results = "hold"}
+```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>% 
 ### <b>
   arrange(desc(`Date Rated`)) ### </b>
 ```
 
 
-## Exercices
+## Exercices {#exe}
 
 
 
@@ -728,7 +749,7 @@ Des aides à la sélection :
 options(tibble.print_max = 4, tibble.print_min = 4)
 ```
 
-```{r, message = FALSE, results = "hold"}
+```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>% 
   arrange(desc(`Date Rated`)) %>% 
 ### <b>
@@ -740,12 +761,12 @@ read_csv(file = "./materials/ratings.csv") %>%
 options(tibble.print_max = 10, tibble.print_min = 10)
 ```
 
-## Exercices
+## Exercices {#exe}
 
 
 
 ## Ajouter des colonnes
-```{r, message = FALSE, results = "hold"}
+```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>% 
   arrange(desc(`Date Rated`)) %>% 
 ### <b>
@@ -755,12 +776,12 @@ read_csv(file = "./materials/ratings.csv") %>%
 ```
 
 
-## Exercices
+## Exercices {#exe}
 
 
 
 ## Résumer les données
-```{r, message = FALSE, results = "hold"}
+```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>%  
 ### <b>
   summarise(
@@ -774,12 +795,12 @@ read_csv(file = "./materials/ratings.csv") %>%
 ```
 
 
-## Exercices
+## Exercices {#exe}
 
 
 
 ## Utiliser `group_by()`
-```{r, message = FALSE, results = "hold"}
+```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>% 
   mutate(
     Year = lubridate::year(`Date Rated`)
@@ -797,7 +818,7 @@ read_csv(file = "./materials/ratings.csv") %>%
 ```
 
 
-## Exercices
+## Exercices {#exe}
 
 
 
@@ -808,7 +829,7 @@ read_csv(file = "./materials/ratings.csv") %>%
 <img src="images/database.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
-```{r, results = "hold"}
+```{r}
 library(DBI)
 library(odbc)
 ```
@@ -934,7 +955,7 @@ con <- dbConnect(
     ```
 
 * Créer la table *mtcars*
-    ```{r, results = "hold"}
+    ```{r}
     mtcars %>% 
       rownames_to_column(var = "car") %>% 
       mutate(const = gsub(" .*", "", car)) %>% 
@@ -958,12 +979,18 @@ con <- dbConnect(
 ```
 
 * Lire une table
+    ```{r, echo = FALSE}
+    options(tibble.print_max = 5, tibble.print_min = 5)
+    ```
     ```{r}
-    dbReadTable(con, "mtcars")
+    dbReadTable(con, "mtcars") %>% as_tibble()
     ```
 
 
 ## Faire des requêtes en SQL depuis R
+```{r, echo = FALSE}
+options(tibble.print_max = 10, tibble.print_min = 10)
+```
 
 * Sélectioner les voitures du constructeur Mercedes
     ```{r}
@@ -972,7 +999,7 @@ con <- dbConnect(
     ```
 
 * Libérer les ressources occupées par la requête
-    ```{r, results = "hold", message = FALSE}
+    ```{r, message = FALSE}
     ### <b>
     dbClearResult(res)
     ### </b>
@@ -980,7 +1007,7 @@ con <- dbConnect(
     ```
 
 
-## Exercices
+## Exercices {#exe}
 
 1. En tant qu'utilisateur "postgres", créez une base "movies".  
     Faire de "imdb_user" le propriètaire de cette base.
@@ -1083,10 +1110,26 @@ dbDisconnect(con)
 ```
 
 
+## test 
+
+1. chunk in list
+    ```{r}
+    print(1)
+    ```
+2. list 2
+* not ordered
+    ```{r}
+    print(4)
+    ```
+
+```{r}
+print(3)
+```
+
 
 
 ## Clean PostgreSQL
-```{r, echo = FALSE, message = FALSE}
+```{r, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
 con <- dbConnect(
   drv = odbc(),
   driver = "PostgreSQL ODBC Driver(UNICODE)",
