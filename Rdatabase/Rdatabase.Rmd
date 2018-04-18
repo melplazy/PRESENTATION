@@ -6,8 +6,8 @@ monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 params:
   theme_dark: TRUE
-  dpi: 120
-  ggFontSize: 9
+  dpi: 300
+  ggFontSize: 14
 output:
   ioslides_presentation:
     css: template/shiny-slides.css
@@ -53,7 +53,7 @@ opts_chunk$set(
   fig.path = "./images/",
   cache = FALSE,
   cache.path = "./",
-  width = getOption("width"),
+  width = 80,
   comment = "#>",
   results = "hold"
 )
@@ -68,6 +68,10 @@ scale_fill_viridis <- hijack(scale_fill_viridis, option = "viridis", begin = 2/5
 
 options(tibble.print_max = 3, tibble.print_min = 3)
 ```
+
+## Les Bases de Données et R {.flexbox .vcenter}
+
+<img src="images/intro.png"></img> 
 
 # Préparer sa session {.flexbox .vcenter}
 
@@ -209,11 +213,12 @@ Afficher les `n` premières lignes, s'il y a plus de `m` ligneset sur `p` colonn
 print(x = DF, n = n, width = p))
 ```
 
-* dans R Studio via `View()`
+* dans Rstudio via `View()`
 ```{r, eval = FALSE}
 View(mtcars)
 ```
-![](images/Rstudio_View.png)
+
+<img src="images/Rstudio_View.png"></img>
 
 
 ## Sélectionner une variable : `$`, `[` et `[[`
@@ -286,9 +291,12 @@ class(as.data.frame(tb))
 
 ## Pour aller plus loin ...
 
+* Cheatsheets Rstudio : [(https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
+
 ```{r, eval = FALSE}
-vignette("tibble")
+vignette(package = "tibble")
 ```
+
 <img src="images/screenshot_tibble.png" height="350"></img>
 
 
@@ -321,13 +329,17 @@ __Exemple :__
 *  `x %>% f %>% g %>% h` équivalent à `h(g(f(x)))`
 *  `f <- . %>% cos %>% sin` équivalent à `f <- function(.) sin(cos(.))`
 
+
+## Pourquoi utiliser le "pipe" ?
+
 Une aide à :
 
 *  l'écriture du code.
 *  la lisibilité du code.
 
-Note : Raccourci `Ctrl+M` dans Rstudio pour faire apparaître un "pipe".
+<img src="images/xkcd_code_quality.png"></img>
 
+Note : Raccourci `Ctrl+M` dans Rstudio pour faire apparaître un "pipe".
 
 ## Conserver les étapes
 ```{r, eval = FALSE}
@@ -371,7 +383,7 @@ x <- names(x)
 <br>
 Les inconvénients de cette écriture :
 
-*  Obligation relancer tout le code pour débuguer.
+*  Obligation de relancer tout le code pour débuguer.
 *  Répétition du nom de l'objet (14 fois).
 
 ## Composer l'appel aux fonctions
@@ -415,7 +427,8 @@ x %>%
 <br>
 A éviter si :
 
-*  le nombre d'étapes devient important (Utiliser des objets intermédiaires avec des noms claires).
+*  le nombre d'étapes devient important.  
+    Utiliser des objets intermédiaires avec des noms claires.
 *  la séquence d'opération n'est pas linéaire.
 *  les opérations nécéssitent plusieurs objets en entrée et/ou sortie.
 
@@ -423,10 +436,11 @@ A éviter si :
 ## Pour aller plus loin ...
 
 ```{r, eval = FALSE}
-vignette("magrittr")
+vignette(package = "magrittr")
 ```
 
 <img src="images/screenshot_magrittr.png" height="350"></img>
+
 
 # *readr* & *readxl* | Importer des données {.flexbox .vcenter}
 
@@ -572,7 +586,7 @@ read_csv(
 * Quelle fonction utiliseriez-vous pour importer un document avec `|` en séparateur ?
     
 * Un fichier CSV peut parfois contenir une virgule dans un champ.  
-    L'utilisation des guillemets simple `'` ou double `"` permet d'éviter que la virgule ne pose problème.
+    Astuce : utilisez des guillemets simple `'` ou double `"`.
       1. Quel est le caractère par défaut utiliser par `read_csv()` ?  
       2. Quelle fonction et argument utiliser pour changer ce caractère ?
       3. Quelle fonction et avec quel valeur argument liriez-vous la chaîne suivante ?
@@ -581,7 +595,6 @@ read_csv(
     ```
     
 * Identifier les problèmes des lignes suivantes.  
-    Que se passe t'il lors de l'exécution ?
     ```{r, eval = FALSE}
     read_csv("a,b\n1,2,3\n4,5,6")
     read_csv("a,b,c\n1,2\n1,2,3,4")
@@ -602,44 +615,58 @@ data.frame(
   kable(font_size = 18, align = "c", row.names = FALSE)
 ```
 
-## Quelques benchmark : Lecture {.flexbox .vcenter}
+## Quelques benchmark ! {.flexbox .vcenter}
+
+<img src="images/xkcd_violin_plots.png"></img>
+
+
+## Quelques benchmark : Lecture  {.flexbox .vcenter}
 ```{r read_benchmark, message = FALSE, echo = FALSE}
 filename <- "./materials/ratings.csv"
 microbenchmark::microbenchmark(
-  {dta <- read.csv(filename)},
-  {dta <- read_csv(filename)},
+  {dta <- utils::read.csv(filename)},
+  {dta <- readr::read_csv(filename)},
   {dta <- data.table::fread(filename)},
   unit = "s"
 ) %>% 
   as.data.frame() %>% 
   mutate(
-    t = microbenchmark:::convert_to_unit(time, "s")
+    t = microbenchmark:::convert_to_unit(time, "s"),
+    expr = factor(
+      gsub("\\{ *dta <- (.*)\\(.*", "\\1", expr),
+      levels = c("utils::read.csv", "readr::read_csv", "data.table::fread")
+    )
   ) %>% 
     ggplot(aes(x = expr, y = t, fill = expr)) +
       geom_violin(colour = "white") +
       scale_fill_viridis(discrete = TRUE, guide = FALSE) +
       labs(y = "Time (s)", x = NULL) +
+      scale_y_continuous(limits = c(0, NA)) +
       coord_flip()
 ```
 
 
-## Quelques benchmark : Ecriture {.flexbox .vcenter}
+## Quelques benchmark : Ecriture{.flexbox .vcenter}
 ```{r write_benchmark, message = FALSE, echo = FALSE}
 filename <- paste0(tempdir(), "/ratings.csv")
 microbenchmark::microbenchmark(
-  {write.csv(x = ratings, file = filename, row.names = FALSE)},
-  {write_csv(x = ratings, path = filename)},
+  {utils::write.csv(x = ratings, file = filename, row.names = FALSE)},
+  {readr::write_csv(x = ratings, path = filename)},
   {data.table::fwrite(x = ratings, file = filename)},
   unit = "s"
 ) %>% 
   as.data.frame() %>% 
   mutate(
-    t = microbenchmark:::convert_to_unit(time, "s")
+    t = microbenchmark:::convert_to_unit(time, "s"),
+    expr = factor(
+      gsub("\\{ *(.*)\\(.*", "\\1", expr), 
+      levels = c("utils::write.csv", "readr::write_csv", "data.table::fwrite"))
   ) %>% 
     ggplot(aes(x = expr, y = t, fill = expr)) +
       geom_violin(colour = "white") +
       scale_fill_viridis(discrete = TRUE, guide = FALSE) +
       labs(y = "Time (s)", x = NULL) +
+      scale_y_continuous(limits = c(0, NA)) +
       coord_flip()
 ```
 
@@ -648,25 +675,28 @@ microbenchmark::microbenchmark(
 *readr* inclut également des fonctions d'écriture `write_*()`.
 
 * Les chaînes de caractères sont en UTF-8.
+    <img src="images/xkccd_unicode.png"></img>
 * Les dates et date/heure sont au format ISO8601
 
 __Exemple__ :
 
-* Dans le cas d'un fichier CSV
-    ```{r, eval = FALSE}
-    write_csv(x = ratings, path = "ratings.csv")
-    ```
-
-* Dans le cas d'un fichier Excel
-    ```{r, eval = FALSE}
-    library(writexl)
-    write_xlsx(x = mtcars, path = "mtcars.xlsx")
-    ```
+```{r, eval = FALSE}
+readr::write_csv(x = ratings, path = "ratings.csv")
+```
+```{r, eval = FALSE}
+writexl::write_xlsx(x = ratings, path = "ratings.xlsx")
+```
 
 
-# *dplyr* | Les rudiments {.flexbox .vcenter}
+# *dplyr* | Une grammaire de la manipulation des données {.flexbox .vcenter}
 
 <img src="images/dplyr.png" height="250" class="auto-fadein"></img>
+
+
+## *dplyr* : Le pipe et des fonctions utiles {.flexbox .vcenter}
+
+<img src="images/xkcd_bad_code.png"></img>
+
 
 ## Pré-requis
 ```{r}
@@ -693,6 +723,9 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 5. Résumer des valeurs (`summarise()`).
 
 6. `group_by()` pour travailler sur des sous-ensembles d'un jeu de données.
+
+
+## Les fonctions de base
 
 Une syntaxe commune :
 
@@ -822,6 +855,17 @@ read_csv(file = "./materials/ratings.csv") %>%
 
 
 
+## Pour aller plus loin ...
+
+* Cheatsheets Rstudio : [https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
+
+* Site de dplyr : [dplyr.tidyverse.org](https://dplyr.tidyverse.org/)
+
+```{r, eval = FALSE}
+vignette(package = "dplyr")
+```
+
+<img src="images/screenshot_dplyr.png" height="350"></img>
 
 
 # *DBI* | Importer depuis une base de données  {.flexbox .vcenter}
@@ -831,9 +875,10 @@ read_csv(file = "./materials/ratings.csv") %>%
 ## Pré-requis
 ```{r}
 library(DBI)
+```
+```{r}
 library(odbc)
 ```
-
 ```{r}
 tidyverse_conflicts()
 ```
@@ -867,17 +912,17 @@ Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".b
 
 ## Base, utilisateur et droits en SQL
 
-1. Créer un utilisateur
+1. Créer un utilisateur.
     ```{sql, eval = FALSE}
     CREATE ROLE rdb LOGIN password 'rdbpass';
     ```
 
-2. Créer une base
+2. Créer une base.
     ```{sql, eval = FALSE}
     CREATE DATABASE datawarehouse;
     ```
 
-3. Modifier le propriètaire d'une base
+3. Modifier le propriètaire d'une base.
     ```{sql, eval = FALSE}
     ALTER DATABASE datawarehouse OWNER TO 'rdb';
     ```
@@ -885,7 +930,7 @@ Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".b
 
 ## Base, utilisateur et droits en R
 
-Identifier le driver de connection
+Identifier le driver de connection.
 ```{r}
 odbcListDrivers() %>% 
   filter(attribute=="DriverODBCVer") %>% 
@@ -895,7 +940,7 @@ odbcListDrivers() %>%
 
 ## Base, utilisateur et droits en R
 
-Initier la connection
+Initier la connection.
 ```{r}
 con <- dbConnect(
   drv = odbc(),
@@ -904,17 +949,34 @@ con <- dbConnect(
   port = 5432,
   database = "postgres",
   uid = "postgres",
+### <b>
   password = "password"
+### </b>
 )
 ```
+```{r, eval = FALSE}
+con <- dbConnect(
+  drv = odbc(),
+  driver = "PostgreSQL ODBC Driver(UNICODE)",
+  server = "localhost",
+  port = 5432,
+  database = "postgres",
+  uid = "postgres",
+### <b>
+  password = rstudioapi::askForPassword("Mot de passe :")
+### </b>
+)
+```
+
   
   
 ## Base, utilisateur et droits en R
-* Créer un utilisateur
+
+* Créer un utilisateur.
     ```{r}
     dbSendQuery(con, SQL("CREATE ROLE rdb LOGIN password 'rdbpass';"))
     ```
-* Créer une base
+* Créer une base.
     ```{r}
     dbSendQuery(con, SQL("CREATE DATABASE datawarehouse;"))
     ```
@@ -922,18 +984,19 @@ con <- dbConnect(
 
 ## Base, utilisateur et droits en R
 
-* Modifier le propriètaire d'une base
+* Modifier le propriètaire d'une base.
     ```{r}
     dbSendQuery(con, SQL("ALTER DATABASE datawarehouse OWNER TO rdb;"))
     ```
 
-* Se déconnecter de la base
+* Se déconnecter de la base.
     ```{r}
     dbDisconnect(con)
     ```
     
 ## Créer des tables en SQL depuis R
-* Se connecter en tant que "rdb"
+
+* Se connecter en tant que "rdb".
     ```{r}
     con <- dbConnect(
       drv = odbc(),
@@ -941,8 +1004,10 @@ con <- dbConnect(
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
+    ### <b>
       uid = "rdb",
       password = "rdbpass"
+    ### </b>
     )
     ```
 
@@ -983,7 +1048,10 @@ con <- dbConnect(
     options(tibble.print_max = 5, tibble.print_min = 5)
     ```
     ```{r}
-    dbReadTable(con, "mtcars") %>% as_tibble()
+    ### <b>
+    dbReadTable(con, "mtcars") %>% 
+    ### </b>
+      as_tibble()
     ```
 
 
@@ -1011,7 +1079,22 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 
 1. En tant qu'utilisateur "postgres", créez une base "movies".  
     Faire de "imdb_user" le propriètaire de cette base.
-    ```{r, include = FALSE}
+2. En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
+    Remplacez les espaces par des underscores dans les noms de colonnes.
+    ```{r, message = FALSE}
+    ratings <- read_csv(file = "./materials/ratings.csv") %>% 
+      `colnames<-`(gsub(" ", "_", colnames(.)))
+    ```
+3. Listez les noms de colonnes de la table créée.
+4. Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`) et importer le résultat localement sous la forme d'un *tibble*.
+5. Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
+    Exportez cette table vers la base de données.
+
+
+## Exercices {#exe}
+1. En tant qu'utilisateur "postgres", créez une base "movies".  
+    Faire de "imdb_user" le propriètaire de cette base.
+    ```{r}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1026,15 +1109,16 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     dbSendQuery(con, SQL("ALTER DATABASE Movies OWNER TO imdb_user;"))
     dbDisconnect(con)
     ```
-    
 
+
+## Exercices {#exe}
 2. En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
     Remplacez les espaces par des underscores dans les noms de colonnes.
     ```{r, message = FALSE}
     ratings <- read_csv(file = "./materials/ratings.csv") %>% 
       `colnames<-`(gsub(" ", "_", colnames(.)))
     ```
-    ```{r, include = FALSE}
+    ```{r}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1046,12 +1130,16 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     )
     dbWriteTable(con, "ratings", ratings)
     ```
+
+## Exercices {#exe}
 3. Listez les noms de colonnes de la table créée.
-    ```{r, include = FALSE}
+    ```{r}
     dbListFields(con, 'ratings')
     ```
+
+## Exercices {#exe}
 4. Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`) et importer le résultat localement sous la forme d'un *tibble*.
-    ```{r, include = FALSE}
+    ```{r}
     dbSendQuery(
       conn = con, 
       statement = SQL('SELECT "Your_Rating", COUNT(*) as count FROM ratings GROUP BY "Your_Rating";')
@@ -1059,9 +1147,11 @@ options(tibble.print_max = 10, tibble.print_min = 10)
       dbFetch() %>% 
       as_tibble()
     ```
+
+## Exercices {#exe}
 5. Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
     Exportez cette table vers la base de données.
-    ```{r, include = FALSE}
+    ```{r}
     dbSendQuery(
       conn = con, 
       statement = SQL(
@@ -1075,18 +1165,25 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     
     dbListTables(con)
     ```
-    
-```{r, include = FALSE}
-dbDisconnect(con)
+
+
+## Pour aller plus loin ...
+
+Liste de diffusion autour du package *DBI*: [r-sig-db](https://stat.ethz.ch/mailman/listinfo/r-sig-db).
+
+```{r, eval = FALSE}
+vignette(package = "DBI")
 ```
 
+<img src="images/screenshot_dbi.png"></img>
 
+#
 
 ## Une base de données relationnel
 
-* Schéma des tables du package *nycflights13*
+* Schéma des tables du package *nycflights13*.
 
-![](images/nycflights13.png)
+<img src="images/nycflights13.png"></img>
 
 ## Une base de données relationnel
 ```{r, message = FALSE}
@@ -1110,26 +1207,8 @@ dbDisconnect(con)
 ```
 
 
-## test 
-
-1. chunk in list
-    ```{r}
-    print(1)
-    ```
-2. list 2
-* not ordered
-    ```{r}
-    print(4)
-    ```
-
-```{r}
-print(3)
-```
-
-
-
-## Clean PostgreSQL
-```{r, echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+## Nettoyage du serveur PostgreSQL
+```{r, echo = TRUE, results = "hide", warning = FALSE, message = FALSE}
 con <- dbConnect(
   drv = odbc(),
   driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1142,9 +1221,10 @@ con <- dbConnect(
 
 dbSendQuery(con, SQL("DROP DATABASE datawarehouse;"))
 dbSendQuery(con, SQL("DROP ROLE rdb;"))
-
 dbSendQuery(con, SQL("DROP DATABASE movies;"))
 dbSendQuery(con, SQL("DROP ROLE imdb_user;"))
+
+# DROP DATABASE datawarehouse; DROP ROLE rdb; DROP DATABASE movies; DROP ROLE imdb_user;
 
 dbDisconnect(con)
 ```
