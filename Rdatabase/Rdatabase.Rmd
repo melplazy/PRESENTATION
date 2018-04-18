@@ -100,7 +100,7 @@ options(tibble.print_max = 3, tibble.print_min = 3)
 ## Qu'est-ce-que le *tidyverse* ?
 
 Un ensemble d'outils basés sur une philosophie/grammaire commune.
-```{r}
+```{r, message = FALSE}
 if (!"tidyverse"%in%rownames(installed.packages())) {
   install.packages("tidyverse")
 }
@@ -130,7 +130,7 @@ tidyverse_update()
 <img src="images/tibble.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
-```{r tibble}
+```{r, message = FALSE}
 library(tidyverse)
 ```
 
@@ -291,7 +291,7 @@ class(as.data.frame(tb))
 
 ## Pour aller plus loin ...
 
-* Cheatsheets Rstudio : [(https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
+* Cheatsheets Rstudio : [https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
 
 ```{r, eval = FALSE}
 vignette(package = "tibble")
@@ -305,11 +305,11 @@ vignette(package = "tibble")
 <img src="images/pipe.png" height="250" class="auto-fadein"></img>
 
 ## Pré-requis
-```{r}
+```{r, message = FALSE}
 library(pryr)
 ```
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 ```
 
@@ -452,11 +452,11 @@ vignette(package = "magrittr")
 
 
 ## Pré-requis
-```{r}
+```{r, message = FALSE}
 library(readxl)
 ```
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 ```
 
@@ -608,7 +608,7 @@ read_csv(
 ```{r, echo = FALSE}
 data.frame(
   check.names = FALSE,
-  "Type de données" = rev(c("Logiciel Statistique", "Excel", 'Fichier "Text"')),
+  "Type de données" = rev(c("Logiciel Statistique", "Excel", 'Fichier "Texte"')),
   Package = rev(c("__*haven*__", "__*readxl*__", "__*readr*__")),
   Alternatives = rev(c("foreign, sas7bdat, readstata13", "gdata, openxlsx, XLConnect, xlsx", "base, data.table"))
 ) %>% 
@@ -699,7 +699,7 @@ writexl::write_xlsx(x = ratings, path = "ratings.xlsx")
 
 
 ## Pré-requis
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 ```
 
@@ -872,11 +872,12 @@ vignette(package = "dplyr")
 
 <img src="images/database.png" height="250" class="auto-fadein"></img>
 
+
 ## Pré-requis
-```{r}
+```{r, message = FALSE}
 library(DBI)
 ```
-```{r}
+```{r, message = FALSE}
 library(odbc)
 ```
 ```{r}
@@ -885,9 +886,10 @@ tidyverse_conflicts()
 
 
 ## Démarrer PostgreSQL
-Lancez PostgreSQL via le raccourci "SQL Shell (psql)".
 
-Laissez les valeurs par défaut (pressez "Entrée").
+* Lancez PostgreSQL via le raccourci "SQL Shell (psql)".
+
+* Laissez les valeurs par défaut (pressez "Entrée").
 
 <img src="images/pgsql_warning.png"></img>
 
@@ -912,17 +914,17 @@ Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".b
 
 ## Base, utilisateur et droits en SQL
 
-1. Créer un utilisateur.
+* Créer un utilisateur.
     ```{sql, eval = FALSE}
     CREATE ROLE rdb LOGIN password 'rdbpass';
     ```
 
-2. Créer une base.
+* Créer une base.
     ```{sql, eval = FALSE}
     CREATE DATABASE datawarehouse;
     ```
 
-3. Modifier le propriètaire d'une base.
+* Modifier le propriètaire d'une base.
     ```{sql, eval = FALSE}
     ALTER DATABASE datawarehouse OWNER TO 'rdb';
     ```
@@ -930,7 +932,18 @@ Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".b
 
 ## Base, utilisateur et droits en R
 
-Identifier le driver de connection.
+Des connecteurs :
+
+* [RMySQL](https://github.com/rstats-db/RMySQL#readme): MySQL et MariaDB.
+* [RPostgreSQL](https://cran.r-project.org/package=RPostgreSQL): Postgres et Redshift.
+* [RSQLite](https://github.com/rstats-db/RSQLite): base de donnée SQLite intégrée.
+* [odbc](https://github.com/rstats-db/odbc#odbc): protocoles de connection libre.
+* [bigrquery](https://github.com/rstats-db/bigrquery): Google BigQuery.
+
+
+## Base, utilisateur et droits en R
+
+* Identifier le driver de connection.
 ```{r}
 odbcListDrivers() %>% 
   filter(attribute=="DriverODBCVer") %>% 
@@ -940,7 +953,7 @@ odbcListDrivers() %>%
 
 ## Base, utilisateur et droits en R
 
-Initier la connection.
+* Initier la connection.
 ```{r}
 con <- dbConnect(
   drv = odbc(),
@@ -1014,12 +1027,12 @@ con <- dbConnect(
 
 ## Créer des tables en SQL depuis R
 
-* Lister les tables
+* Lister les tables.
     ```{r}
     dbListTables(con)
     ```
 
-* Créer la table *mtcars*
+* Créer la table *mtcars*.
     ```{r}
     mtcars %>% 
       rownames_to_column(var = "car") %>% 
@@ -1030,7 +1043,7 @@ con <- dbConnect(
       ### </b>
     ```
 
-* Lister les tables
+* Lister les tables.
     ```{r}
     dbListTables(con)
     ```
@@ -1038,12 +1051,12 @@ con <- dbConnect(
 
 ## Faire des requêtes en SQL depuis R
 
-* Lister les champs d'une table
+* Lister les champs d'une table.
     ```{r}
     dbListFields(con, "mtcars")
 ```
 
-* Lire une table
+* Lire une table.
     ```{r, echo = FALSE}
     options(tibble.print_max = 5, tibble.print_min = 5)
     ```
@@ -1060,13 +1073,13 @@ con <- dbConnect(
 options(tibble.print_max = 10, tibble.print_min = 10)
 ```
 
-* Sélectioner les voitures du constructeur Mercedes
+* Sélectioner les voitures du constructeur Mercedes.
     ```{r}
     res <- dbSendQuery(con, "SELECT * FROM mtcars WHERE const='Merc'")
     dbFetch(res)
     ```
 
-* Libérer les ressources occupées par la requête
+* Libérer les ressources occupées par la requête.
     ```{r, message = FALSE}
     ### <b>
     dbClearResult(res)
@@ -1077,24 +1090,25 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 
 ## Exercices {#exe}
 
-1. En tant qu'utilisateur "postgres", créez une base "movies".  
+* En tant qu'utilisateur "postgres", créez une base "movies".  
     Faire de "imdb_user" le propriètaire de cette base.
-2. En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
+    
+* En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
     Remplacez les espaces par des underscores dans les noms de colonnes.
-    ```{r, message = FALSE}
-    ratings <- read_csv(file = "./materials/ratings.csv") %>% 
-      `colnames<-`(gsub(" ", "_", colnames(.)))
-    ```
-3. Listez les noms de colonnes de la table créée.
-4. Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`) et importer le résultat localement sous la forme d'un *tibble*.
-5. Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
+    
+* Listez les noms de colonnes de la table créée.
+
+* Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`)  
+    Importer le résultat localement sous la forme d'un *tibble*.
+    
+* Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
     Exportez cette table vers la base de données.
 
 
 ## Exercices {#exe}
-1. En tant qu'utilisateur "postgres", créez une base "movies".  
+* En tant qu'utilisateur "postgres", créez une base "movies".  
     Faire de "imdb_user" le propriètaire de cette base.
-    ```{r}
+    ```{r, warning = FALSE, message = FALSE, results = "hide"}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1112,13 +1126,13 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 
 
 ## Exercices {#exe}
-2. En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
-    Remplacez les espaces par des underscores dans les noms de colonnes.
-    ```{r, message = FALSE}
+* En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
+    Enlevez les espaces dans les noms de colonnes.
+    ```{r, warning = FALSE, message = FALSE, results = "hide"}
     ratings <- read_csv(file = "./materials/ratings.csv") %>% 
-      `colnames<-`(gsub(" ", "_", colnames(.)))
+      `colnames<-`(gsub(" ", "", colnames(.)))
     ```
-    ```{r}
+    ```{r, warning = FALSE, message = FALSE, results = "hide"}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1132,32 +1146,35 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     ```
 
 ## Exercices {#exe}
-3. Listez les noms de colonnes de la table créée.
-    ```{r}
+* Listez les noms de colonnes de la table créée.
+    ```{r, warning = FALSE, message = FALSE, results = "hide"}
     dbListFields(con, 'ratings')
     ```
 
 ## Exercices {#exe}
-4. Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`) et importer le résultat localement sous la forme d'un *tibble*.
-    ```{r}
+* Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"YourRating"`).  
+    Importer le résultat localement sous la forme d'un *tibble*.
+    ```{r, warning = FALSE, message = FALSE, results = "hide"}
     dbSendQuery(
       conn = con, 
-      statement = SQL('SELECT "Your_Rating", COUNT(*) as count FROM ratings GROUP BY "Your_Rating";')
+      statement = SQL(
+        'SELECT "YourRating", COUNT(*) as count FROM ratings GROUP BY "YourRating";'
+      )
     ) %>% 
       dbFetch() %>% 
       as_tibble()
     ```
 
 ## Exercices {#exe}
-5. Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
+* Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
     Exportez cette table vers la base de données.
-    ```{r}
+    ```{r, warning = FALSE, message = FALSE, results = "hide"}
     dbSendQuery(
       conn = con, 
       statement = SQL(
         'SELECT * 
           FROM ratings 
-          WHERE "Date_Rated">=\'2017-01-01\' AND "Date_Rated"<=\'2017-12-31\';'
+          WHERE "DateRated">=\'2017-01-01\' AND "DateRated"<=\'2017-12-31\';'
       )
     ) %>% 
       dbFetch()%>% 
@@ -1165,6 +1182,9 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     
     dbListTables(con)
     ```
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "hide"}
+dbDisconnect(con)
+```
 
 
 ## Pour aller plus loin ...
@@ -1177,7 +1197,258 @@ vignette(package = "DBI")
 
 <img src="images/screenshot_dbi.png"></img>
 
-#
+
+# *dplyr* & *dbplyr* | Une grammaire SQL généralisée {.flexbox .vcenter}
+
+<div class="columns-2">
+<img src="images/dplyr.png" height="250" class="auto-fadein"></img>
+
+<img src="images/dbplyr.png" height="250" class="auto-fadein"></img>
+</div>
+
+
+## Pré-requis
+```{r, echo = FALSE}
+options(tibble.print_max = 4, tibble.print_min = 4)
+```
+```{r, message = FALSE}
+library(DBI)
+```
+```{r, message = FALSE}
+library(odbc)
+```
+```{r, message = FALSE}
+library(tidyverse)
+```
+```{r, message = FALSE}
+library(dbplyr)
+```
+```{r}
+tidyverse_conflicts()
+```
+
+
+## *dbplyr* : Premiers pas avec *dplyr*
+
+* Connection sur une base de donnée SQL intégrée (package *RSQLite*).
+    ```{r, eval = FALSE}
+    con <- dbConnect(RSQLite::SQLite(), path = ":memory:")
+    ```
+
+* Connection à la base PostgreSQL.
+    ```{r}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "movies",
+      port = 5432,
+      uid = "imdb_user",
+      password = "password"
+    )
+    ```
+
+
+## *dbplyr* : Premiers pas avec *dplyr*
+
+* Remplir la base.
+    ```{r, message = FALSE}
+    ratings <- read_csv(file = "./materials/ratings.csv") %>% 
+      `colnames<-`(gsub(" ", "", colnames(.))) %>% 
+      mutate(Year = lubridate::year(DateRated))
+    ```
+    ```{r, message = FALSE}
+    copy_to(
+      dest = con, 
+      df = ratings, 
+      name = "ratings",
+      temporary = FALSE, 
+      indexes = list(
+        "DateRated", 
+        "YourRating", 
+        "Title"
+      ),
+      overwrite = TRUE
+    )
+    ```
+
+Note : `temporary = TRUE` permet de rendre la table uniquement disponible à la connection en cours et uniquement pendant celle-ci.
+
+
+## *dbplyr* : Premiers pas avec *dplyr*
+
+* Faire une référence à une table depuis une connection.
+```{r}
+ratings_db <- tbl(con, "ratings")
+class(ratings_db)
+```
+
+* Afficher l'objet.
+```{r}
+ratings_db
+```
+
+## Manipuler une base avec *dplyr*
+
+* Faire des requêtes sans SQL.
+```{r}
+date_sevendaysago <- (Sys.Date()-7)
+
+ratings_db %>% 
+  filter(DateRated > date_sevendaysago) %>% 
+  select(Title, DateRated, YourRating, IMDbRating)
+```
+
+
+## Manipuler une base avec *dplyr*
+
+* Faire des opérations en SQL sans SQL.
+```{r}
+ratings_db %>% 
+  group_by(Year) %>% 
+  summarise(
+    N = n(),
+    AvgRating = mean(YourRating)
+  ) %>% 
+  arrange(Year)
+```
+
+
+## Manipuler une base avec *dplyr*
+
+* *dplyr* et *tbl_df*.
+    ```{r}
+    ratings_summary <- ratings %>% 
+      group_by(Year) %>% 
+      summarise(
+        N = n(),
+        AvgRating = mean(YourRating)
+      ) %>% 
+      arrange(Year)
+    ```
+    ```{r}
+    str(ratings_summary, 1)
+    ```
+
+
+## Manipuler une base avec *dplyr*
+
+* *dplyr* et *tbl_sql*.
+    ```{r}
+    ratings_summary_db <- ratings_db %>% 
+      group_by(Year) %>% 
+      summarise(
+        N = n(),
+        AvgRating = mean(YourRating)
+      ) %>% 
+      arrange(Year)
+    ```
+    ```{r}
+    str(ratings_summary_db, 1)
+    ```
+
+
+## Manipuler une base avec *dplyr*
+
+* L'envoi de la requête ne s'effectue qu'à la fin ou à l'affichage de l'objet.
+    ```{r}
+    ratings_summary_db %>% 
+      print()
+    ```
+
+
+## Manipuler une base avec *dplyr*
+
+* Les données ne sont jamais téléchargées dans la session R (sauf mention explicite).
+    ```{r}
+    ratings_summary_db %>% 
+      collect()
+    ```
+
+
+## Retour au SQL avec *dplyr*
+
+* Que fait *dplyr* pour effectuer la commande précédente `ratings_summary_db` ?
+    ```{r}
+     ratings_summary_db %>% 
+      show_query()
+    ```
+
+## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbbl* 
+
+* Rappatrier les données d'une requête via `collect()`
+    ```{r}
+    ratings_summary <- ratings_summary_db %>% 
+      collect()
+    class(ratings_summary)
+    ```
+* Connaître les dimmensions de l'objet avant `collect()` ?
+    ```{r}
+    dim(ratings_summary_db)
+    ```
+    ```{r}
+    nrow(ratings_summary_db)
+    ```
+
+## *dplyr*, `explain()` to me
+
+```{r}
+explain(ratings_summary_db)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+rm(ratings_db, ratings_summary_db)
+dbDisconnect(con)
+```
+
+## Pour aller plus loin ...
+
+* Tutoriel SQL: [www.codecademy.com](https://www.codecademy.com/learn/learn-sql)
+
+* Le SQL en 10 étapes (anglais) : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
+
+
+# *dbplot* | Du *ggplot2* depuis une base de données {.flexbox .vcenter}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3, fig.width = 2}
+con <- dbConnect(
+  drv = odbc(),
+  driver = "PostgreSQL ODBC Driver(UNICODE)",
+  server = "localhost",
+  database = "movies",
+  port = 5432,
+  uid = "imdb_user",
+  password = "password"
+)
+ratings_db <- tbl(con, "ratings")
+ratings_db %>% 
+  dbplot_boxplot(data = ratings, x = Year, var = IMDbRating)
+```
+
+
+## Pré-requis
+```{r, echo = FALSE}
+options(tibble.print_max = 4, tibble.print_min = 4)
+```
+```{r, message = FALSE}
+library(DBI)
+```
+```{r, message = FALSE}
+library(odbc)
+```
+```{r, message = FALSE}
+library(tidyverse)
+```
+```{r, message = FALSE}
+library(dbplyr)
+```
+```{r, message = FALSE}
+library(dbplot)
+```
+```{r}
+tidyverse_conflicts()
+```
+
 
 ## Une base de données relationnel
 
@@ -1186,7 +1457,7 @@ vignette(package = "DBI")
 <img src="images/nycflights13.png"></img>
 
 ## Une base de données relationnel
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 con <- dbConnect(
   drv = odbc(),
   driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1207,8 +1478,8 @@ dbDisconnect(con)
 ```
 
 
-## Nettoyage du serveur PostgreSQL
-```{r, echo = TRUE, results = "hide", warning = FALSE, message = FALSE}
+```{r, eval = FALSE, echo = TRUE, results = "hide", warning = FALSE, message = FALSE}
+dbDisconnect(con)
 con <- dbConnect(
   drv = odbc(),
   driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1218,13 +1489,10 @@ con <- dbConnect(
   uid = "postgres",
   password = "password"
 )
-
 dbSendQuery(con, SQL("DROP DATABASE datawarehouse;"))
 dbSendQuery(con, SQL("DROP ROLE rdb;"))
 dbSendQuery(con, SQL("DROP DATABASE movies;"))
 dbSendQuery(con, SQL("DROP ROLE imdb_user;"))
-
-# DROP DATABASE datawarehouse; DROP ROLE rdb; DROP DATABASE movies; DROP ROLE imdb_user;
-
 dbDisconnect(con)
+# DROP DATABASE datawarehouse; DROP ROLE rdb; DROP DATABASE movies; DROP ROLE imdb_user;
 ```
