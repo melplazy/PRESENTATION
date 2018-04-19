@@ -1098,7 +1098,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     
 * Listez les noms de colonnes de la table créée.
 
-* Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"Your Rating"`)  
+* Utilisez une requête SQL pour compter le nombre de films pour chaque note (`Your Rating`)  
     Importer le résultat localement sous la forme d'un *tibble*.
     
 * Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
@@ -1377,6 +1377,54 @@ translate_sql(head(ratings_db))
 ```
 
 
+## Exercices {#exe}
+
+* Comment *dbplyr* traduit les fonctions `as.numeric()` et `as.character()` ?
+
+* Comment *dbplyr* traduit l'opérateur `^` ?
+
+* Comment *dbplyr* traduit les fonctions `mean()`et `sd()` ?  
+    Et avec`na.rm = TRUE` ?
+
+
+## Exercices {#exe}
+
+* Comment *dbplyr* traduit les fonctions `as.numeric()` et `as.character()` ?
+    ```{r}
+    translate_sql(as.numeric(x))
+    ```
+    ```{r}
+    translate_sql(as.character(x))
+    ```
+
+
+## Exercices {#exe}
+
+* Comment *dbplyr* traduit l'opérateur `^` ?
+    ```{r}
+    translate_sql(x^2)
+    ```
+    ```{r}
+    tbl(con, sql('select 1 as x')) %>%
+      mutate(sqr = x^2)
+    ```
+
+
+## Exercices {#exe}
+
+* Comment *dbplyr* traduit les fonctions `mean()`et `sd()` ?  
+    Et avec `trim = 0.05` ou `na.rm = TRUE` ?
+    ```{r}
+    translate_sql(mean(x))
+    ```
+    ```{r, error = TRUE}
+    translate_sql(mean(x, trim = 0.05))
+    ```
+    ```{r}
+    translate_sql(mean(x, na.rm = TRUE))
+    ```
+    
+
 ## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbl* 
 
 * Rappatrier les données d'une requête via `collect()`
@@ -1392,6 +1440,28 @@ translate_sql(head(ratings_db))
     ```{r}
     tally(ratings_summary_db)
     ```
+
+
+## Exercices {#exe}
+
+* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
+    Que se passe-t'il et pourquoi ?
+
+
+## Exercices {#exe}
+
+* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
+    Que se passe-t'il et pourquoi ?
+    ```{r, warning = FALSE}
+    ratings_summary_db %>% head(1)
+    ```
+    ```{r, error = TRUE}
+    ratings_summary_db %>% tail()
+    ```
+    ```{r, error = TRUE}
+    ratings_summary_db %>% nrow()
+    ```
+
 
 ## *dplyr*, `explain()` to me
 
@@ -1411,43 +1481,31 @@ dbDisconnect(con)
 <img src="images/nycflights13.png"></img>
 
 
-## Exercices {#exe}
-
-* Comment *dbplyr* traduit les fonctions `as.numeric()` et `as.character()` ?
+## Exercices (Partie I) {#exe}
+```{r, echo = FALSE}
+options(tibble.print_max = 10, tibble.print_min = 10)
+```
 
 * Connectez vous à la base "datawarehouse" en tant que "rdb".
 
 * Créez une table "mtcars" avec le jeu de données `mtcars`.  
-    Comparez les fonctions `dplyr::copy_to()` (en tulisant l'argument `temporary`) et `DBI::dbWriteTable()`.
+    Comparez les fonctions `dplyr::copy_to()` (en utilisant l'argument `temporary`) et `DBI::dbWriteTable()`.
     
-* Modifiez `mtcars` en passant les noms de lignes dans une colonne et en ajoutant une colonne constructeur.  
+* Modifiez `mtcars` en passant les noms de lignes dans une colonne 
+et en ajoutant une colonne constructeur `const`.  
     Exporter l'objet `mtcars` vers la base. Que se passe-t'il ? (argument `overwrite`).
 
 * Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
-    Vérifier que les tables sont bien créées.
+    Vérifiez que les tables sont bien créées.
     
-* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
-    Que se passe-t'il et pourquoi ?
-    
-* Effectuez la jointure de `planes`et `flights` (sans copie locale des données) pour identifier les constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).  
+* Effectuez la jointure de `planes`et `flights` pour identifier les 3 constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).  
     Quelle est la requête SQL réalisée ?
 
 
-## Exercices {#exe}
-
-* Comment *dbplyr* traduit les fonctions `as.numeric()` et `as.character()` ?
-```{r}
-translate_sql(as.numeric(x))
-```
-```{r}
-translate_sql(as.character(x))
-```
-
-
-## Exercices {#exe}
+## Exercices (Partie I) {#exe}
 
 * Connectez vous à la base "datawarehouse" en tant que "rdb".
-    ```{r, eval = FALSE}
+    ```{r}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
@@ -1459,28 +1517,29 @@ translate_sql(as.character(x))
     )
     ```
 
-## Exercices {#exe}
+## Exercices (Partie I) {#exe}
 
 * Créez une table "mtcars" avec le jeu de données `mtcars`.  
-    Comparez les fonctions `dplyr::copy_to` (en tulisant l'argument `temporary`) et `DBI::dbWriteTable`.
-    ```{r, eval = FALSE}
-    copy_to(con, "mtcars", mtcars, temporary = TRUE)
+    Comparez les fonctions `dplyr::copy_to()` (en utilisant l'argument `temporary`) et `DBI::dbWriteTable()`.
+    ```{r}
+    copy_to(con, mtcars, "mtcars", temporary = TRUE, overwrite = TRUE)
     dbListTables(con)
     ```
-    ```{r, eval = FALSE}
-    copy_to(con, "mtcars", mtcars, temporary = FALSE)
+    ```{r}
+    copy_to(con, mtcars, "mtcars", temporary = FALSE, overwrite = TRUE)
     dbListTables(con)
     ```
-    ```{r, eval = FALSE}
-    dbWriteTable(con, "mtcars", mtcars)
+    ```{r}
+    dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
     dbListTables(con)
     ```
     
     
-## Exercices {#exe}
-* Modifiez `mtcars` en passant les noms de lignes dans une colonne et en ajoutant une colonne constructeur.  
+## Exercices (Partie I) {#exe}
+* Modifiez `mtcars` en passant les noms de lignes dans une colonne 
+et en ajoutant une colonne constructeur `const`.  
     Exporter l'objet `mtcars` vers la base. Que se passe-t'il ? (argument `overwrite`).
-    ```{r, eval = FALSE}
+    ```{r}
     mtcars %>% 
       rownames_to_column(var = "car") %>% 
       mutate(const = gsub(" .*", "", car)) %>% 
@@ -1489,13 +1548,11 @@ translate_sql(as.character(x))
     ```
 
 
-## Exercices {#exe}
+## Exercices (Partie I) {#exe}
 
 * Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
     Vérifiez que les tables sont bien créées.
     ```{r, eval = FALSE}
-    dbListTables(con)
-    
     library(nycflights13)
     dbWriteTable(con, "flights", flights)
     dbWriteTable(con, "airports", airports)
@@ -1507,13 +1564,11 @@ translate_sql(as.character(x))
     ```
 
 
-## Exercices {#exe}
+## Exercices (Partie I) {#exe}
 
 * Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
     Vérifiez que les tables sont bien créées.
-    ```{r, eval = FALSE}
-    dbListTables(con)
-    
+    ```{r}
     library(nycflights13)
     nycflights13_db <- ls("package:nycflights13") %>% 
       lapply(., function(df) { 
@@ -1526,54 +1581,92 @@ translate_sql(as.character(x))
         ) 
       }) %>% 
       `names<-`(ls("package:nycflights13"))
-    
+    ```
+    ```{r}
     dbListTables(con)
     ```
 
 
-## Exercices {#exe}
+## Exercices (Partie I) {#exe}
 
-* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
-    Que se passe-t'il et pourquoi ?
-    ```{r, eval = FALSE}
-    nycflights13_db[["airports"]] %>% 
-      head()
-    ```
-    ```{r, eval = FALSE}
-    nycflights13_db[["airports"]] %>% 
-      tail()
-    ```
-    ```{r, eval = FALSE}
-    nycflights13_db[["airports"]] %>% 
-      nrow()
-    ```
-
-
-## Exercices {#exe}
-
-* Effectuez la jointure de `planes`et `flights` (sans copie locale des données) pour identifier les 5 constructeurs présentant le plus grand nombre d'heures de vol.
-    ```{r, eval = FALSE}
+* Effectuez la jointure de `planes`et `flights` pour identifier les 3 constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).
+    ```{r, warning = FALSE}
     longest_air_time_db <- nycflights13_db[["flights"]] %>%
       inner_join(nycflights13_db[["planes"]], by = "tailnum") %>%
       group_by(manufacturer) %>% 
       summarise(total_air_time = sum(air_time)/60) %>% 
       arrange(desc(total_air_time)) %>%
       select(manufacturer, total_air_time) %>% 
-      head(10)
+      head(3)
     longest_air_time_db
     ```
+
+## Exercices (Partie I) {#exe}
+
+* Effectuez la jointure de `planes`et `flights` pour identifier les 3 constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).
     Quelle est la requête SQL réalisée ?
-    ```{r, eval = FALSE}
+    ```{r, tidy = TRUE, tidy.opts = list(width.cutoff = 80)}}
     longest_air_time_db %>% show_query()
     ```
-  
-  
-  
-## Exercices {#exe}
+
+## Exercices (Partie II) {#exe}
+```{r, echo = FALSE}
+options(tibble.print_max = 5, tibble.print_min = 5)
+```
+
+* Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
+    Comparez le résultat entre la version calculée sur l'objet local et sur la base de donnée. 
+
+* Comptez le nombre d'aéroport dont le code `dest` (table `flights`) commence par la lettre "A" ([Wildcard SQL](https://www.w3schools.com/sql/sql_wildcards.asp); `%like%`).
+
+* Créez une nouvelle colonne `origin_dest` à partir des colonnes `origin` et `dest`.
 
 
+## Exercices (Partie II) {#exe}
+
+* Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
+    Comparez le résultat entre la version calculée sur l'objet local et sur la base de donnée.
+    ```{r}
+    nycflights13::weather %>% 
+      group_by(origin, year) %>%  summarise(avg_temp = mean(temp))
+    ```
+    ```{r, warning = FALSE, eval= FALSE}
+    nycflights13_db[["weather"]] %>% 
+      group_by(origin, year) %>% summarise(avg_temp = mean(temp))
+    ```
 
 
+## Exercices (Partie II) {#exe}
+
+* Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
+    Comparez le résultat entre la version calculée sur l'objet local et sur la base de donnée.
+    ```{r, eval = FALSE}
+    nycflights13::weather %>% 
+      group_by(origin, year) %>%  summarise(avg_temp = mean(temp))
+    ```
+    ```{r, warning = FALSE}
+    nycflights13_db[["weather"]] %>% 
+      group_by(origin, year) %>% summarise(avg_temp = mean(temp))
+    ```
+
+
+## Exercices (Partie II) {#exe}
+
+* Comptez le nombre d'aéroport dont le code `dest` (table `flights`) commence par la lettre "A" ([Wildcard SQL](https://www.w3schools.com/sql/sql_wildcards.asp); `%like%`).
+    ```{r}
+    nycflights13_db[["flights"]] %>% 
+      filter(dest %like% 'A%') %>% 
+      summarise(count = n_distinct(dest))
+    ```
+
+## Exercices (Partie II) {#exe}
+
+* Créez une nouvelle colonne `origin_dest` à partir des colonnes `origin` et `dest`.
+    ```{r}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = origin %|| '-' ||% dest) %>%
+      select(origin, dest, origin_dest)
+    ```
 
 
 
@@ -1581,7 +1674,7 @@ translate_sql(as.character(x))
 
 * Tutoriel SQL: [www.codecademy.com](https://www.codecademy.com/learn/learn-sql)
 
-* Le SQL en 10 étapes (anglais) : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
+* Le SQL en 10 étapes : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
 
 
 # 
