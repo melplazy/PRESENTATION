@@ -411,7 +411,7 @@ names(which.max(prop.table(table(na.exclude(sqrt(x))<1))))
 Les inconvénients de cette écriture :
 
 *  L'ordre des appels va de l'intérieur vers l'extérieur.
-*  Les arguments peuvent se situés "loin" de la fonction.
+*  Les arguments peuvent se situer "loin" de la fonction.
 
 
 ## Utiliser le "pipe" 
@@ -485,7 +485,7 @@ Lire des formats plus exotiques :
 
 ## Par rapport à celles de R : Entrée
 
-* Nom homogène des fonctions et arguments .
+* Nom homogène des fonctions et arguments.
 * Plus rapide (moins rapide que *data.table*).
 * ~~Auto-conversion en facteur.~~
 * L'importation ne dépend pas des variables locales.
@@ -591,7 +591,7 @@ read_csv(
     Astuce : utilisez des guillemets simple `'` ou double `"`.
       1. Quel est le caractère par défaut utiliser par `read_csv()` ?  
       2. Quelle fonction et argument utiliser pour changer ce caractère ?
-      3. Quelle fonction et avec quel valeur argument liriez-vous la chaîne suivante ?
+      3. Quelle fonction et avec quelle valeur argument liriez-vous la chaîne suivante ?
     ```{r, eval = FALSE}
     "x,y\n1,'a,b'"
     ```
@@ -1436,7 +1436,7 @@ translate_sql(head(ratings_db))
 
 ## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbl* 
 
-* Connaître les dimmensions de l'objet avant `collect()` ?
+* Connaître les dimensions de l'objet avant `collect()` ?
     ```{r}
     tally(ratings_summary_db)
     ```
@@ -1474,7 +1474,7 @@ rm(ratings_db, ratings_summary_db)
 dbDisconnect(con)
 ```
 
-## Une base de données relationnel
+## Une base de données relationnelle
 
 * Schéma des tables du package *nycflights13*.
 
@@ -1605,48 +1605,52 @@ et en ajoutant une colonne constructeur `const`.
 
 * Effectuez la jointure de `planes`et `flights` pour identifier les 3 constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).
     Quelle est la requête SQL réalisée ?
-    ```{r, tidy = TRUE, tidy.opts = list(width.cutoff = 80)}}
+    ```{r, warning = FALSE}
     longest_air_time_db %>% show_query()
     ```
 
 ## Exercices (Partie II) {#exe}
 ```{r, echo = FALSE}
-options(tibble.print_max = 5, tibble.print_min = 5)
+options(tibble.print_max = 3, tibble.print_min = 3)
 ```
 
 * Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
-    Comparez le résultat entre la version calculée sur l'objet local et sur la base de donnée. 
+    Comparez le résultat de la version locale (*tbl_df*) et distante (*tbl_sql*).
 
 * Comptez le nombre d'aéroport dont le code `dest` (table `flights`) commence par la lettre "A" ([Wildcard SQL](https://www.w3schools.com/sql/sql_wildcards.asp); `%like%`).
 
-* Créez une nouvelle colonne `origin_dest` à partir des colonnes `origin` et `dest`.
+* Créez une nouvelle colonne `origin_dest` à partir de `origin` et `dest`.
 
 
 ## Exercices (Partie II) {#exe}
 
 * Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
-    Comparez le résultat entre la version calculée sur l'objet local et sur la base de donnée.
+    Comparez le résultat de la version locale (*tbl_df*) et distante (*tbl_sql*).
     ```{r}
     nycflights13::weather %>% 
-      group_by(origin, year) %>%  summarise(avg_temp = mean(temp))
+      group_by(origin, year) %>%  
+      summarise(avg_temp = mean(temp))
     ```
     ```{r, warning = FALSE, eval= FALSE}
     nycflights13_db[["weather"]] %>% 
-      group_by(origin, year) %>% summarise(avg_temp = mean(temp))
+      group_by(origin, year) %>% 
+      summarise(avg_temp = mean(temp))
     ```
 
 
 ## Exercices (Partie II) {#exe}
 
 * Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
-    Comparez le résultat entre la version calculée sur l'objet local et sur la base de donnée.
+    Comparez le résultat de la version locale (*tbl_df*) et distante (*tbl_sql*).
     ```{r, eval = FALSE}
     nycflights13::weather %>% 
-      group_by(origin, year) %>%  summarise(avg_temp = mean(temp))
+      group_by(origin, year) %>%  
+      summarise(avg_temp = mean(temp))
     ```
     ```{r, warning = FALSE}
     nycflights13_db[["weather"]] %>% 
-      group_by(origin, year) %>% summarise(avg_temp = mean(temp))
+      group_by(origin, year) %>% 
+      summarise(avg_temp = mean(temp))
     ```
 
 
@@ -1659,15 +1663,134 @@ options(tibble.print_max = 5, tibble.print_min = 5)
       summarise(count = n_distinct(dest))
     ```
 
-## Exercices (Partie II) {#exe}
 
-* Créez une nouvelle colonne `origin_dest` à partir des colonnes `origin` et `dest`.
+## Exercices (Partie II) {#exe}
+```{r, echo = FALSE}
+options(tibble.print_max = 2, tibble.print_min = 2)
+```
+
+* Créez une nouvelle colonne `origin_dest` à partir de `origin` et `dest`.
     ```{r}
     nycflights13_db[["flights"]] %>%
       mutate(origin_dest = origin %|| '-' ||% dest) %>%
       select(origin, dest, origin_dest)
     ```
+    ```{r, eval = FALSE}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = CONCAT(origin, "-", dest)) %>%
+      select(origin, dest, origin_dest)
+    ```
+    ```{r, eval = FALSE}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = paste(origin, dest, sep = "-")) %>%
+      select(origin, dest, origin_dest)
+    ```
 
+
+## Exercices (Partie II) {#exe}
+
+* Créez une nouvelle colonne `origin_dest` à partir de `origin` et `dest`.
+    ```{r, eval = FALSE}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = origin %|| '-' ||% dest) %>%
+      select(origin, dest, origin_dest)
+    ```
+    ```{r}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = CONCAT(origin, "-", dest)) %>%
+      select(origin, dest, origin_dest)
+    ```
+    ```{r, eval = FALSE}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = paste(origin, dest, sep = "-")) %>%
+      select(origin, dest, origin_dest)
+    ```
+
+
+## Exercices (Partie II) {#exe}
+
+* Créez une nouvelle colonne `origin_dest` à partir de `origin` et `dest`.
+    ```{r, eval = FALSE}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = origin %|| '-' ||% dest) %>%
+      select(origin, dest, origin_dest)
+    ```
+    ```{r, eval = FALSE}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = CONCAT(origin, "-", dest)) %>%
+      select(origin, dest, origin_dest)
+    ```
+    ```{r}
+    nycflights13_db[["flights"]] %>%
+      mutate(origin_dest = paste(origin, dest, sep = "-")) %>%
+      select(origin, dest, origin_dest)
+    ```
+ 
+```{r, echo = FALSE, results = "hide"}
+dbDisconnect(con)
+```
+    
+
+## Schéma et table
+
+* Une base de données contenant des schémas décrivant des tables.
+    ```{r, echo = FALSE}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "datawarehouse",
+      port = 5432,
+      uid = "rdb",
+      password = "rdbpass"
+    )
+    ```
+    ```{r, message = FALSE, warning = FALSE}
+    ### <b>
+    dbSendQuery(con, "CREATE SCHEMA nycflights13;")
+    ### </b>
+    dbWriteTable(con, SQL("nycflights13.flights"), flights)
+    ```
+    ```{r, echo = FALSE}
+    dbWriteTable(con, SQL("nycflights13.airports"), airports)
+    dbWriteTable(con, SQL("nycflights13.planes"), planes)
+    dbWriteTable(con, SQL("nycflights13.weather"), weather)
+    dbWriteTable(con, SQL("nycflights13.airlines"), airlines)
+    ```
+    <img src="images/screenshot_postgre.png"></img>
+
+
+## Schéma et table
+```{r, echo = FALSE}
+options(tibble.print_max = 5, tibble.print_min = 5)
+```
+* La fonction `tbl()` cherche dans le schéma par défaut ("public" sur PostgreSQL).
+    ```{r}
+    tbl(con, "mtcars") %>% head()
+    ```
+
+
+## Schéma et table
+
+* `dplyr::ìn_schema()` permet de spécifier le schéma à utiliser.
+    ```{r}
+    tbl(con, in_schema("public", "mtcars")) %>% head()
+    ```
+
+
+## Schéma et table
+
+* Accéder à une table présente dans un schéma autre que celui par défaut.
+    ```{r}
+    tbl(con, in_schema("nycflights13", "flights")) %>% head(1)
+    ```
+    ```{r}
+    tbl(con, in_schema("nycflights13", "weather")) %>% head(1)
+    ```
+    
+```{r, echo = FALSE, results = "hide"}
+dbDisconnect(con)
+```
 
 
 ## Pour aller plus loin ...
@@ -1676,47 +1799,249 @@ options(tibble.print_max = 5, tibble.print_min = 5)
 
 * Le SQL en 10 étapes : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
 
+* "Databases using R" : [db.rstudio.com](http://db.rstudio.com)
 
-# 
+
+# *rvest* | Extraction de contenus web {.flexbox .vcenter}
+
+<img src="images/rvest.png" height="250" class="auto-fadein"></img>
 
 
-## *dbplot* | Du *ggplot2* depuis une base de données {.flexbox .vcenter}
+## Protocole HTTP et Web {.flexbox .vcenter}
 
-```{r, eval = FALSE}
-library(DBI)
-library(odbc)
+<img src="images/web01.png"></img>
+
+
+## Protocole HTTP et Web {.flexbox .vcenter}
+
+<img src="images/web02.png"></img>
+
+
+## Protocole HTTP et Web {.flexbox .vcenter}
+
+<img src="images/web03.png"></img>
+
+
+## La page de l'IMDb {.flexbox .vcenter}
+
+<img src="images/screenshot_imdb1.png"></img>
+
+
+## Stratégie{.flexbox .vcenter}
+
+<img src="images/screenshot_imdb2.png"></img>
+
+
+## Stratégie 
+
+* Identifier les balises HTML encapsulant l'information.
+* Utiliser l'architecture en arbre du code HTML.
+
+<img src="images/screenshot_imdb3.png"></img>
+
+
+## Stratégie 
+
+* Identifier les balises HTML encapsulant l'information.
+* Utiliser l'architecture en arbre du code HTML et du CSS.
+
+<div class="columns-2">
+<img src="images/screenshot_imdb3.png"></img>
+
+<img src="images/screenshot_imdb4.png"></img>
+</div>
+
+
+## Pré-requis
+```{r, echo = FALSE}
+options(tibble.print_max = 5, tibble.print_min = 5)
+```
+```{r, message = FALSE}
+library(rvest)
+```
+```{r, message = FALSE}
 library(tidyverse)
-library(dbplyr)
-library(dbplot)
-library(sparklyr)
-
-con <- spark_connect(master = "local")
-
-ratings %>% 
-  copy_to(con, ., "ratings") %>% 
-  dbplot_boxplot(x = Year, var = IMDbRating)
-
-dbDisconnect(con)
+```
+```{r}
+tidyverse_conflicts()
 ```
 
 
+## *rvest* : Les étapes clés
+
+1. Télécharger le code HTML et le convertir en XML.
+    ```{r, eval = FALSE}
+    imdb_xml <- read_html("https://www.imdb.com/title/tt1677720/")
+    ```
+2. Extraire les noeuds.
+    ```{r, eval = FALSE}
+    imdb_xml %>% 
+      html_nodes("h1")
+    ```
+3. Extraire le contenu des noeuds.
+    * `html_text()`
+    * `html_name()`
+    * `html_attrs()`
+    * `html_children()`
+    * `html_table()`
+    ```{r, eval = FALSE}
+    imdb_xml %>% 
+      html_nodes("h1") %>% 
+      html_text()
+    ```
+
+## *rvest* : Les étapes clés
+
+* Récupérer l'URL de la page casting du film.
+    ```{r}
+    rpo_cast_url <- "https://www.imdb.com/title/tt1677720/fullcredits/"
+    ```
+    <img src="images/screenshot_imdb5.png"></img>
 
 
-```{r, eval = FALSE, echo = TRUE, results = "hide", warning = FALSE, message = FALSE}
-dbDisconnect(con)
+## *rvest* : Les étapes clés
+
+<img src="images/screenshot_imdb6.png"></img>
+
+* Récupérer la table contenant les acteurs et les personnages du film.
+    ```{r}
+    rpo_cast_list <- read_html(rpo_cast_url) %>% 
+      html_nodes("table.cast_list")
+    ```
+
+
+## *rvest* : Exemple avec l'IMDb
+
+<img src="images/screenshot_imdb7.png"></img>
+
+* Récupérer la liste des personnages du film.
+    ```{r}
+    rpo_character_list <- rpo_cast_list %>% 
+      html_nodes("td.character")
+    ```
+
+
+## *rvest* : Exemple avec l'IMDb
+
+* Extraire le contenu des noeuds.
+    ```{r}
+    html_text(rpo_character_list) %>% head(2)
+    ```
+* Formater le contenu.
+    ```{r}
+    rpo_character_list %>% 
+      html_text() %>% 
+      gsub("\n", "", .) %>% 
+      head()
+    ```
+    ```{r}
+    rpo_character_list %>% 
+      html_text() %>% 
+      gsub("\n", "", .) %>% 
+      gsub(" +", " ", .) %>% 
+      gsub("^ (.*) $", "\\1", .) %>% 
+      head()
+    ```
+
+## *rvest* : Exemple avec l'IMDb
+```{r, echo = FALSE}
+cast_tbl <- tibble(
+  Actor = read_html(rpo_cast_url) %>% 
+    html_nodes("td.itemprop") %>% 
+    html_nodes("span.itemprop") %>% 
+    html_text(),
+  Character = rpo_character_list %>% 
+    html_text() %>% 
+    gsub("\n", "", .) %>% 
+    gsub(" +", " ", .) %>% 
+    gsub("^ (.*) $", "\\1", .)
+)
+```
+```{r}
+cast_tbl %>% 
+  head(5)
+```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+```{r, results = "hide"}
+ratings <- read_csv("materials/ratings.csv") %>% 
+  `colnames<-`(gsub(" ", "", colnames(.))) %>% 
+  mutate(
+    Year = lubridate::year(DateRated),
+    Month = lubridate::month(DateRated),
+    Day = lubridate::wday(DateRated)
+  )
+```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+```{r, results = "hide"}
 con <- dbConnect(
   drv = odbc(),
   driver = "PostgreSQL ODBC Driver(UNICODE)",
   server = "localhost",
+  database = "movies",
   port = 5432,
-  database = "postgres",
-  uid = "postgres",
+  uid = "imdb_user",
   password = "password"
 )
-dbSendQuery(con, SQL("DROP DATABASE datawarehouse;"))
-dbSendQuery(con, SQL("DROP ROLE rdb;"))
-dbSendQuery(con, SQL("DROP DATABASE movies;"))
-dbSendQuery(con, SQL("DROP ROLE imdb_user;"))
-dbDisconnect(con)
-# DROP DATABASE datawarehouse; DROP ROLE rdb; DROP DATABASE movies; DROP ROLE imdb_user;
 ```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+```{r, results = "hide"}
+ratings_db <- copy_to(
+  dest = con, 
+  df = ratings, 
+  names = "ratings", 
+  overwrite = TRUE,
+  temporary = FALSE
+)
+```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+```{r, results = "hide"}
+cast_list <- ratings_db %>% 
+  filter(Title %like% "Ready Player One") %>% 
+  collect() %>% 
+  .[["URL"]] %>% 
+  paste0(., "fullcredits/") %>% 
+  read_html() %>% 
+  html_nodes("table.cast_list")
+```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+```{r, results = "hide"}
+cast_tbl <- tibble(
+  Actor = cast_list %>% 
+    html_nodes("td.itemprop") %>% 
+    html_nodes("span.itemprop") %>% 
+    html_text(),
+  Character = cast_list %>% 
+    html_text() %>% 
+    gsub("\n", "", .) %>% 
+    gsub(" +", " ", .) %>% 
+    gsub("^ (.*) $", "\\1", .)
+)
+```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+```{r, results = "hide", eval = FALSE}
+get_cast_list <- function(db) {
+  db %>% 
+    paste0(., "fullcredits/") %>% 
+    read_html() %>% 
+    html_nodes("table.cast_list") %>% 
+    html_nodes("td.itemprop") %>% 
+    html_nodes("span.itemprop") %>% 
+    html_text() %>% 
+    return()
+}
+
+```
+
+<!-- DROP DATABASE datawarehouse; DROP ROLE rdb; DROP DATABASE movies; DROP ROLE imdb_user;-->
