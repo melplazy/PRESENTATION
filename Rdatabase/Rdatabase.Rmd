@@ -254,6 +254,8 @@ De "vielles" fonctions limitées à la classe d'objet `data.frame` !
 ```{r}
 tb <- as_tibble(mtcars)
 class(tb)
+```
+```{r}
 class(as.data.frame(tb))
 ```
 
@@ -626,8 +628,7 @@ filename <- "./materials/ratings.csv"
 microbenchmark::microbenchmark(
   {dta <- utils::read.csv(filename)},
   {dta <- readr::read_csv(filename)},
-  {dta <- data.table::fread(filename)},
-  unit = "s"
+  {dta <- data.table::fread(filename)}
 ) %>% 
   as.data.frame() %>% 
   mutate(
@@ -652,8 +653,7 @@ filename <- paste0(tempdir(), "/ratings.csv")
 microbenchmark::microbenchmark(
   {utils::write.csv(x = ratings, file = filename, row.names = FALSE)},
   {readr::write_csv(x = ratings, path = filename)},
-  {data.table::fwrite(x = ratings, file = filename)},
-  unit = "s"
+  {data.table::fwrite(x = ratings, file = filename)}
 ) %>% 
   as.data.frame() %>% 
   mutate(
@@ -1200,11 +1200,7 @@ vignette(package = "DBI")
 
 # *dplyr* & *dbplyr* | Une grammaire SQL généralisée {.flexbox .vcenter}
 
-<div class="columns-2">
 <img src="images/dplyr.png" height="250" class="auto-fadein"></img>
-
-<img src="images/dbplyr.png" height="250" class="auto-fadein"></img>
-</div>
 
 
 ## Pré-requis
@@ -1261,12 +1257,13 @@ tidyverse_conflicts()
     copy_to(
       dest = con, 
       df = ratings, 
-      name = "ratings",
+      name = "ratings_idx",
       temporary = FALSE, 
       indexes = list(
         "DateRated", 
         "YourRating", 
-        "Title"
+        "Title", 
+        "Year"
       ),
       overwrite = TRUE
     )
@@ -1278,15 +1275,15 @@ Note : `temporary = TRUE` permet de rendre la table uniquement disponible à la 
 ## *dbplyr* : Premiers pas avec *dplyr*
 
 * Faire une référence à une table depuis une connection.
-```{r}
-ratings_db <- tbl(con, "ratings")
-class(ratings_db)
-```
+    ```{r}
+    ratings_db <- tbl(con, "ratings")
+    class(ratings_db)
+    ```
 
 * Afficher l'objet.
-```{r}
-ratings_db
-```
+    ```{r}
+    ratings_db
+    ```
 
 ## Manipuler une base avec *dplyr*
 
@@ -1373,8 +1370,14 @@ ratings_db %>%
      ratings_summary_db %>% 
       show_query()
     ```
+    
+* Traduire du R en requête SQL.
+```{r}
+translate_sql(head(ratings_db))
+```
 
-## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbbl* 
+
+## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbl* 
 
 * Rappatrier les données d'une requête via `collect()`
     ```{r}
@@ -1382,12 +1385,12 @@ ratings_db %>%
       collect()
     class(ratings_summary)
     ```
+
+## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbl* 
+
 * Connaître les dimmensions de l'objet avant `collect()` ?
     ```{r}
-    dim(ratings_summary_db)
-    ```
-    ```{r}
-    nrow(ratings_summary_db)
+    tally(ratings_summary_db)
     ```
 
 ## *dplyr*, `explain()` to me
@@ -1401,6 +1404,179 @@ rm(ratings_db, ratings_summary_db)
 dbDisconnect(con)
 ```
 
+## Une base de données relationnel
+
+* Schéma des tables du package *nycflights13*.
+
+<img src="images/nycflights13.png"></img>
+
+
+## Exercices {#exe}
+
+* Comment *dbplyr* traduit les fonctions `as.numeric()` et `as.character()` ?
+
+* Connectez vous à la base "datawarehouse" en tant que "rdb".
+
+* Créez une table "mtcars" avec le jeu de données `mtcars`.  
+    Comparez les fonctions `dplyr::copy_to()` (en tulisant l'argument `temporary`) et `DBI::dbWriteTable()`.
+    
+* Modifiez `mtcars` en passant les noms de lignes dans une colonne et en ajoutant une colonne constructeur.  
+    Exporter l'objet `mtcars` vers la base. Que se passe-t'il ? (argument `overwrite`).
+
+* Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
+    Vérifier que les tables sont bien créées.
+    
+* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
+    Que se passe-t'il et pourquoi ?
+    
+* Effectuez la jointure de `planes`et `flights` (sans copie locale des données) pour identifier les constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).  
+    Quelle est la requête SQL réalisée ?
+
+
+## Exercices {#exe}
+
+* Comment *dbplyr* traduit les fonctions `as.numeric()` et `as.character()` ?
+```{r}
+translate_sql(as.numeric(x))
+```
+```{r}
+translate_sql(as.character(x))
+```
+
+
+## Exercices {#exe}
+
+* Connectez vous à la base "datawarehouse" en tant que "rdb".
+    ```{r, eval = FALSE}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "datawarehouse",
+      port = 5432,
+      uid = "rdb",
+      password = "rdbpass"
+    )
+    ```
+
+## Exercices {#exe}
+
+* Créez une table "mtcars" avec le jeu de données `mtcars`.  
+    Comparez les fonctions `dplyr::copy_to` (en tulisant l'argument `temporary`) et `DBI::dbWriteTable`.
+    ```{r, eval = FALSE}
+    copy_to(con, "mtcars", mtcars, temporary = TRUE)
+    dbListTables(con)
+    ```
+    ```{r, eval = FALSE}
+    copy_to(con, "mtcars", mtcars, temporary = FALSE)
+    dbListTables(con)
+    ```
+    ```{r, eval = FALSE}
+    dbWriteTable(con, "mtcars", mtcars)
+    dbListTables(con)
+    ```
+    
+    
+## Exercices {#exe}
+* Modifiez `mtcars` en passant les noms de lignes dans une colonne et en ajoutant une colonne constructeur.  
+    Exporter l'objet `mtcars` vers la base. Que se passe-t'il ? (argument `overwrite`).
+    ```{r, eval = FALSE}
+    mtcars %>% 
+      rownames_to_column(var = "car") %>% 
+      mutate(const = gsub(" .*", "", car)) %>% 
+      select(const, everything()) %>% 
+      dbWriteTable(con, "mtcars", ., overwrite = TRUE)
+    ```
+
+
+## Exercices {#exe}
+
+* Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
+    Vérifiez que les tables sont bien créées.
+    ```{r, eval = FALSE}
+    dbListTables(con)
+    
+    library(nycflights13)
+    dbWriteTable(con, "flights", flights)
+    dbWriteTable(con, "airports", airports)
+    dbWriteTable(con, "planes", planes)
+    dbWriteTable(con, "weather", weather)
+    dbWriteTable(con, "airlines", airlines)
+    
+    dbListTables(con)
+    ```
+
+
+## Exercices {#exe}
+
+* Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
+    Vérifiez que les tables sont bien créées.
+    ```{r, eval = FALSE}
+    dbListTables(con)
+    
+    library(nycflights13)
+    nycflights13_db <- ls("package:nycflights13") %>% 
+      lapply(., function(df) { 
+        copy_to(
+          df = get(df), 
+          dest = con, 
+          name = df, 
+          overwrite = TRUE, 
+          temporary = TRUE
+        ) 
+      }) %>% 
+      `names<-`(ls("package:nycflights13"))
+    
+    dbListTables(con)
+    ```
+
+
+## Exercices {#exe}
+
+* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
+    Que se passe-t'il et pourquoi ?
+    ```{r, eval = FALSE}
+    nycflights13_db[["airports"]] %>% 
+      head()
+    ```
+    ```{r, eval = FALSE}
+    nycflights13_db[["airports"]] %>% 
+      tail()
+    ```
+    ```{r, eval = FALSE}
+    nycflights13_db[["airports"]] %>% 
+      nrow()
+    ```
+
+
+## Exercices {#exe}
+
+* Effectuez la jointure de `planes`et `flights` (sans copie locale des données) pour identifier les 5 constructeurs présentant le plus grand nombre d'heures de vol.
+    ```{r, eval = FALSE}
+    longest_air_time_db <- nycflights13_db[["flights"]] %>%
+      inner_join(nycflights13_db[["planes"]], by = "tailnum") %>%
+      group_by(manufacturer) %>% 
+      summarise(total_air_time = sum(air_time)/60) %>% 
+      arrange(desc(total_air_time)) %>%
+      select(manufacturer, total_air_time) %>% 
+      head(10)
+    longest_air_time_db
+    ```
+    Quelle est la requête SQL réalisée ?
+    ```{r, eval = FALSE}
+    longest_air_time_db %>% show_query()
+    ```
+  
+  
+  
+## Exercices {#exe}
+
+
+
+
+
+
+
 ## Pour aller plus loin ...
 
 * Tutoriel SQL: [www.codecademy.com](https://www.codecademy.com/learn/learn-sql)
@@ -1408,74 +1584,29 @@ dbDisconnect(con)
 * Le SQL en 10 étapes (anglais) : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
 
 
-# *dbplot* | Du *ggplot2* depuis une base de données {.flexbox .vcenter}
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 3, fig.width = 2}
-con <- dbConnect(
-  drv = odbc(),
-  driver = "PostgreSQL ODBC Driver(UNICODE)",
-  server = "localhost",
-  database = "movies",
-  port = 5432,
-  uid = "imdb_user",
-  password = "password"
-)
-ratings_db <- tbl(con, "ratings")
-ratings_db %>% 
-  dbplot_boxplot(data = ratings, x = Year, var = IMDbRating)
-```
+# 
 
 
-## Pré-requis
-```{r, echo = FALSE}
-options(tibble.print_max = 4, tibble.print_min = 4)
-```
-```{r, message = FALSE}
+## *dbplot* | Du *ggplot2* depuis une base de données {.flexbox .vcenter}
+
+```{r, eval = FALSE}
 library(DBI)
-```
-```{r, message = FALSE}
 library(odbc)
-```
-```{r, message = FALSE}
 library(tidyverse)
-```
-```{r, message = FALSE}
 library(dbplyr)
-```
-```{r, message = FALSE}
 library(dbplot)
-```
-```{r}
-tidyverse_conflicts()
-```
+library(sparklyr)
 
+con <- spark_connect(master = "local")
 
-## Une base de données relationnel
+ratings %>% 
+  copy_to(con, ., "ratings") %>% 
+  dbplot_boxplot(x = Year, var = IMDbRating)
 
-* Schéma des tables du package *nycflights13*.
-
-<img src="images/nycflights13.png"></img>
-
-## Une base de données relationnel
-```{r, message = FALSE, eval = FALSE}
-con <- dbConnect(
-  drv = odbc(),
-  driver = "PostgreSQL ODBC Driver(UNICODE)",
-  server = "localhost",
-  database = "datawarehouse",
-  port = 5432,
-  uid = "rdb",
-  password = "rdbpass"
-)
-library(nycflights13)
-dbSendQuery(con, "CREATE SCHEMA nycflights13;")
-dbWriteTable(con, SQL("nycflights13.flights"), flights)
-dbWriteTable(con, SQL("nycflights13.airports"), airports)
-dbWriteTable(con, SQL("nycflights13.planes"), planes)
-dbWriteTable(con, SQL("nycflights13.weather"), weather)
-dbWriteTable(con, SQL("nycflights13.airlines"), airlines)
 dbDisconnect(con)
 ```
+
+
 
 
 ```{r, eval = FALSE, echo = TRUE, results = "hide", warning = FALSE, message = FALSE}
