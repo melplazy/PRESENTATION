@@ -987,11 +987,11 @@ con <- dbConnect(
 
 * Créer un utilisateur.
     ```{r}
-    dbSendQuery(con, SQL("CREATE ROLE rdb LOGIN password 'rdbpass';"))
+    dbSendQuery(con, SQL("CREATE ROLE test_user LOGIN password 'test_pwd';"))
     ```
 * Créer une base.
     ```{r}
-    dbSendQuery(con, SQL("CREATE DATABASE datawarehouse;"))
+    dbSendQuery(con, SQL("CREATE DATABASE test_data;"))
     ```
 
 
@@ -999,7 +999,7 @@ con <- dbConnect(
 
 * Modifier le propriètaire d'une base.
     ```{r}
-    dbSendQuery(con, SQL("ALTER DATABASE datawarehouse OWNER TO rdb;"))
+    dbSendQuery(con, SQL("ALTER DATABASE test_data OWNER TO test_user;"))
     ```
 
 * Se déconnecter de la base.
@@ -1009,17 +1009,17 @@ con <- dbConnect(
     
 ## Créer des tables en SQL depuis R
 
-* Se connecter en tant que "rdb".
+* Se connecter en tant que "test_user".
     ```{r}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
       server = "localhost",
-      database = "datawarehouse",
+      database = "test_data",
       port = 5432,
     ### <b>
-      uid = "rdb",
-      password = "rdbpass"
+      uid = "test_user",
+      password = "test_pwd"
     ### </b>
     )
     ```
@@ -1090,10 +1090,11 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 
 ## Exercices {#exe}
 
-* En tant qu'utilisateur "postgres", créez une base "movies".  
-    Faire de "imdb_user" le propriètaire de cette base.
+* En tant qu'utilisateur "postgres", créez une base "datawarehouse".  
+    Créez un utilisateur "data_user".  
+    Changez le propriétaire de "datawarehouse" par "data_user".
     
-* En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
+* En tant qu'utilisateur "data_user", exportez le fichier "ratings.csv" vers la base.
     Remplacez les espaces par des underscores dans les noms de colonnes.
     
 * Listez les noms de colonnes de la table créée.
@@ -1106,27 +1107,28 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 
 
 ## Exercices {#exe}
-* En tant qu'utilisateur "postgres", créez une base "movies".  
-    Faire de "imdb_user" le propriètaire de cette base.
+* En tant qu'utilisateur "postgres", créez une base "datawarehouse". 
+    Créez un utilisateur "data_user".  
+    Changez le propriétaire de "datawarehouse" par "data_user".
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
     con <- dbConnect(
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
       server = "localhost",
-      database = "datawarehouse",
+      database = "postgres",
       port = 5432,
       uid = "postgres",
       password = "password"
     )
-    dbSendQuery(con, SQL("CREATE ROLE imdb_user LOGIN password 'password';"))
-    dbSendQuery(con, SQL("CREATE DATABASE movies;"))
-    dbSendQuery(con, SQL("ALTER DATABASE Movies OWNER TO imdb_user;"))
+    dbSendQuery(con, SQL("CREATE ROLE data_user LOGIN password 'data_pwd';"))
+    dbSendQuery(con, SQL("CREATE DATABASE datawarehouse;"))
+    dbSendQuery(con, SQL("ALTER DATABASE datawarehouse OWNER TO data_user;"))
     dbDisconnect(con)
     ```
 
 
 ## Exercices {#exe}
-* En tant qu'utilisateur "imdb_user", exportez le fichier "ratings.csv" vers la base.
+* En tant qu'utilisateur "data_user", exportez le fichier "ratings.csv" vers la base.
     Enlevez les espaces dans les noms de colonnes.
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
     ratings <- read_csv(file = "./materials/ratings.csv") %>% 
@@ -1137,10 +1139,10 @@ options(tibble.print_max = 10, tibble.print_min = 10)
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
       server = "localhost",
-      database = "movies",
+      database = "datawarehouse",
       port = 5432,
-      uid = "imdb_user",
-      password = "password"
+      uid = "data_user",
+      password = "data_pwd"
     )
     dbWriteTable(con, "ratings", ratings)
     ```
@@ -1237,10 +1239,10 @@ tidyverse_conflicts()
       drv = odbc(),
       driver = "PostgreSQL ODBC Driver(UNICODE)",
       server = "localhost",
-      database = "movies",
+      database = "datawarehouse",
       port = 5432,
-      uid = "imdb_user",
-      password = "password"
+      uid = "data_user",
+      password = "data_pwd"
     )
     ```
 
@@ -1356,7 +1358,7 @@ ratings_db %>%
 
 ## Manipuler une base avec *dplyr*
 
-* Les données ne sont jamais téléchargées dans la session R (sauf mention explicite).
+* Les données ne sont jamais téléchargées dans R (sauf mention explicite).
     ```{r}
     ratings_summary_db %>% 
       collect()
@@ -1493,7 +1495,8 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     
 * Modifiez `mtcars` en passant les noms de lignes dans une colonne 
 et en ajoutant une colonne constructeur `const`.  
-    Exporter l'objet `mtcars` vers la base. Que se passe-t'il ? (argument `overwrite`).
+    Exporter l'objet `mtcars` vers la base.  
+    Que se passe-t'il ? (argument `overwrite`).
 
 * Créez dans la base "datawarehouse" l'ensemble des tables de `nycflights13`.  
     Vérifiez que les tables sont bien créées.
@@ -1512,8 +1515,8 @@ et en ajoutant une colonne constructeur `const`.
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
-      uid = "rdb",
-      password = "rdbpass"
+      uid = "data_user",
+      password = "data_pwd"
     )
     ```
 
@@ -1538,7 +1541,8 @@ et en ajoutant une colonne constructeur `const`.
 ## Exercices (Partie I) {#exe}
 * Modifiez `mtcars` en passant les noms de lignes dans une colonne 
 et en ajoutant une colonne constructeur `const`.  
-    Exporter l'objet `mtcars` vers la base. Que se passe-t'il ? (argument `overwrite`).
+    Exporter l'objet `mtcars` vers la base.  
+    Que se passe-t'il ? (argument `overwrite`).
     ```{r}
     mtcars %>% 
       rownames_to_column(var = "car") %>% 
@@ -1741,8 +1745,8 @@ dbDisconnect(con)
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
-      uid = "rdb",
-      password = "rdbpass"
+      uid = "data_user",
+      password = "data_pwd"
     )
     ```
     ```{r, message = FALSE, warning = FALSE}
@@ -1857,6 +1861,7 @@ dbDisconnect(con)
 options(tibble.print_max = 5, tibble.print_min = 5)
 ```
 ```{r, message = FALSE}
+library(xml2)
 library(rvest)
 ```
 ```{r, message = FALSE}
@@ -1871,12 +1876,11 @@ tidyverse_conflicts()
 
 1. Télécharger le code HTML et le convertir en XML.
     ```{r, eval = FALSE}
-    imdb_xml <- read_html("https://www.imdb.com/title/tt1677720/")
+    read_html()
     ```
 2. Extraire les noeuds.
     ```{r, eval = FALSE}
-    imdb_xml %>% 
-      html_nodes("h1")
+    html_nodes()
     ```
 3. Extraire le contenu des noeuds.
     * `html_text()`
@@ -1896,12 +1900,11 @@ tidyverse_conflicts()
     ```{r}
     rpo_cast_url <- "https://www.imdb.com/title/tt1677720/fullcredits/"
     ```
-    <img src="images/screenshot_imdb5.png"></img>
+
+<img src="images/screenshot_imdb5.png"></img>
 
 
 ## *rvest* : Les étapes clés
-
-<img src="images/screenshot_imdb6.png"></img>
 
 * Récupérer la table contenant les acteurs et les personnages du film.
     ```{r}
@@ -1909,16 +1912,18 @@ tidyverse_conflicts()
       html_nodes("table.cast_list")
     ```
 
+<img src="images/screenshot_imdb6.png"></img>
+
 
 ## *rvest* : Exemple avec l'IMDb
-
-<img src="images/screenshot_imdb7.png"></img>
 
 * Récupérer la liste des personnages du film.
     ```{r}
     rpo_character_list <- rpo_cast_list %>% 
       html_nodes("td.character")
     ```
+
+<img src="images/screenshot_imdb7.png"></img>
 
 
 ## *rvest* : Exemple avec l'IMDb
@@ -1932,50 +1937,67 @@ tidyverse_conflicts()
     rpo_character_list %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
-      head()
-    ```
-    ```{r}
-    rpo_character_list %>% 
-      html_text() %>% 
-      gsub("\n", "", .) %>% 
       gsub(" +", " ", .) %>% 
       gsub("^ (.*) $", "\\1", .) %>% 
-      head()
+      head(2)
     ```
 
 ## *rvest* : Exemple avec l'IMDb
-```{r, echo = FALSE}
-cast_tbl <- tibble(
-  Actor = read_html(rpo_cast_url) %>% 
-    html_nodes("td.itemprop") %>% 
-    html_nodes("span.itemprop") %>% 
-    html_text(),
-  Character = rpo_character_list %>% 
-    html_text() %>% 
-    gsub("\n", "", .) %>% 
-    gsub(" +", " ", .) %>% 
-    gsub("^ (.*) $", "\\1", .)
-)
-```
-```{r}
-cast_tbl %>% 
-  head(5)
-```
+
+* Reconstruction du tableau acteur/personnage.
+    ```{r}
+    cast_tbl <- tibble(
+      Actor = read_html(rpo_cast_url) %>% 
+        html_nodes("td.itemprop") %>% 
+        html_nodes("span.itemprop") %>% 
+        html_text(),
+      Character = rpo_character_list %>% 
+        html_text() %>% 
+        gsub("\n", "", .) %>% 
+        gsub(" +", " ", .) %>% 
+        gsub("^ (.*) $", "\\1", .)
+    )
+    
+    cast_tbl %>% 
+      head(3)
+    ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
-```{r, results = "hide"}
-ratings <- read_csv("materials/ratings.csv") %>% 
-  `colnames<-`(gsub(" ", "", colnames(.))) %>% 
-  mutate(
-    Year = lubridate::year(DateRated),
-    Month = lubridate::month(DateRated),
-    Day = lubridate::wday(DateRated)
-  )
-```
 
+* Lecture du fichier contenant les notes des films.
+    ```{r, results = "hide", message = FALSE}
+    ratings <- read_csv("materials/ratings.csv") %>% 
+      `colnames<-`(gsub(" ", "", colnames(.))) %>% 
+      mutate(
+        Year = lubridate::year(DateRated),
+        Month = lubridate::month(DateRated),
+        Day = lubridate::wday(DateRated)
+      )
+    ```
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+
+* Création d'un nouveau utilisateur et d'une nouvelle base.
+    ```{r, results = "hide", warning = FALSE}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "postgres",
+      port = 5432,
+      uid = "postgres",
+      password = "password"
+    )
+    dbSendQuery(con, SQL("CREATE ROLE imdb_user LOGIN password 'imdb_pwd';"))
+    dbSendQuery(con, SQL("CREATE DATABASE movies;"))
+    dbSendQuery(con, SQL("ALTER DATABASE movies OWNER TO imdb_user;"))
+    dbDisconnect(con)
+    ```
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+
+* Connection avec "imdb_user" sur "movies".
 ```{r, results = "hide"}
 con <- dbConnect(
   drv = odbc(),
@@ -1984,12 +2006,14 @@ con <- dbConnect(
   database = "movies",
   port = 5432,
   uid = "imdb_user",
-  password = "password"
+  password = "imdb_pwd"
 )
 ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+
+* Création de la table "ratings" (et d'un objet `tbl_sql`).
 ```{r, results = "hide"}
 ratings_db <- copy_to(
   dest = con, 
@@ -2002,46 +2026,77 @@ ratings_db <- copy_to(
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
-```{r, results = "hide"}
-cast_list <- ratings_db %>% 
-  filter(Title %like% "Ready Player One") %>% 
-  collect() %>% 
-  .[["URL"]] %>% 
-  paste0(., "fullcredits/") %>% 
-  read_html() %>% 
-  html_nodes("table.cast_list")
-```
+
+* Extraction du casting d'un film provenant de la table "ratings".
+    ```{r, results = "hide"}
+    cast_list <- ratings_db %>% 
+      filter(Title %like% "Ready Player One") %>% 
+      collect() %>% 
+      .[["URL"]] %>% 
+      paste0(., "fullcredits/") %>% 
+      read_html() %>% 
+      html_nodes("table.cast_list")
+    ```
+
+* Création d'un tableau casting.
+    ```{r, results = "hide"}
+    cast_tbl <- tibble(
+      Actor = cast_list %>% 
+        html_nodes("td.itemprop") %>% 
+        html_nodes("span.itemprop") %>% 
+        html_text(),
+      Character = cast_list %>% 
+        html_nodes("td.character") %>% 
+        html_text() %>% 
+        gsub("\n", "", .) %>% 
+        gsub(" +", " ", .) %>% 
+        gsub("^ (.*) $", "\\1", .)
+    )
+    ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
-```{r, results = "hide"}
-cast_tbl <- tibble(
-  Actor = cast_list %>% 
-    html_nodes("td.itemprop") %>% 
-    html_nodes("span.itemprop") %>% 
-    html_text(),
-  Character = cast_list %>% 
-    html_text() %>% 
-    gsub("\n", "", .) %>% 
-    gsub(" +", " ", .) %>% 
-    gsub("^ (.*) $", "\\1", .)
-)
+```{r}
+get_cast <- function(x) {
+  x %>% 
+    paste0(., "fullcredits/") %>% 
+    read_html() %>% 
+    html_nodes("table.cast_list") %>% 
+    (function(node) {
+      cast_tbl <- tibble(
+        URL = x,
+        Actor = node %>% 
+          html_nodes("td.itemprop") %>% 
+          html_nodes("span.itemprop") %>% 
+          html_text(),
+        Character = node %>% 
+          html_nodes("td.character") %>%
+          html_text() %>% 
+          gsub("\n", "", .) %>% 
+          gsub(" +", " ", .) %>% 
+          gsub("^ (.*) $", "\\1", .)
+      )
+    }) %>% 
+    return()
+}
+get_cast("https://www.imdb.com/title/tt0100240/")[1]
 ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
 ```{r, results = "hide", eval = FALSE}
-get_cast_list <- function(db) {
-  db %>% 
-    paste0(., "fullcredits/") %>% 
-    read_html() %>% 
-    html_nodes("table.cast_list") %>% 
-    html_nodes("td.itemprop") %>% 
-    html_nodes("span.itemprop") %>% 
-    html_text() %>% 
-    return()
-}
-
+casting_db <- ratings_db %>% 
+  select(URL) %>% 
+  collect() %>% 
+  head() %>% 
+  mutate(
+    Casting = map(URL, get_cast)
+  )
+casting_db
 ```
 
-<!-- DROP DATABASE datawarehouse; DROP ROLE rdb; DROP DATABASE movies; DROP ROLE imdb_user;-->
+## Exercices {#exe}
+
+
+
+<!-- DROP DATABASE test_data; DROP ROLE test_user; DROP DATABASE datawarehouse; DROP ROLE data_user; DROP DATABASE movies; DROP ROLE imdb_user; -->
