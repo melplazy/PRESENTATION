@@ -69,9 +69,11 @@ scale_fill_viridis <- hijack(scale_fill_viridis, option = "viridis", begin = 2/5
 options(tibble.print_max = 3, tibble.print_min = 3)
 ```
 
+
 ## Les Bases de Données et R {.flexbox .vcenter}
 
 <img src="images/intro.png"></img> 
+
 
 # Préparer sa session {.flexbox .vcenter}
 
@@ -93,9 +95,11 @@ options(tibble.print_max = 3, tibble.print_min = 3)
 <img src="images/rwindows_setup.png" width="350"></img>
 </div>
 
+
 # Le *tidyverse* {.flexbox .vcenter}
 
 <img src="images/tidyverse.png" height="250" class="auto-fadein"></img> 
+
 
 ## Qu'est-ce-que le *tidyverse* ?
 
@@ -129,6 +133,7 @@ tidyverse_update()
 
 <img src="images/tibble.png" height="250" class="auto-fadein"></img>
 
+
 ## Pré-requis
 ```{r, message = FALSE}
 library(tidyverse)
@@ -137,6 +142,7 @@ library(tidyverse)
 ```{r}
 tidyverse_conflicts()
 ```
+
 
 ## Construire un *tibble*
 
@@ -158,65 +164,72 @@ data.frame(
 
 
 ## Construire un *tibble*
-Et avec des noms de variables "exotiques" ?
-```{r}
-data.frame(`1`= 1:3)
-```
 
-```{r}
-tibble(
-  `;)` = 1:5, 
-  `42` = "1", 
-  `€` = `;)` ^ 2 + as.numeric(`42`)
-)
-```
+* Et avec des noms de variables "exotiques" ?
+    ```{r}
+    data.frame(`1`= 1:3)
+    ```
+    
+    ```{r}
+    tibble(
+      `;)` = 1:5, 
+      `42` = "1", 
+      `€` = `;)` ^ 2 + as.numeric(`42`)
+    )
+    ```
+
 
 ## Afficher un *data.frame*
-Les méthodes `show()` et `print()` :  
-```{r}
-as.data.frame(mtcars)
-```
-```{r}
-print(as.data.frame(mtcars))
-```
+
+* Les méthodes `show()` et `print()`. 
+    ```{r}
+    as.data.frame(mtcars)
+    ```
+    ```{r}
+    print(as.data.frame(mtcars))
+    ```
+
 
 ## Afficher un *tibble*
-Les méthodes `show()` et `print()` : 
-```{r}
-as_tibble(mtcars)
-```
-```{r}
-print(as_tibble(mtcars))
-```
+
+* Les méthodes `show()` et `print()` .
+    ```{r}
+    as_tibble(mtcars)
+    ```
+    ```{r}
+    print(as_tibble(mtcars))
+    ```
 
 ## Afficher un *tibble*
-La fonction `rownames_to_column()` (et `column_to_rownames()`) : 
-```{r}
-as_tibble(rownames_to_column(mtcars))
-```
-```{r}
-print(as_tibble(rownames_to_column(mtcars)))
-```
+
+* La fonction `rownames_to_column()` (et `column_to_rownames()`).
+    ```{r}
+    as_tibble(rownames_to_column(mtcars))
+    ```
+    ```{r}
+    print(as_tibble(rownames_to_column(mtcars)))
+    ```
 
 
 ## Afficher un *tibble* : les options
-Changer les options d'affichages d'un *tibble* :
+
+Changer les options d'affichages d'un `tibble` :
 
 * via `options()`
-```{r, eval = FALSE}
-options(tibble.print_max = n, tibble.print_min = m, dplyr.print_min = p)
-```
-Afficher les `n` premières lignes, s'il y a plus de `m` ligneset sur `p` colonnes.
+    ```{r, eval = FALSE}
+    options(tibble.print_max = n, tibble.print_min = m, dplyr.print_min = p)
+    ```
+    Afficher les `n` premières lignes, s'il y a plus de `m` lignes et sur `p` colonnes.
 
 * via `print()`
-```{r, eval = FALSE}
-print(x = DF, n = n, width = p))
-```
+    ```{r, eval = FALSE}
+    print(x = DF, n = n, width = p))
+    ```
 
 * dans Rstudio via `View()`
-```{r, eval = FALSE}
-View(mtcars)
-```
+    ```{r, eval = FALSE}
+    View(mtcars)
+    ```
 
 <img src="images/Rstudio_View.png"></img>
 
@@ -249,7 +262,9 @@ as_tibble(mtcars)[["mpg"]]
 as_tibble(mtcars)[, "mpg"]
 ```
 
+
 ## Assurer la rétro-compatibilité du code
+
 De "vielles" fonctions limitées à la classe d'objet `data.frame` !
 ```{r}
 tb <- as_tibble(mtcars)
@@ -260,36 +275,119 @@ class(as.data.frame(tb))
 ```
 
 
-## Exercices {#exe}
+## Exercices (Partie I) {#exe}
 
 *  Comment savoir si un objet est de classe `tibble`, `data.frame`  ou encore `matrix` ?
 *  Comment se comporte les opérations suivantes sur un `data.frame` et l'équivalent `tibble` ?  
     Quelle est la différence ?  
     ```{r, eval = FALSE}
     df <- data.frame(abc = 1, xyz = "a")
-    df$x
+    df$xyz
+    df[["xyz"]]
     df[, "xyz"]
     df[, c("abc", "xyz")]
     ```
-  
 *  Comment extraire une colonne en utilisant une variable ? 
     ```{r}
-    X <- "mpg"
+    x <- "abc"
     ```
 
-## Exercices {#exe}
 
-*  Manipuler des noms de variables non-conventionnelles :
-    ```{r}
-    annoying <- tibble(
+## Exercices (Partie I) {#exe}
+
+*  Comment savoir si un objet est de classe `tibble`, `data.frame`  ou encore `matrix` ?
+    ```{r, eval = FALSE}
+    class(dta)
+    ```
+
+
+## Exercices (Partie I) {#exe}
+
+*  Comment se comporte les opérations suivantes sur un `data.frame` et l'équivalent `tibble` ?  
+    Quelle est la différence ?
+    ```{r, eval = FALSE}
+    df1 <- data.frame(abc = 1, xyz = "a")
+    ```
+    ```{r, eval = FALSE}
+    df2 <- as_tibble(df1)
+    ```
+    ```{r, eval = FALSE}
+    df1$xyz
+    df1[["xyz"]]
+    df1[, "xyz"]
+    df1[, c("abc", "xyz")]
+    ```
+
+
+## Exercices (Partie I) {#exe}
+
+*  Comment extraire une colonne en utilisant une variable ? 
+    ```{r, eval = FALSE}
+    x <- "abc"
+    df1[, x]
+    df1[[x]]
+    ```
+    ```{r, eval = FALSE}
+    x <- "abc"
+    df2[, x]
+    df2[[x]]
+    ```
+
+
+## Exercices (Partie II) {#exe}
+
+Manipuler des noms de variables non-conventionnelles :
+```{r, eval = FALSE}
+dta <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+```
+* Récupérez la variable nommée `1`.
+* Tracez un nuage de points de `1` par rapport à `2`.
+* Créez un nouveau `tibble` avec une colonne nommée `3`, contenant le résultat de `2` divisé par `1`.
+* Renommez les colonnes avec leurs noms littéral: `"un"`, `"deux"` et `"trois"`.
+
+
+## Exercices (Partie II) {#exe}
+
+Manipuler des noms de variables non-conventionnelles :
+```{r, eval = FALSE}
+dta <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+```
+* Récupérez la variable nommée `1`.
+    ```{r, eval = FALSE}
+    dta$`1`
+    ```
+* Tracez un nuage de points de `1` par rapport à `2`.
+    ```{r, eval = FALSE}
+    plot(dta$`1`, dta$`2`)
+    ggplot(data = dta, aes(x = `1`, y = `2`)) + geom_point(colour ="white")
+    ```
+
+
+## Exercices (Partie II) {#exe}
+
+* Créez un nouveau `tibble` avec une colonne nommée `3`, contenant le résultat de `2` divisé par `1`.
+    ```{r, eval = FALSE}
+    dta <- tibble(
       `1` = 1:10,
-      `2` = `1` * 2 + rnorm(length(`1`))
+      `2` = `1` * 2 + rnorm(length(`1`)),
+      `3` = `2`/ `1`
     )
     ```
-    1.  Extraire la variable nommée `1`.
-    2.  Tracer un nuage de points de `1` par rapport à `2`.
-    3.  Ajouter une colonne nommée `3` contenant le résultat de `2` divisé par `1`.
-    4.  Renommer les colonnes avec leurs noms littéral: `"un"`, `"deux"` et `"trois"`.
+* Renommez les colonnes avec leurs noms littéral : `un`, `deux` et `trois`, en construisant un nouveau `tibble`.
+    ```{r, eval = FALSE}
+    dta <- tibble(
+      "un" = 1:10,
+      "deux" = un * 2 + rnorm(length(un)),
+      "trois" = deux / un
+    )
+    ```
+
 
 ## Pour aller plus loin ...
 
@@ -306,7 +404,9 @@ vignette(package = "tibble")
 
 <img src="images/pipe.png" height="250" class="auto-fadein"></img>
 
+
 ## Pré-requis
+
 ```{r, message = FALSE}
 library(pryr)
 ```
@@ -319,7 +419,9 @@ library(tidyverse)
 tidyverse_conflicts()
 ```
 
+
 ## Qu'est-ce-que le "pipe" ?
+
 L'opérateur "pipe" (`%>%`) provient du package __magrittr__ développé par Stefan Milton Bache.
 
 Par défaut `library(tidyverse)` s'occupe de charger l'opérateur "pipe".
@@ -343,7 +445,9 @@ Une aide à :
 
 Note : Raccourci `Ctrl+M` dans Rstudio pour faire apparaître un "pipe".
 
+
 ## Conserver les étapes
+
 ```{r, eval = FALSE}
 x <- rnorm(25)
 x1 <- sqrt(x)
@@ -369,7 +473,9 @@ Les inconvénients de cette écriture :
     pryr::object_size(mtcars, mtcars2)
     ```
 
-## Remplacer l'objet original 
+
+## Remplacer l'objet original
+
 ```{r, eval = FALSE}
 x <- rnorm(25)
 
@@ -388,7 +494,9 @@ Les inconvénients de cette écriture :
 *  Obligation de relancer tout le code pour débuguer.
 *  Répétition du nom de l'objet (14 fois).
 
+
 ## Composer l'appel aux fonctions
+
 ```{r, eval = FALSE}
 x <- rnorm(25)
 
@@ -415,6 +523,7 @@ Les inconvénients de cette écriture :
 
 
 ## Utiliser le "pipe" 
+
 ```{r, eval = FALSE}
 x %>% 
   sqrt() %>% 
@@ -454,6 +563,7 @@ vignette(package = "magrittr")
 
 
 ## Pré-requis
+
 ```{r, message = FALSE}
 library(readxl)
 ```
@@ -466,7 +576,9 @@ library(tidyverse)
 tidyverse_conflicts()
 ```
 
+
 ## Les fonctions de base de *readr*
+
 Lire des tableaux rectangulaires :
 
 * `read_csv()` : fichier avec séparateur virgule (".csv").
@@ -482,6 +594,7 @@ Lire des formats plus exotiques :
     
 * `read_fwf()` : fichier à largeur fixe (nombre de caractères).
 * `read_log()` : fichier de log provenant de serveur web Apache.
+
 
 ## Par rapport à celles de R : Entrée
 
@@ -501,7 +614,7 @@ locale()
     * 07:57:59Z
     * 2018-04-13T07:57:59Z
 * Noms des colonnes inchangés.
-* Renvoie un objet *tibble*.
+* Renvoie un objet `tibble`.
 * Pas de nom de ligne.
 
 
@@ -514,6 +627,7 @@ ratings <- read.csv(
 str(ratings[0, ])
 ```
 
+
 ## Dans la pratique | Lire un CSV avec *readr*
 
 ```{r}
@@ -521,6 +635,7 @@ ratings <- read_csv(
   file = "./materials/ratings.csv"
 )
 ```
+
 
 ## Dans la pratique | Lire un "texte" avec *base*
 
@@ -532,6 +647,7 @@ read.csv(
 )
 ```
 
+
 ## Dans la pratique | Lire un "texte" avec *readr*
 
 ```{r}
@@ -542,41 +658,43 @@ read_csv(
 )
 ```
 
+
 ## Les arguments de *readr*
 
-* L'argument `skip = n`
+* L'argument `skip = n`.
     ```{r}
     read_csv("Une ligne de métadonnées
       x,y,z
       1,2,3", skip = 1)
     ```
-* L'argument `comment = "#"`
+* L'argument `comment = "#"`.
     ```{r}
     read_csv("# Une ligne de commentaires
       x,y,z
       1,2,3", comment = "#")
     ```
 
+
 ## Les arguments de *readr*
 
-* L'argument `col_names = FALSE`
+* L'argument `col_names = FALSE`.
     ```{r}
     read_csv("1,2,3\n4,5,6", col_names = FALSE)
     ```
     
-* Utiliser `col_names`pour nommer les colonnes
+* Utiliser `col_names` pour nommer les colonnes.
     ```{r}
     read_csv("1,2,3\n4,5,6", col_names = c("a", "b", "c"))
     ```
     
 ## Les arguments de *readr*
 
-* L'argument `na = "."`
+* L'argument `na = "."`.
     ```{r}
     read_csv("a,b,c\n1,2,3\n4,.,6", na = ".")
     ```
     
-* L'argument `col_types`
+* L'argument `col_types`.
     ```{r}
     read_csv(
       "a,b,c\n1,x,2018-05-03\n4,y,2018-05-04", 
@@ -584,7 +702,9 @@ read_csv(
     )
     ```
 
+
 ## Exercices {#exe}
+
 * Quelle fonction utiliseriez-vous pour importer un document avec `|` en séparateur ?
     
 * Un fichier CSV peut parfois contenir une virgule dans un champ.  
@@ -596,7 +716,7 @@ read_csv(
     "x,y\n1,'a,b'"
     ```
     
-* Identifier les problèmes des lignes suivantes.  
+* Identifiez les problèmes des lignes suivantes.  
     ```{r, eval = FALSE}
     read_csv("a,b\n1,2,3\n4,5,6")
     read_csv("a,b,c\n1,2\n1,2,3,4")
@@ -604,6 +724,46 @@ read_csv(
     read_csv("a,b\n1,2\na,b")
     read_csv("a;b\n1;3")
     ```
+
+
+## Exercices {#exe}
+
+* Quelle fonction utiliseriez-vous pour importer un document avec `|` en séparateur ?
+    ```{r, eval = FALSE}
+    read_delim(file = path, delim = "|")
+    ```
+
+
+## Exercices {#exe}
+
+* Un fichier CSV peut parfois contenir une virgule dans un champ.  
+    Astuce : utilisez des guillemets simple `'` ou double `"`.
+      1. Quel est le caractère par défaut utiliser par `read_csv()` ? 
+      ```{r, eval = FALSE}
+      "
+      ```
+      2. Quelle fonction et argument utiliser pour changer ce caractère ? 
+      ```{r, eval = FALSE}
+      quote = "\""
+      ```
+      3. Quelle fonction et avec quelle valeur argument liriez-vous la chaîne suivante ?
+    ```{r, eval = FALSE}
+    read_csv("x,y\n1,'a,b'", quote = "\'")
+    read_delim("x,y\n1,'a,b'", delim = ",", quote = "\'")
+    ```
+
+
+## Exercices {#exe}
+
+* Identifiez les problèmes des lignes suivantes.  
+    ```{r, eval = FALSE}
+    read_csv("a,b\n1,2,3\n4,5,6")
+    read_csv("a,b,c\n1,2\n1,2,3,4")
+    read_csv("a,b\n\"1")
+    read_csv("a,b\n1,2\na,b")
+    read_csv("a;b\n1;3")
+    ```
+
 
 ## Les alternatives à *readr* {.flexbox .vcenter}
 
@@ -617,12 +777,14 @@ data.frame(
   kable(font_size = 18, align = "c", row.names = FALSE)
 ```
 
+
 ## Quelques benchmark ! {.flexbox .vcenter}
 
 <img src="images/xkcd_violin_plots.png"></img>
 
 
 ## Quelques benchmark : Lecture  {.flexbox .vcenter}
+
 ```{r read_benchmark, message = FALSE, echo = FALSE}
 filename <- "./materials/ratings.csv"
 microbenchmark::microbenchmark(
@@ -647,7 +809,8 @@ microbenchmark::microbenchmark(
 ```
 
 
-## Quelques benchmark : Ecriture{.flexbox .vcenter}
+## Quelques benchmark : Ecriture {.flexbox .vcenter}
+
 ```{r write_benchmark, message = FALSE, echo = FALSE}
 filename <- paste0(tempdir(), "/ratings.csv")
 microbenchmark::microbenchmark(
@@ -672,11 +835,12 @@ microbenchmark::microbenchmark(
 
 
 ## Exporter des données vers un fichier
+
 *readr* inclut également des fonctions d'écriture `write_*()`.
 
 * Les chaînes de caractères sont en UTF-8.
     <img src="images/xkccd_unicode.png"></img>
-* Les dates et date/heure sont au format ISO8601
+* Les dates et date/heure sont au format ISO8601.
 
 __Exemple__ :
 
@@ -699,6 +863,7 @@ writexl::write_xlsx(x = ratings, path = "ratings.xlsx")
 
 
 ## Pré-requis
+
 ```{r, message = FALSE}
 library(tidyverse)
 ```
@@ -735,6 +900,7 @@ Une syntaxe commune :
 
 
 ## Sélectionner des lignes
+
 ```{r, message = FALSE}
 ratings <- read_csv(file = "./materials/ratings.csv")
 ```
@@ -746,7 +912,7 @@ filter(ratings, `Your Rating` >= 9, `IMDb Rating` >= 9)
 ```
 
 ```{r, message = FALSE}
-read_csv(file = "./materials/ratings.csv") %>% 
+ratings %>% 
 ### <b>
   filter(`Your Rating` >= 9 & `IMDb Rating` >= 9)
 ### </b>
@@ -755,21 +921,73 @@ read_csv(file = "./materials/ratings.csv") %>%
 
 ## Exercices {#exe}
 
+* Trouvez le film le plus noté.
+
+* Trouvez les films contenant "shark" dans le titre (`grepl()`).
+
+* Trouvez les films vus entre le 3 Mai 2018 et le 25 Mai 2018.
+
+* Que fait la fonction `between()` ?
+
+
+## Exercices {#exe}
+
+* Trouvez le film le plus noté.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(`Num Votes`==max(`Num Votes`))
+    ```
+* Trouvez les films contenant "shark" dans le titre (`grepl()`).
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(grepl(pattern = "shark", x = Title, ignore.case = TRUE))
+    ```
+* Trouvez les films vus entre le 3 Mai 2018 et le 25 Mai 2018.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(`Date Rated`>="2018-04-25" & `Date Rated`<="2018-05-03")
+    ```
+* Que fait la fonction `between()` ?
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(between(`Date Rated`, "2018-04-25", "2018-05-03"))
+    ```
 
 
 ## Réordonner des lignes
+
 ```{r, message = FALSE}
-read_csv(file = "./materials/ratings.csv") %>% 
+ratings %>% 
 ### <b>
-  arrange(desc(`Date Rated`)) ### </b>
+  arrange(desc(`Date Rated`))
+### </b>
 ```
 
 
 ## Exercices {#exe}
 
+* Réordonnez `ratings` selon les notes IMDb (`ÌMDb Rating`) et utilisateur (`Your Rating`).
+
+* Réordonnez `ratings` selon les titres des films (`Title`), par ordre alphabétique.
+
+
+## Exercices {#exe}
+
+* Réordonnez `ratings` selon les notes IMDb (`ÌMDb Rating`) et utilisateur (`Your Rating`).
+    ```{r, eval = FALSE}
+    ratings %>% 
+      arrange(desc(`ÌMDb Rating`), desc(`Your Rating`))
+    ```
+
+* Réordonnez `ratings` selon les titres des films (`Title`), par ordre alphabétique.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      arrange(Title)
+    ```
 
 
 ## Sélectionner des colonnes
+
 Des aides à la sélection :
 
 * `starts_with("abc")` : noms commençant par "abc".
@@ -783,7 +1001,7 @@ options(tibble.print_max = 4, tibble.print_min = 4)
 ```
 
 ```{r, message = FALSE}
-read_csv(file = "./materials/ratings.csv") %>% 
+ratings %>% 
   arrange(desc(`Date Rated`)) %>% 
 ### <b>
   select(Title, ends_with("Rating"))
@@ -794,13 +1012,34 @@ read_csv(file = "./materials/ratings.csv") %>%
 options(tibble.print_max = 10, tibble.print_min = 10)
 ```
 
+
 ## Exercices {#exe}
+
+* Sélectionnez les colonnes contenant "Date".
+
+* Sélectionnez les colonnes contenant "Title", "Your Rating", "Date Rated" et "Release Date" par leu indice.
+
+
+## Exercices {#exe}
+
+* Sélectionnez les colonnes contenant "Date".
+    ```{r, eval = FALSE}
+    ratings %>% 
+      select(contains("Date"))
+    ```
+
+* Sélectionnez les colonnes contenant "Title", "Your Rating", "Date Rated" et "Release Date" par leu indice.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      select(4, 2, 3, 12)
+    ```
 
 
 
 ## Ajouter des colonnes
+
 ```{r, message = FALSE}
-read_csv(file = "./materials/ratings.csv") %>% 
+ratings %>% 
   arrange(desc(`Date Rated`)) %>% 
 ### <b>
   mutate(Rating_is_better = `Your Rating`>=`IMDb Rating`) %>% 
@@ -811,16 +1050,37 @@ read_csv(file = "./materials/ratings.csv") %>%
 
 ## Exercices {#exe}
 
+* Calculez la moyenne des notes `Your Rating`et `IMDb Rating`.
+    
+* Ajoutez les mois `month` et jours `days` à partir de `Date Rated` (package *lubridate*).
+
+  
+## Exercices {#exe}
+
+* Calculez la moyenne des notes `Your Rating`et `IMDb Rating`.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      mutate(`Avg Rating` = (`Your Rating`+`IMDb Rating`)/2)
+    ```
+    
+* Ajoutez les mois `month` et jours `days` à partir de `Date Rated` (package *lubridate*).
+    ```{r, eval = FALSE}
+    ratings %>% 
+      mutate(
+        Month = lubridate::month(`Date Rated`),
+        day = lubridate::day(`Date Rated`)
+      )
+    ```
 
 
 ## Résumer les données
+
 ```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>%  
 ### <b>
   summarise(
     n_movies = n(),
     my_average_rating = mean(`Your Rating`),
-    users_average_rating = mean(`IMDb Rating`),
     oldest_rating = min(`Date Rated`),
     newest_rating =  max(`Date Rated`)
   )
@@ -830,9 +1090,36 @@ read_csv(file = "./materials/ratings.csv") %>%
 
 ## Exercices {#exe}
 
+* Calculez la moyenne, l'écart-type, le minimum et le maximum des notes de `IMDb Rating`.
+
+* Calculez le nombre de jours séparant la première note de la dernière.
+
+
+## Exercices {#exe}
+
+* Calculez la moyenne, l'écart-type, le minimum et le maximum des notes de `IMDb Rating`.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      summarise(
+        mean = mean(`IMDb Rating`),
+        sd = sd(`IMDb Rating`),
+        min = min(`IMDb Rating`),
+        max = max(`IMDb Rating`)
+      )
+    ```
+
+
+* Calculez le nombre de jours séparant la première note de la dernière.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      summarise(
+        ndays = max(`Date Rated`)-min(`Date Rated`)
+      )
+    ```
 
 
 ## Utiliser `group_by()`
+
 ```{r, message = FALSE}
 read_csv(file = "./materials/ratings.csv") %>% 
   mutate(
@@ -853,6 +1140,27 @@ read_csv(file = "./materials/ratings.csv") %>%
 
 ## Exercices {#exe}
 
+* Calculez le temps total (`Runtime (mins)`) et le nombre de films pour l'année 2017, par note (`Your Rating`).  
+Repartez du fichier CSV et triez le résultat par ordre décroissant de la variable de temps total calculée.
+
+
+## Exercices {#exe}
+
+* Calculez le temps total (`Runtime (mins)`) et le nombre de films pour l'année 2017, par note (`Your Rating`).  
+Repartez du fichier CSV et triez le résultat par ordre décroissant de la variable de temps total calculée.
+    ```{r, eval = FALSE}
+    read_csv(file = "./materials/ratings.csv") %>% 
+      mutate(
+        Year = lubridate::year(`Date Rated`)
+      ) %>% 
+      filter(Year=="2017") %>% 
+      group_by(`Your Rating`) %>% 
+      summarise(
+        n_movies = n(),
+        runtime_all = sum(`Runtime (mins)`)
+      ) %>% 
+      arrange(des(runtime_all))
+    ```
 
 
 ## Pour aller plus loin ...
@@ -874,6 +1182,7 @@ vignette(package = "dplyr")
 
 
 ## Pré-requis
+
 ```{r, message = FALSE}
 library(DBI)
 ```
@@ -895,6 +1204,7 @@ tidyverse_conflicts()
 
 
 ## Démarrer PostgreSQL
+
 Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".bat".
 
 <img src="images/pgsql_bat.png"></img>
@@ -924,7 +1234,7 @@ Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".b
     CREATE DATABASE datawarehouse;
     ```
 
-* Modifier le propriètaire d'une base.
+* Modifier le propriétaire d'une base.
     ```{sql, eval = FALSE}
     ALTER DATABASE datawarehouse OWNER TO 'rdb';
     ```
@@ -936,7 +1246,7 @@ Des connecteurs :
 
 * [RMySQL](https://github.com/rstats-db/RMySQL#readme): MySQL et MariaDB.
 * [RPostgreSQL](https://cran.r-project.org/package=RPostgreSQL): Postgres et Redshift.
-* [RSQLite](https://github.com/rstats-db/RSQLite): base de donnée SQLite intégrée.
+* [RSQLite](https://github.com/rstats-db/RSQLite): base de données SQLite intégrée.
 * [odbc](https://github.com/rstats-db/odbc#odbc): protocoles de connection libre.
 * [bigrquery](https://github.com/rstats-db/bigrquery): Google BigQuery.
 
@@ -944,45 +1254,44 @@ Des connecteurs :
 ## Base, utilisateur et droits en R
 
 * Identifier le driver de connection.
-```{r}
-odbcListDrivers() %>% 
-  filter(attribute=="DriverODBCVer") %>% 
-  select(-attribute)
-```
+    ```{r}
+    odbcListDrivers() %>% 
+      filter(attribute=="DriverODBCVer") %>% 
+      select(-attribute)
+    ```
 
 
 ## Base, utilisateur et droits en R
 
 * Initier la connection.
-```{r}
-con <- dbConnect(
-  drv = odbc(),
-  driver = "PostgreSQL ODBC Driver(UNICODE)",
-  server = "localhost",
-  port = 5432,
-  database = "postgres",
-  uid = "postgres",
-### <b>
-  password = "password"
-### </b>
-)
-```
-```{r, eval = FALSE}
-con <- dbConnect(
-  drv = odbc(),
-  driver = "PostgreSQL ODBC Driver(UNICODE)",
-  server = "localhost",
-  port = 5432,
-  database = "postgres",
-  uid = "postgres",
-### <b>
-  password = rstudioapi::askForPassword("Mot de passe :")
-### </b>
-)
-```
+    ```{r}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      port = 5432,
+      database = "postgres",
+      uid = "postgres",
+    ### <b>
+      password = "password"
+    ### </b>
+    )
+    ```
+    ```{r, eval = FALSE}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      port = 5432,
+      database = "postgres",
+      uid = "postgres",
+    ### <b>
+      password = rstudioapi::askForPassword("Mot de passe :")
+    ### </b>
+    )
+    ```
 
-  
-  
+
 ## Base, utilisateur et droits en R
 
 * Créer un utilisateur.
@@ -997,7 +1306,7 @@ con <- dbConnect(
 
 ## Base, utilisateur et droits en R
 
-* Modifier le propriètaire d'une base.
+* Modifier le propriétaire d'une base.
     ```{r}
     dbSendQuery(con, SQL("ALTER DATABASE test_data OWNER TO test_user;"))
     ```
@@ -1054,7 +1363,7 @@ con <- dbConnect(
 * Lister les champs d'une table.
     ```{r}
     dbListFields(con, "mtcars")
-```
+    ```
 
 * Lire une table.
     ```{r, echo = FALSE}
@@ -1069,6 +1378,7 @@ con <- dbConnect(
 
 
 ## Faire des requêtes en SQL depuis R
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 10, tibble.print_min = 10)
 ```
@@ -1100,13 +1410,14 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 * Listez les noms de colonnes de la table créée.
 
 * Utilisez une requête SQL pour compter le nombre de films pour chaque note (`Your Rating`)  
-    Importer le résultat localement sous la forme d'un *tibble*.
+    Importer le résultat localement sous la forme d'un `tibble`.
     
 * Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
     Exportez cette table vers la base de données.
 
 
 ## Exercices {#exe}
+
 * En tant qu'utilisateur "postgres", créez une base "datawarehouse". 
     Créez un utilisateur "data_user".  
     Changez le propriétaire de "datawarehouse" par "data_user".
@@ -1128,6 +1439,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 
 
 ## Exercices {#exe}
+
 * En tant qu'utilisateur "data_user", exportez le fichier "ratings.csv" vers la base.
     Enlevez les espaces dans les noms de colonnes.
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
@@ -1147,15 +1459,19 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     dbWriteTable(con, "ratings", ratings)
     ```
 
+
 ## Exercices {#exe}
+
 * Listez les noms de colonnes de la table créée.
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
     dbListFields(con, 'ratings')
     ```
 
+
 ## Exercices {#exe}
+
 * Utilisez une requête SQL pour compter le nombre de films pour chaque note (`"YourRating"`).  
-    Importer le résultat localement sous la forme d'un *tibble*.
+    Importer le résultat localement sous la forme d'un `tibble`.
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
     dbSendQuery(
       conn = con, 
@@ -1166,6 +1482,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
       dbFetch() %>% 
       as_tibble()
     ```
+
 
 ## Exercices {#exe}
 * Sélectionnez les films notés entre le 1er janvier 2017 et le 31 décembre 2017.  
@@ -1206,6 +1523,7 @@ vignette(package = "DBI")
 
 
 ## Pré-requis
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 4, tibble.print_min = 4)
 ```
@@ -1228,7 +1546,7 @@ tidyverse_conflicts()
 
 ## *dbplyr* : Premiers pas avec *dplyr*
 
-* Connection sur une base de donnée SQL intégrée (package *RSQLite*).
+* Connection sur une base de données SQL intégrée (package *RSQLite*).
     ```{r, eval = FALSE}
     con <- dbConnect(RSQLite::SQLite(), path = ":memory:")
     ```
@@ -1290,27 +1608,27 @@ Note : `temporary = TRUE` permet de rendre la table uniquement disponible à la 
 ## Manipuler une base avec *dplyr*
 
 * Faire des requêtes sans SQL.
-```{r}
-date_sevendaysago <- (Sys.Date()-7)
-
-ratings_db %>% 
-  filter(DateRated > date_sevendaysago) %>% 
-  select(Title, DateRated, YourRating, IMDbRating)
-```
+    ```{r}
+    date_sevendaysago <- (Sys.Date()-7)
+    
+    ratings_db %>% 
+      filter(DateRated > date_sevendaysago) %>% 
+      select(Title, DateRated, YourRating, IMDbRating)
+    ```
 
 
 ## Manipuler une base avec *dplyr*
 
 * Faire des opérations en SQL sans SQL.
-```{r}
-ratings_db %>% 
-  group_by(Year) %>% 
-  summarise(
-    N = n(),
-    AvgRating = mean(YourRating)
-  ) %>% 
-  arrange(Year)
-```
+    ```{r}
+    ratings_db %>% 
+      group_by(Year) %>% 
+      summarise(
+        N = n(),
+        AvgRating = mean(YourRating)
+      ) %>% 
+      arrange(Year)
+    ```
 
 
 ## Manipuler une base avec *dplyr*
@@ -1374,9 +1692,9 @@ ratings_db %>%
     ```
     
 * Traduire du R en requête SQL.
-```{r}
-translate_sql(head(ratings_db))
-```
+    ```{r}
+    translate_sql(head(ratings_db))
+    ```
 
 
 ## Exercices {#exe}
@@ -1436,6 +1754,7 @@ translate_sql(head(ratings_db))
     class(ratings_summary)
     ```
 
+
 ## *dplyr* > SQL > ~~*tbl* ?~~ > `collect()` > *tbl* 
 
 * Connaître les dimensions de l'objet avant `collect()` ?
@@ -1478,12 +1797,13 @@ dbDisconnect(con)
 
 ## Une base de données relationnelle
 
-* Schéma des tables du package *nycflights13*.
+* Schéma "partiel" des tables du package *nycflights13*.
 
 <img src="images/nycflights13.png"></img>
 
 
 ## Exercices (Partie I) {#exe}
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 10, tibble.print_min = 10)
 ```
@@ -1539,6 +1859,7 @@ et en ajoutant une colonne constructeur `const`.
     
     
 ## Exercices (Partie I) {#exe}
+
 * Modifiez `mtcars` en passant les noms de lignes dans une colonne 
 et en ajoutant une colonne constructeur `const`.  
     Exporter l'objet `mtcars` vers la base.  
@@ -1605,21 +1926,23 @@ et en ajoutant une colonne constructeur `const`.
     longest_air_time_db
     ```
 
+
 ## Exercices (Partie I) {#exe}
 
-* Effectuez la jointure de `planes`et `flights` pour identifier les 3 constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).
+* Effectuez la jointure de `planes`et `flights` pour identifier les 3 constructeurs présentant le plus grand nombre d'heures de vol (`?dplyr::join`).  
     Quelle est la requête SQL réalisée ?
     ```{r, warning = FALSE}
     longest_air_time_db %>% show_query()
     ```
 
 ## Exercices (Partie II) {#exe}
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 3, tibble.print_min = 3)
 ```
 
 * Calculez la moyenne des températures `temp` (table `weather`) par station `origin` et par année `year`.  
-    Comparez le résultat de la version locale (*tbl_df*) et distante (*tbl_sql*).
+    Comparez le résultat de la version locale (`tbl_df`) et distante (`tbl_sql`).
 
 * Comptez le nombre d'aéroport dont le code `dest` (table `flights`) commence par la lettre "A" ([Wildcard SQL](https://www.w3schools.com/sql/sql_wildcards.asp); `%like%`).
 
@@ -1669,6 +1992,7 @@ options(tibble.print_max = 3, tibble.print_min = 3)
 
 
 ## Exercices (Partie II) {#exe}
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 2, tibble.print_min = 2)
 ```
@@ -1765,9 +2089,11 @@ dbDisconnect(con)
 
 
 ## Schéma et table
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 5, tibble.print_min = 5)
 ```
+
 * La fonction `tbl()` cherche dans le schéma par défaut ("public" sur PostgreSQL).
     ```{r}
     tbl(con, "mtcars") %>% head()
@@ -1831,7 +2157,7 @@ dbDisconnect(con)
 <img src="images/screenshot_imdb1.png"></img>
 
 
-## Stratégie{.flexbox .vcenter}
+## Stratégie {.flexbox .vcenter}
 
 <img src="images/screenshot_imdb2.png"></img>
 
@@ -1857,6 +2183,7 @@ dbDisconnect(con)
 
 
 ## Pré-requis
+
 ```{r, echo = FALSE}
 options(tibble.print_max = 5, tibble.print_min = 5)
 ```
@@ -1942,6 +2269,7 @@ tidyverse_conflicts()
       head(2)
     ```
 
+
 ## *rvest* : Exemple avec l'IMDb
 
 * Reconstruction du tableau acteur/personnage.
@@ -1976,6 +2304,7 @@ tidyverse_conflicts()
       )
     ```
 
+
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
 
 * Création d'un nouveau utilisateur et d'une nouvelle base.
@@ -1995,34 +2324,35 @@ tidyverse_conflicts()
     dbDisconnect(con)
     ```
 
+
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
 
 * Connection avec "imdb_user" sur "movies".
-```{r, results = "hide"}
-con <- dbConnect(
-  drv = odbc(),
-  driver = "PostgreSQL ODBC Driver(UNICODE)",
-  server = "localhost",
-  database = "movies",
-  port = 5432,
-  uid = "imdb_user",
-  password = "imdb_pwd"
-)
-```
+    ```{r, results = "hide"}
+    con <- dbConnect(
+      drv = odbc(),
+      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      server = "localhost",
+      database = "movies",
+      port = 5432,
+      uid = "imdb_user",
+      password = "imdb_pwd"
+    )
+    ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
 
 * Création de la table "ratings" (et d'un objet `tbl_sql`).
-```{r, results = "hide"}
-ratings_db <- copy_to(
-  dest = con, 
-  df = ratings, 
-  names = "ratings", 
-  overwrite = TRUE,
-  temporary = FALSE
-)
-```
+    ```{r, results = "hide"}
+    ratings_db <- copy_to(
+      dest = con, 
+      df = ratings, 
+      names = "ratings", 
+      overwrite = TRUE,
+      temporary = FALSE
+    )
+    ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
@@ -2037,6 +2367,9 @@ ratings_db <- copy_to(
       read_html() %>% 
       html_nodes("table.cast_list")
     ```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
 
 * Création d'un tableau casting.
     ```{r, results = "hide"}
@@ -2056,47 +2389,241 @@ ratings_db <- copy_to(
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
-```{r}
-get_cast <- function(x) {
-  x %>% 
-    paste0(., "fullcredits/") %>% 
-    read_html() %>% 
-    html_nodes("table.cast_list") %>% 
-    (function(node) {
-      cast_tbl <- tibble(
-        URL = x,
-        Actor = node %>% 
-          html_nodes("td.itemprop") %>% 
-          html_nodes("span.itemprop") %>% 
-          html_text(),
-        Character = node %>% 
-          html_nodes("td.character") %>%
-          html_text() %>% 
-          gsub("\n", "", .) %>% 
-          gsub(" +", " ", .) %>% 
-          gsub("^ (.*) $", "\\1", .)
-      )
-    }) %>% 
-    return()
-}
-get_cast("https://www.imdb.com/title/tt0100240/")[1]
-```
+
+* Fontion de récuppération du casting d'un film.
+    ```{r}
+    get_cast <- function(x) {
+      x %>% 
+        paste0(., "fullcredits/") %>% 
+        read_html() %>% 
+        html_nodes("table.cast_list") %>% 
+        (function(node) {
+          cast_tbl <- tibble(
+            URL = x,
+            Actor = node %>% 
+              html_nodes("td.itemprop") %>% 
+              html_nodes("span.itemprop") %>% 
+              html_text(),
+            Character = node %>% 
+              html_nodes("td.character") %>%
+              html_text() %>% 
+              gsub("\n", "", .) %>% 
+              gsub(" +", " ", .) %>% 
+              gsub("^ (.*) $", "\\1", .)
+          )
+        }) %>% 
+        return()
+    }
+    ```
 
 
 ## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
-```{r, results = "hide", eval = FALSE}
-casting_db <- ratings_db %>% 
-  select(URL) %>% 
-  collect() %>% 
-  head() %>% 
-  mutate(
-    Casting = map(URL, get_cast)
-  )
-casting_db
-```
+
+* Fontion de récuppération du casting d'un film.
+    ```{r}
+    get_cast("https://www.imdb.com/title/tt0100240/")
+    ```
+
+
+## *rvest*, *DBI*, *dplyr*, *dbplyr* et le *tidyverse*
+
+* Ajout du casting dans `ratings_db` (local).
+    ```{r}
+    casting <- ratings_db %>% 
+      select(URL) %>% 
+      collect() %>% 
+      head() %>% 
+      mutate(
+        Casting = map(URL, get_cast)
+      )
+    casting
+    ```
+
 
 ## Exercices {#exe}
 
+En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+
+* Compilez des statistiques (moyenne, écart-type, etc.) dans une nouvelle table.
+
+* Exportez ces tables vers une base de données.
+ 
+
+## Exercices {#exe}
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+    ```{r, eval = FALSE}
+    movies_list <- "https://www.imdb.com/user/ur56341222/ratings" %>% 
+      read_html() %>% 
+      html_nodes("div#ratings-container.lister-list") %>% 
+      html_nodes("div.lister-item.mode-detail")
+    ```
+    * Titre.
+    ```{r, eval = FALSE}
+    title = x %>% 
+      html_nodes("h3.lister-item-header") %>% 
+      html_text() %>% 
+      gsub("\n", "", .) %>% 
+      gsub(" [0-9]+.", "", .) %>% 
+      gsub(" +", " ", .) %>% 
+      gsub("^ (.*) $", "\\1", .)
+    ```
+
+ 
+## Exercices {#exe}
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+    ```{r, eval = FALSE}
+    movies_list <- "https://www.imdb.com/user/ur56341222/ratings" %>% 
+      read_html() %>% 
+      html_nodes("div#ratings-container.lister-list") %>% 
+      html_nodes("div.lister-item.mode-detail")
+    ```
+* Genres.
+    ```{r, eval = FALSE}
+    genres = x %>% 
+      html_nodes("span.genre") %>% 
+      html_text() %>% 
+      gsub("\n", "", .) %>% 
+      gsub(" +", " ", .) %>% 
+      gsub("^ (.*) $", "\\1", .)
+    ```   
+
+
+## Exercices {#exe}
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+    ```{r, eval = FALSE}
+    movies_list <- "https://www.imdb.com/user/ur56341222/ratings" %>% 
+      read_html() %>% 
+      html_nodes("div#ratings-container.lister-list") %>% 
+      html_nodes("div.lister-item.mode-detail")
+    ```
+* Durée du film.
+    ```{r, eval = FALSE}
+    runtime = x %>% 
+      html_nodes("span.runtime") %>% 
+      html_text() %>% 
+      gsub("\n", "", .) %>% 
+      gsub(" +", " ", .) %>% 
+      gsub("^ (.*) $", "\\1", .)
+    ```
+
+
+## Exercices {#exe}
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+    ```{r, eval = FALSE}
+    movies_list <- "https://www.imdb.com/user/ur56341222/ratings" %>% 
+      read_html() %>% 
+      html_nodes("div#ratings-container.lister-list") %>% 
+      html_nodes("div.lister-item.mode-detail")
+    ```
+* Note.
+    ```{r, eval = FALSE}
+    rating = x %>% 
+      html_nodes("div.ipl-rating-widget") %>% 
+      html_nodes("div.ipl-rating-star.small") %>% 
+      html_text("span.ipl-rating-star__rating") %>% 
+      unique() %>% 
+      gsub("\n", "", .) %>% 
+      gsub(" +", " ", .) %>% 
+      gsub("^ (.*) $", "\\1", .) %>% 
+      as.numeric() %>% 
+      (function(.x) {if (length(.x)!=2) {c(NA, NA)} else {.x}})
+    ```
+
+
+## Exercices {#exe}
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+    ```{r, eval = FALSE}
+    get_movies_info <- function(x) {
+      c(
+        x %>% html_nodes("h3.lister-item-header") %>% html_text() %>% gsub("\n", "", .) %>% 
+          gsub(" [0-9]+.", "", .) %>% gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .),
+      
+        x %>% html_nodes("span.genre") %>% html_text() %>% 
+          gsub("\n", "", .) %>% gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .),
+    
+        x %>% html_nodes("span.runtime") %>% html_text() %>% gsub("\n", "", .) %>% 
+          gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .) %>% ifelse(length(.)==0, NA, .),
+    
+        x %>% html_nodes("div.ipl-rating-widget") %>% 
+          html_nodes("div.ipl-rating-star.small") %>% 
+          html_text("span.ipl-rating-star__rating") %>% 
+          gsub("\n", "", .) %>% gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .) %>% 
+          as.numeric() %>%(function(.x) {if (length(.x)!=2) {c(NA, NA)} else {.x}})
+      ) %>% 
+        `names<-`(c("title", "genres", "runtime", "imdbrating", "userating")) %>% 
+        return()
+    }
+    ```
+
+
+## Exercices {#exe}
+
+* Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note (étoile jaune).
+    ```{r, eval = FALSE}
+    movies_list <- "https://www.imdb.com/user/ur56341222/ratings" %>% 
+      read_html() %>% 
+      html_nodes("div#ratings-container.lister-list") %>% 
+      html_nodes("div.lister-item.mode-detail") %>% 
+      lapply(., get_movies_info) %>% 
+      do.call("bind_rows", .)
+    ```
+
+
+# *ggplot2* | The grammar of graphics {.flexbox .vcenter}
+
+<img src="images/ggplot2.png" height="250" class="auto-fadein"></img>
+
+
+## Simplifier et améliorer la création {.flexbox .vcenter}
+
+<img src="images/xkcd_graph_quality.png"></img>
+
+
+##
+
+
+# *nodbi* | Le connecteur pour les bases NoSQL {.flexbox .vcenter}
+
+<img src="images/database.png" height="250" class="auto-fadein"></img>
+
+
+## *nodbi* (développement en cours)
+
+* *nodbi* sur GitHub : [nodbi](https://github.com/ropensci/nodbi)
+
+Supporte :
+
+* MongoDB
+* Redis
+* CouchDB
+* Elasticsearch
+* etcd
+* Riak
+
+
+## *nodbi* (développement en cours)
+
+* Package sur le CRAN : 
+    - *sofa* (CouchDB) [CRAN](https://cran.r-project.org/package=sofa).
+    - *mongolite* (MongoDB) [CRAN](https://cran.r-project.org/package=mongolite). 
+    - *elastic* (Elasticsearch) [CRAN](https://cran.r-project.org/package=elastic).
+    - *etseed* (etcd) [CRAN](https://cran.r-project.org/package=etseed).
+
+* Package sur hors CRAN : 
+    - *RedisAPI* (Redis) [GitHub](https://github.com/ropensci/RedisAPI).
+    - *rrlite* (Redis) [GitHub](https://github.com/ropensci/rrlite).
+    
+
+# Merci ! Présentation disponible au format Rmarkdown sur {.flexbox .vcenter}
+
+<a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase"><img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img></a>
 
 
 <!-- DROP DATABASE test_data; DROP ROLE test_user; DROP DATABASE datawarehouse; DROP ROLE data_user; DROP DATABASE movies; DROP ROLE imdb_user; -->
