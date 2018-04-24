@@ -2557,8 +2557,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
           gsub("\n", "", .) %>% gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .) %>% 
           as.numeric() %>%(function(.x) {if (length(.x)!=2) {c(NA, NA)} else {.x}})
       ) %>% 
-        `names<-`(c("title", "genres", "runtime", "imdbrating", "userating")) %>% 
-        return()
+        `names<-`(c("title", "genres", "runtime", "imdbrating", "userating"))
     }
     ```
 
@@ -2621,7 +2620,7 @@ Supporte :
     - *rrlite* (Redis) [GitHub](https://github.com/ropensci/rrlite).
     
 
-# Merci ! Présentation disponible au format Rmarkdown sur {.flexbox .vcenter}
+# Merci ! | Présentation disponible au format Rmarkdown sur {.flexbox .vcenter}
 
 <a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase"><img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img></a>
 
