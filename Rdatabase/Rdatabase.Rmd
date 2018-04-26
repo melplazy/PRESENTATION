@@ -20,6 +20,7 @@ output:
 
 ```{r setup, include = FALSE}
 options(stringsAsFactors = FALSE)
+Sys.setlocale("LC_TIME", "english_united kingdom.1252")
 
 ### Load packages and functions
 # library(parallel)
@@ -564,6 +565,9 @@ vignette(package = "magrittr")
 
 ## Pré-requis
 
+* Fichier "ratings.csv" sur :  
+    [https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase](https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase/materials).
+
 ```{r, message = FALSE}
 library(readxl)
 ```
@@ -1035,7 +1039,6 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     ```
 
 
-
 ## Ajouter des colonnes
 
 ```{r, message = FALSE}
@@ -1311,11 +1314,17 @@ Des connecteurs :
     dbSendQuery(con, SQL("ALTER DATABASE test_data OWNER TO test_user;"))
     ```
 
+
+## Base, utilisateur et droits en R
+
 * Se déconnecter de la base.
     ```{r}
     dbDisconnect(con)
     ```
-    
+
+<img src="images/xkcd_still_in_use_2x.png" height="300"></img>s
+
+
 ## Créer des tables en SQL depuis R
 
 * Se connecter en tant que "test_user".
@@ -1514,7 +1523,7 @@ Liste de diffusion autour du package *DBI*: [r-sig-db](https://stat.ethz.ch/mail
 vignette(package = "DBI")
 ```
 
-<img src="images/screenshot_dbi.png"></img>
+<img src="images/screenshot_dbi.png", height="350"></img>
 
 
 # *dplyr* & *dbplyr* | Une grammaire SQL généralisée {.flexbox .vcenter}
@@ -2462,7 +2471,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
     * Titre.
     ```{r, eval = FALSE}
-    title = x %>% 
+    title <- x %>% 
       html_nodes("h3.lister-item-header") %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
@@ -2483,7 +2492,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
 * Genres.
     ```{r, eval = FALSE}
-    genres = x %>% 
+    genres <- x %>% 
       html_nodes("span.genre") %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
@@ -2503,7 +2512,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
 * Durée du film.
     ```{r, eval = FALSE}
-    runtime = x %>% 
+    runtime <- x %>% 
       html_nodes("span.runtime") %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
@@ -2523,7 +2532,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
 * Note.
     ```{r, eval = FALSE}
-    rating = x %>% 
+    rating <- x %>% 
       html_nodes("div.ipl-rating-widget") %>% 
       html_nodes("div.ipl-rating-star.small") %>% 
       html_text("span.ipl-rating-star__rating") %>% 
@@ -2580,12 +2589,118 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
 <img src="images/ggplot2.png" height="250" class="auto-fadein"></img>
 
 
-## Simplifier et améliorer la création {.flexbox .vcenter}
+## Simplifier et améliorer les figures {.flexbox .vcenter}
 
-<img src="images/xkcd_graph_quality.png"></img>
+<img src="images/xkcd_graph_quality.png", width="500"></img>
 
 
-##
+## `ratings` en images 
+
+```{r, results = "hide", message = FALSE}
+ratings_agg <- read_csv("materials/ratings.csv") %>%
+  group_by(`Date Rated`) %>%
+  summarise(
+    avg_rating = mean(`Your Rating`),
+    n_rating = n()
+  ) %>%
+  right_join(
+    tibble(
+      "Date Rated" = seq(from = as.Date("2015-01-01"), to = Sys.Date(), by = 1)
+    )
+  ) %>%
+  mutate(
+    Year = lubridate::year(`Date Rated`),
+    Month = lubridate::month(`Date Rated`, label = TRUE, abbr = FALSE),
+    wDay = lubridate::wday(`Date Rated`, label = TRUE, abbr = FALSE, week_start = 1),
+    wDay = factor(wDay, levels = rev(levels(wDay))),
+    Week = lubridate::isoweek(`Date Rated`),
+    n_rating = ifelse(is.na(n_rating), 0, n_rating)
+  ) %>% 
+  filter(Year == 2017)
+```
+
+
+## `ratings` en images
+
+```{r}
+x_labels <- ratings_agg %>% 
+  select(Week, Month) %>% 
+  distinct() %>% 
+  group_by(Month) %>% 
+  summarise(Week = min(Week))
+```
+
+
+## `ratings` en images
+
+```{r}
+p <- ratings_agg %>% 
+  ggplot(aes(x = Week, y = wDay, fill = avg_rating, label = n_rating)) +
+    geom_tile(colour = "grey20", size = 0.1) +
+    geom_text(colour = "white", fontface = "bold", size = 3) +
+    facet_wrap(~ Year, ncol = 1) +
+    scale_fill_viridis(name = "Average", limits = c(0, 10), na.value = "grey30") +
+    scale_y_discrete(expand = c(0, 0)) +
+    scale_x_continuous(
+      expand = c(0, 0), 
+      breaks = x_labels[["Week"]], 
+      labels = x_labels[["Month"]]
+    ) +
+    theme(
+      axis.ticks = element_blank(),
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      axis.title = element_blank(),
+      panel.grid = element_blank()
+    )
+```
+
+
+## `ratings` en images {.flexbox .vcenter}
+
+```{r, echo = FALSE}
+print(p)
+```
+
+
+## `ratings` en images
+
+```{r, results = "hide", message = FALSE}
+p <- read_csv("materials/ratings.csv") %>% 
+  select(`Your Rating`, `IMDb Rating`) %>% 
+  gather(data = ., key = Who, value = Rating) %>% 
+  ggplot(aes(x = round(Rating, digits = 0), fill = Who)) +
+    geom_density(
+      aes(y = ..count.. / sum(..count..) * 100), 
+      bw = 2, 
+      alpha = 0.75, 
+      colour = "white"
+    ) +
+    geom_bar(
+      aes(y = ..count.. / sum(..count..)), 
+      width = 0.90, 
+      colour = "white", 
+      position = position_dodge(preserve = "single")
+    ) +
+    scale_x_continuous(name = "Rating", limits = c(0, 10), breaks = seq(0, 10, 2)) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_viridis(name = NULL, discrete = TRUE) +
+    labs(x = "Rating", y = "Proportion", title = "Distribution of Ratings") +
+    theme(legend.position = c(0, 1), legend.justification = c(-0.05, 1.05))
+```
+
+
+## `ratings` en images {.flexbox .vcenter}
+
+```{r, echo = FALSE}
+print(p)
+```
+
+
+## Pour aller plus loin ...
+
+* *ggplot2* : [[http://ggplot2.tidyverse.org/index.html](ggplot2.tidyverse.org)
+
+* *dbplot* : [https://github.com/edgararuiz/dbplot](https://github.com/edgararuiz/dbplot)
 
 
 # *nodbi* | Le connecteur pour les bases NoSQL {.flexbox .vcenter}
@@ -2609,14 +2724,22 @@ Supporte :
 
 ## *nodbi* (développement en cours)
 
-* Package sur le CRAN : 
+* Package sur le CRAN :
+
     - *sofa* (CouchDB) [CRAN](https://cran.r-project.org/package=sofa).
-    - *mongolite* (MongoDB) [CRAN](https://cran.r-project.org/package=mongolite). 
+
+    - *mongolite* (MongoDB) [CRAN](https://cran.r-project.org/package=mongolite).
+
     - *elastic* (Elasticsearch) [CRAN](https://cran.r-project.org/package=elastic).
+
     - *etseed* (etcd) [CRAN](https://cran.r-project.org/package=etseed).
 
-* Package sur hors CRAN : 
+<br>
+
+* Package sur hors CRAN :
+
     - *RedisAPI* (Redis) [GitHub](https://github.com/ropensci/RedisAPI).
+
     - *rrlite* (Redis) [GitHub](https://github.com/ropensci/rrlite).
     
 

@@ -1,6 +1,6 @@
 slide img {
   max-width: 768px;
-  max-height: 350px;
+  max-height: 460px;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -117,8 +117,23 @@ pre {
 
 }
 
+article.smaller pre {
+    font-size: 12px;
+}
+
 ul {
 list-style: disc;
+}
+
+ul li ul li::before {
+  content: none;
+  font-weight: 600;
+}
+ul > li::before {
+  content: none;
+  margin-left: -1em;
+  position: absolute;
+  font-weight: 600;
 }
 
 ol pre, ul pre {
