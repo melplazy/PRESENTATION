@@ -1191,7 +1191,7 @@ Repartez du fichier CSV et triez le résultat par ordre décroissant de la varia
 
 ## Exercices {#exe}
 
-* Calculez le temps total ("Runtime (mins)") et le nombre de films pour l'année 2017, par note (`Your Rating").  
+* Calculez le temps total ("Runtime (mins)") et le nombre de films pour l'année 2017, par note ("Your Rating").  
 Repartez du fichier CSV et triez le résultat par ordre décroissant de la variable de temps total calculée.
     ```{r, eval = FALSE}
     read_csv(file = "./materials/ratings.csv") %>% 
@@ -1271,17 +1271,17 @@ Pour retirer le message d'avertissement, ajouter "chcp 1252" dans le fichier ".b
 
 * Créer un utilisateur.
     ```{sql, eval = FALSE}
-    CREATE ROLE rdb LOGIN password 'rdbpass';
+    CREATE ROLE test_user LOGIN password 'test_pwds';
     ```
 
 * Créer une base.
     ```{sql, eval = FALSE}
-    CREATE DATABASE datawarehouse;
+    CREATE DATABASE test_data;
     ```
 
 * Modifier le propriétaire d'une base.
     ```{sql, eval = FALSE}
-    ALTER DATABASE datawarehouse OWNER TO 'rdb';
+    ALTER DATABASE test_data OWNER TO 'test_user';
     ```
 
 
@@ -1452,7 +1452,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 ## Exercices {#exe}
 
 * En tant qu'utilisateur "postgres" :
-    * créez une base "datawarehouse".  
+    * Créez une base "datawarehouse".  
     * Créez un utilisateur "data_user".  
     * Changez le propriétaire de "datawarehouse" par "data_user".
     
@@ -1471,7 +1471,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 ## Exercices {#exe}
 
 * En tant qu'utilisateur "postgres" :
-    * créez une base "datawarehouse".  
+    * Créez une base "datawarehouse".  
     * Créez un utilisateur "data_user".  
     * Changez le propriétaire de "datawarehouse" par "data_user".
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
@@ -1861,7 +1861,7 @@ dbDisconnect(con)
 options(tibble.print_max = 10, tibble.print_min = 10)
 ```
 
-* Connectez vous à la base "datawarehouse" en tant que "rdb".
+* Connectez vous à la base "datawarehouse" en tant que "data_user".
 
 * Créez une table "mtcars" avec le jeu de données `mtcars`.  
     Comparez les fonctions `dplyr::copy_to()` (en utilisant l'argument `temporary`) et `DBI::dbWriteTable()`.
@@ -1880,7 +1880,7 @@ et en ajoutant une colonne constructeur "const".
 
 ## Exercices (Partie I) {#exe}
 
-* Connectez vous à la base "datawarehouse" en tant que "rdb".
+* Connectez vous à la base "datawarehouse" en tant que "data_user".
     ```{r}
     con <- dbConnect(
       drv = odbc(),
@@ -2681,7 +2681,7 @@ x_labels <- ratings_agg %>%
 
 ## `ratings` en images
 
-```{r}
+```{r, results = "hide", message = FALSE, warning = FALSE}
 p <- ratings_agg %>% 
   ggplot(aes(x = Week, y = wDay, fill = avg_rating, label = n_rating)) +
     geom_tile(colour = "grey20", size = 0.1) +
@@ -2705,7 +2705,7 @@ p <- ratings_agg %>%
 
 ## `ratings` en images {.flexbox .vcenter}
 
-```{r ratings_streak, echo = FALSE}
+```{r ratings_streak, echo = FALSE, message = FALSE, warning = FALSE}
 print(p)
 ```
 
@@ -2739,7 +2739,7 @@ p <- read_csv("materials/ratings.csv") %>%
 
 ## `ratings` en images {.flexbox .vcenter}
 
-```{r ratings_density, echo = FALSE}
+```{r ratings_density, echo = FALSE, message = FALSE, warning = FALSE}
 print(p)
 ```
 
@@ -2796,13 +2796,13 @@ Supporte :
     - *rrlite* (Redis) => [GitHub](https://github.com/ropensci/rrlite).
     
 
-# Merci ! | Présentation disponible au format Rmarkdown sur {.flexbox .vcenter}
+# Présentation disponible au format Rmarkdown | sur {.flexbox .vcenter}
 
-<a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase" style="color: #ffffff" class="auto-fadein">
-	<img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img>
-	<br>
-	https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase
+<a href="https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase" class="auto-fadein">
+	<img src="images/GitHub_Logo.png" height="250" style="margin-bottom: 0" class="auto-fadein"></img>
+  <p style="margin-top:-2em;" class="auto-fadein">https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase</p>
 </a>
+
 
 ## Besoin d'aide ?
 
