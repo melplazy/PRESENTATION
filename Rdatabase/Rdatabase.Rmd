@@ -2602,7 +2602,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
 
 ## Simplifier et améliorer les figures {.flexbox .vcenter}
 
-<img src="images/xkcd_graph_quality.png", width="500"></img>
+<img src="images/xkcd_graph_quality.png" width="500"></img>
 
 
 ## `ratings` en images 
