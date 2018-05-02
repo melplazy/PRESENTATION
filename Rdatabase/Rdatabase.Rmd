@@ -16,6 +16,7 @@ output:
     logo: template/logo_UMR.png
     smaller: true
     self_contained: true
+    mathjax: null
 ---
 
 ```{r setup, include = FALSE}
@@ -84,7 +85,7 @@ options(tibble.print_max = 3, tibble.print_min = 3)
 ## Trucs et astuces
 
 *  Eviter de changer votre répertoire de travail avec `setwd()`,  
-    c.-à-d. démarrer R directement au bon endroit ou définir un "Projet" dans Rstudio.
+    c.-à-d. démarrer R directement au bon endroit ou définir un "Projet" dans R Studio.
 *  Ne pas utiliser le `.Rprofile` avec des options qui modifie le comportement de R.
 *  Désactiver la conversion automatique des chaînes de caractères en facteurs `options(stringsAsFactors = FALSE)`.
 *  Ne pas utiliser `rm(list = ls())` pour "rafraichir" votre session.
@@ -227,7 +228,7 @@ Changer les options d'affichages d'un `tibble` :
     print(x = DF, n = n, width = p))
     ```
 
-* dans Rstudio via `View()`
+* dans R Studio via `View()`
     ```{r, eval = FALSE}
     View(mtcars)
     ```
@@ -392,7 +393,7 @@ dta <- tibble(
 
 ## Pour aller plus loin ...
 
-* Cheatsheets Rstudio : [https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
+* Cheatsheets R Studio : [https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
 
 ```{r, eval = FALSE}
 vignette(package = "tibble")
@@ -444,7 +445,7 @@ Une aide à :
 
 <img src="images/xkcd_code_quality.png"></img>
 
-__Note :__ Raccourci `Ctrl+M` dans Rstudio pour faire apparaître un "pipe".
+__Note :__ Raccourci `Ctrl+M` dans R Studio pour faire apparaître un "pipe".
 
 
 ## Conserver les étapes
@@ -1177,7 +1178,7 @@ Repartez du fichier CSV et triez le résultat par ordre décroissant de la varia
 
 ## Pour aller plus loin ...
 
-* Cheatsheets Rstudio : [https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
+* Cheatsheets R Studio : [https://www.rstudio.com/resources/cheatsheets/](https://www.rstudio.com/resources/cheatsheets/)
 
 * Site de dplyr : [dplyr.tidyverse.org](https://dplyr.tidyverse.org/)
 
@@ -2726,7 +2727,7 @@ print(p)
 
 ## *nodbi* (développement en cours)
 
-* *nodbi* sur GitHub : [nodbi](https://github.com/ropensci/nodbi)
+Disponible sur GitHub : [nodbi](https://github.com/ropensci/nodbi)
 
 Supporte :
 
@@ -2761,7 +2762,31 @@ Supporte :
 
 # Merci ! | Présentation disponible au format Rmarkdown sur {.flexbox .vcenter}
 
-<a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase"><img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img></a>
+<a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase" style="color: #ffffff"><img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img><br>https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase</a>
+
+## Besoin d'aide ?
+
+* Forum :
+
+    * [Groupe des Utilisateurs de R](http://forums.cirad.fr/logiciel-R/)
+
+    * [Stack Overflow](https://stackoverflow.com/questions/tagged/r)
+
+    * [R Studio Community](https://community.rstudio.com/)
+
+<br>
+
+* Des données ?
+
+    * [Kaggle](https://www.kaggle.com/)
+
+<br>
+
+* Du R tous les jours, ou toutes les semaines :
+
+    * [R-Bloggers](https://www.r-bloggers.com/)
+
+    * [R Weekly](https://rweekly.org/)
 
 
 <!-- DROP DATABASE test_data; DROP ROLE test_user; DROP DATABASE datawarehouse; DROP ROLE data_user; DROP DATABASE movies; DROP ROLE imdb_user; -->
