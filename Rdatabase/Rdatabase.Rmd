@@ -11,7 +11,6 @@ params:
 output:
   ioslides_presentation:
     css: template/shiny-slides.css
-    highlight: zenburn
     incremental: false
     logo: template/logo_UMR.png
     smaller: true
@@ -348,7 +347,7 @@ dta <- tibble(
 * Récupérez la variable nommée `1`.
 * Tracez un nuage de points de `1` par rapport à `2`.
 * Créez un nouveau `tibble` avec une colonne nommée `3`, contenant le résultat de `2` divisé par `1`.
-* Renommez les colonnes avec leurs noms littéral: `"un"`, `"deux"` et `"trois"`.
+* Renommez les colonnes avec leurs noms littéral "un", "deux" et "trois", en construisant un nouveau `tibble`.
 
 
 ## Exercices (Partie II) {#exe}
@@ -367,7 +366,7 @@ dta <- tibble(
 * Tracez un nuage de points de `1` par rapport à `2`.
     ```{r, eval = FALSE}
     plot(dta$`1`, dta$`2`)
-    ggplot(data = dta, aes(x = `1`, y = `2`)) + geom_point(colour ="white")
+    ggplot(data = dta, aes(x = `1`, y = `2`)) + geom_point(colour = "white")
     ```
 
 
@@ -381,7 +380,7 @@ dta <- tibble(
       `3` = `2`/ `1`
     )
     ```
-* Renommez les colonnes avec leurs noms littéral : `un`, `deux` et `trois`, en construisant un nouveau `tibble`.
+* Renommez les colonnes avec leurs noms littéral "un", "deux" et "trois", en construisant un nouveau `tibble`.
     ```{r, eval = FALSE}
     dta <- tibble(
       "un" = 1:10,
@@ -460,7 +459,6 @@ x5 <- prop.table(x4)
 x6 <- which.max(x5)
 x7 <- names(x6)
 ```
-
 <br>
 Les inconvénients de cette écriture :
 
@@ -489,7 +487,6 @@ x <- prop.table(x)
 x <- which.max(x)
 x <- names(x)
 ```
-
 <br>
 Les inconvénients de cette écriture :
 
@@ -516,7 +513,6 @@ names(
 
 names(which.max(prop.table(table(na.exclude(sqrt(x))<1))))
 ```
-
 <br>
 Les inconvénients de cette écriture :
 
@@ -536,7 +532,6 @@ x %>%
   which.max() %>% 
   names()
 ```
-
 <br>
 A éviter si :
 
@@ -715,7 +710,7 @@ read_csv(
 * Un fichier CSV peut parfois contenir une virgule dans un champ.  
     Astuce : utilisez des guillemets simple `'` ou double `"`.
       1. Quel est le caractère par défaut utilisé par `read_csv()` ?  
-      2. Quelle fonction et argument utiliser pour changer ce caractère ?
+      2. Quel est l'argument à utiliser pour changer ce caractère ?
       3. Quelle fonction et avec quels arguments liriez-vous la chaîne suivante ?
     ```{r, eval = FALSE}
     "x,y\n1,'a,b'"
@@ -743,14 +738,9 @@ read_csv(
 
 * Un fichier CSV peut parfois contenir une virgule dans un champ.  
     Astuce : utilisez des guillemets simple `'` ou double `"`.
-    1. Quel est le caractère par défaut utiliser par `read_csv()` ? 
-    ```{r, eval = FALSE}
-    "
-    ```
-    2. Quelle fonction et argument utiliser pour changer ce caractère ? 
-    ```{r, eval = FALSE}
-    quote = "\""
-    ```
+    
+    1. Quel est le caractère par défaut utiliser par `read_csv()` ? `"`
+    2. Quel est l'argument à utiliser pour changer ce caractère ? `quote`
     3. Quelle fonction et avec quelle valeur argument liriez-vous la chaîne suivante ?
     ```{r, eval = FALSE}
     read_csv("x,y\n1,'a,b'", quote = "\'")
@@ -930,9 +920,18 @@ ratings %>%
 
 * Trouvez les films contenant "shark" dans le titre (`grepl()`).
 
-* Trouvez les films vus entre le 25 avril 2018 et 3 mai 2018.
+* Trouvez les films vus entre le 25 avril 2018 et le 3 mai 2018.
 
 * Que fait la fonction `between()` ?
+
+
+## Exercices {#exe}
+
+* Trouvez le film avec le plus grand nombre de notes.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(`Num Votes`==max(`Num Votes`))
+    ```
 
 
 ## Exercices {#exe}
@@ -947,7 +946,40 @@ ratings %>%
     ratings %>% 
       filter(grepl(pattern = "shark", x = Title, ignore.case = TRUE))
     ```
-* Trouvez les films vus entre le 25 avril 2018 et 3 mai 2018.
+
+
+## Exercices {#exe}
+
+* Trouvez le film avec le plus grand nombre de notes.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(`Num Votes`==max(`Num Votes`))
+    ```
+* Trouvez les films contenant "shark" dans le titre (`?grep`).
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(grepl(pattern = "shark", x = Title, ignore.case = TRUE))
+    ```
+* Trouvez les films vus entre le 25 avril 2018 et le 3 mai 2018.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(`Date Rated`>="2018-04-25" & `Date Rated`<="2018-05-03")
+    ```
+
+
+## Exercices {#exe}
+
+* Trouvez le film avec le plus grand nombre de notes.
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(`Num Votes`==max(`Num Votes`))
+    ```
+* Trouvez les films contenant "shark" dans le titre (`?grep`).
+    ```{r, eval = FALSE}
+    ratings %>% 
+      filter(grepl(pattern = "shark", x = Title, ignore.case = TRUE))
+    ```
+* Trouvez les films vus entre le 25 avril 2018 et le 3 mai 2018.
     ```{r, eval = FALSE}
     ratings %>% 
       filter(`Date Rated`>="2018-04-25" & `Date Rated`<="2018-05-03")
@@ -1115,7 +1147,7 @@ read_csv(file = "./materials/ratings.csv") %>%
     ratings %>% 
       summarise_at(
         .vars = vars(`IMDb Rating`), 
-        .funs = funs(mean, sd, min, max))
+        .funs = funs(mean, sd, min, max)
       )
     ```
 
@@ -1778,13 +1810,13 @@ __Note :__ `temporary = TRUE` permet de rendre la table uniquement disponible à
 
 ## Exercices {#exe}
 
-* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
+* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur `ratings_summary_db`.  
     Que se passe-t'il et pourquoi ?
 
 
 ## Exercices {#exe}
 
-* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur l'une des tables exportées.  
+* Utilisez les fonctions `head()` , `tail()` et `nrow()` sur `ratings_summary_db`.  
     Que se passe-t'il et pourquoi ?
     ```{r, warning = FALSE}
     ratings_summary_db %>% head(1)
@@ -1842,7 +1874,7 @@ et en ajoutant une colonne constructeur "const".
 * Créez dans la base "datawarehouse" l'ensemble des tables de *nycflights13*.  
     Vérifiez que les tables sont bien créées.
     
-* Effectuez la jointure de `planes`et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
+* Effectuez la jointure de `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
     Quelle est la requête SQL réalisée ?
 
 
@@ -1935,7 +1967,7 @@ et en ajoutant une colonne constructeur "const".
 
 ## Exercices (Partie I) {#exe}
 
-* Effectuez la jointure de `planes`et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).
+* Effectuez la jointure de `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).
     ```{r, warning = FALSE}
     longest_air_time_db <- nycflights13_db[["flights"]] %>%
       inner_join(nycflights13_db[["planes"]], by = "tailnum") %>%
@@ -1950,7 +1982,7 @@ et en ajoutant une colonne constructeur "const".
 
 ## Exercices (Partie I) {#exe}
 
-* Effectuez la jointure de `planes`et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
+* Effectuez la jointure de `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
     Quelle est la requête SQL réalisée ?
     ```{r, warning = FALSE}
     longest_air_time_db %>% show_query()
@@ -2617,7 +2649,11 @@ ratings_agg <- read_csv("materials/ratings.csv") %>%
   ) %>%
   right_join(
     tibble(
-      "Date Rated" = seq(from = as.Date("2015-01-01"), to = Sys.Date(), by = 1)
+      "Date Rated" = seq(
+        from = as.Date("2016-01-01"), 
+        to = as.Date(paste0(lubridate::year(Sys.Date()), "-12-31")), 
+        by = 1
+      )
     )
   ) %>%
   mutate(
@@ -2639,7 +2675,7 @@ x_labels <- ratings_agg %>%
   select(Week, Month) %>% 
   distinct() %>% 
   group_by(Month) %>% 
-  summarise(Week = min(Week))
+  summarise(Week = min(Week)+2)
 ```
 
 
@@ -2676,25 +2712,25 @@ print(p)
 
 ## `ratings` en images
 
-```{r, results = "hide", message = FALSE}
+```{r, results = "hide", message = FALSE, warning = FALSE}
 p <- read_csv("materials/ratings.csv") %>% 
   select(`Your Rating`, `IMDb Rating`) %>% 
   gather(data = ., key = Who, value = Rating) %>% 
   ggplot(aes(x = round(Rating, digits = 0), fill = Who)) +
     geom_density(
-      aes(y = ..count.. / sum(..count..) * 100), 
-      bw = 2, 
+      aes(x = Rating, y = (..count../sum(..count..))*100),
+      bw = 1, 
       alpha = 0.75, 
       colour = "white"
     ) +
-    geom_bar(
-      aes(y = ..count.. / sum(..count..)), 
-      width = 0.90, 
-      colour = "white", 
+    geom_histogram(
+      aes(y = ..count../sum(..count..)),
+      binwidth = 0.5,
+      colour = "white",
       position = position_dodge(preserve = "single")
     ) +
-    scale_x_continuous(name = "Rating", limits = c(0, 10), breaks = seq(0, 10, 2)) +
-    scale_y_continuous(labels = percent) +
+    scale_x_continuous(name = "Rating", expand = c(0, 0), limits = c(0, 10), breaks = c(0, seq_len(10))) +
+    scale_y_continuous(expand = c(0, 0), labels = percent, limits = c(0, 0.30)) +
     scale_fill_viridis(name = NULL, discrete = TRUE) +
     labs(x = "Rating", y = "Proportion", title = "Distribution of Ratings") +
     theme(legend.position = c(0, 1), legend.justification = c(-0.05, 1.05))
@@ -2762,7 +2798,11 @@ Supporte :
 
 # Merci ! | Présentation disponible au format Rmarkdown sur {.flexbox .vcenter}
 
-<a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase" style="color: #ffffff"><img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img><br>https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase</a>
+<a href = "https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase" style="color: #ffffff" class="auto-fadein">
+	<img src="images/GitHub_Logo.png" height="250" class="auto-fadein"></img>
+	<br>
+	https://github.com/mcanouil/PRESENTATION/tree/master/Rdatabase
+</a>
 
 ## Besoin d'aide ?
 
