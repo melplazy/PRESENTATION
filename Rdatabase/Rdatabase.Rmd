@@ -38,7 +38,8 @@ library(rmarkdown)
 library(kableExtra)
 # library(tidyverse)
 
-invisible(sapply(list.files(path = "../../DEV/Rfunctions/", full.names = TRUE), source))
+# invisible(sapply(list.files(path = "../../DEV/Rfunctions/", full.names = TRUE), source))
+source("theme_black.R")
 
 options("width" = 80)
 ### Set knitr rmarkdown chunk options
@@ -2751,7 +2752,7 @@ print(p)
 
 ## Pour aller plus loin ...
 
-* *ggplot2* : [[http://ggplot2.tidyverse.org/index.html](ggplot2.tidyverse.org)
+* *ggplot2* : [http://ggplot2.tidyverse.org/index.html](ggplot2.tidyverse.org)
 
 * *dbplot* : [https://github.com/edgararuiz/dbplot](https://github.com/edgararuiz/dbplot)
 
