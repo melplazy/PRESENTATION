@@ -23,7 +23,6 @@ options(stringsAsFactors = FALSE)
 Sys.setlocale("LC_TIME", "english_united kingdom.1252")
 
 ### Load packages and functions
-# library(parallel)
 library(grid)
 library(scales)
 library(broom)
@@ -31,14 +30,11 @@ library(viridis)
 # library(readxl)
 # library(writexl)
 # library(cowplot)
-# library(tableone)
 library(Hmisc)
 library(knitr)
 library(rmarkdown)
 library(kableExtra)
-# library(tidyverse)
 
-# invisible(sapply(list.files(path = "../../DEV/Rfunctions/", full.names = TRUE), source))
 source("theme_black.R")
 
 options("width" = 80)
