@@ -1550,7 +1550,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
           WHERE "DateRated">=\'2017-01-01\' AND "DateRated"<=\'2017-12-31\';'
       )
     ) %>% 
-      dbFetch()%>% 
+      dbFetch() %>% 
       dbWriteTable(con, "ratings2017", .)
     
     dbListTables(con)
