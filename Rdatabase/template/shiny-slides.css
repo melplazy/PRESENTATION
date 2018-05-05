@@ -118,7 +118,7 @@ pre {
 }
 
 article.smaller pre {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 ul {
@@ -165,5 +165,5 @@ table.rmdtable tr:nth-child(odd) {
 
 #exe {
   background-color: #f3f3f3;
-  padding: 5px 0px 5px 0px;
+  padding: 5px 0 1px 0;
 }

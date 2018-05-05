@@ -11,7 +11,6 @@ params:
 output:
   ioslides_presentation:
     css: template/shiny-slides.css
-    incremental: false
     logo: template/logo_UMR.png
     smaller: true
     self_contained: true
@@ -1871,7 +1870,7 @@ et en ajoutant une colonne constructeur "const".
 * Créez dans la base "datawarehouse" l'ensemble des tables de *nycflights13*.  
     Vérifiez que les tables sont bien créées.
     
-* Effectuez la jointure de `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
+* Effectuez la jointure des tables `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
     Quelle est la requête SQL réalisée ?
 
 
@@ -1964,7 +1963,7 @@ et en ajoutant une colonne constructeur "const".
 
 ## Exercices (Partie I) {#exe}
 
-* Effectuez la jointure de `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).
+* Effectuez la jointure des tables `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).
     ```{r, warning = FALSE}
     longest_air_time_db <- nycflights13_db[["flights"]] %>%
       inner_join(nycflights13_db[["planes"]], by = "tailnum") %>%
@@ -1979,7 +1978,7 @@ et en ajoutant une colonne constructeur "const".
 
 ## Exercices (Partie I) {#exe}
 
-* Effectuez la jointure de `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
+* Effectuez la jointure des tables `planes` et `flights` pour identifier les trois constructeurs ayant le plus grand nombre d'heures de vol (`?dplyr::join`).  
     Quelle est la requête SQL réalisée ?
     ```{r, warning = FALSE}
     longest_air_time_db %>% show_query()
@@ -2175,7 +2174,7 @@ dbDisconnect(con)
 
 ## Pour aller plus loin ...
 
-* Tutoriel SQL: [www.codecademy.com](https://www.codecademy.com/learn/learn-sql)
+* Tutoriel SQL : [www.codecademy.com](https://www.codecademy.com/learn/learn-sql)
 
 * Le SQL en 10 étapes : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
 
@@ -2512,7 +2511,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
     * Titre.
     ```{r, eval = FALSE}
-    title <- x %>% 
+    title <- movies_list %>% 
       html_nodes("h3.lister-item-header") %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
@@ -2533,7 +2532,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
 * Genres.
     ```{r, eval = FALSE}
-    genres <- x %>% 
+    genres <- movies_list %>% 
       html_nodes("span.genre") %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
@@ -2553,7 +2552,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
 * Durée du film.
     ```{r, eval = FALSE}
-    runtime <- x %>% 
+    runtime <- movies_list %>% 
       html_nodes("span.runtime") %>% 
       html_text() %>% 
       gsub("\n", "", .) %>% 
@@ -2573,7 +2572,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
     ```
 * Note.
     ```{r, eval = FALSE}
-    rating <- x %>% 
+    rating <- movies_list %>% 
       html_nodes("div.ipl-rating-widget") %>% 
       html_nodes("div.ipl-rating-star.small") %>% 
       html_text("span.ipl-rating-star__rating") %>% 
