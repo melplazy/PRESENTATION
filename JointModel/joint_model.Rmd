@@ -6,7 +6,7 @@ monofont: 'Source Code Pro'
 monofontoptions: 'Scale=0.7'
 bibliography: [bib/Canouil_etal_2018.bib]
 biblio-style: apalike
-csl: csl/apa.csl
+csl: template/csl/apa.csl
 params:
   eval: TRUE
 output:
@@ -70,7 +70,9 @@ theme_set(theme_black(base_size = 14))
 
 require(ggraph)
 jm_data <- new.env()
-load(file = "Routput/DataArticle_20180102.Rdata", envir = jm_data)
+load(file = "Routput/DataArticle_20180417.Rdata", envir = jm_data)
+
+"/disks/DATATMP/DESIR_longitudinal/ArticleR/simuDtaRMSE.Rdata"
 format_scientific <- function(x, digits = 3) {
   y <- format(x, scientific = -1, digits = digits)
   if (length(grep("e", y)) != 0) {
@@ -86,6 +88,22 @@ format_scientific <- function(x, digits = 3) {
   }
 }
 
+my_trans <- function () {
+  trans_new(
+    name = "my", 
+    transform = function(x){sqrt(abs(x))*sign(x)}, 
+    inverse = function(x) {(x^2)*sign(x)}, 
+    domain = c(-Inf, Inf)
+  )
+}
+sqrt_zero_trans <- function() {
+  trans_new(
+    name = "sqrt_zero",
+    transform = base::sqrt,
+    inverse = function(x) ifelse(x==0, 0, x^2),
+    domain = c(0, Inf)
+  )
+}
 ```
 
 
@@ -172,7 +190,7 @@ where:
 
 ## Hopefully, the Mixed Model is there!
 
-(Generalised) linear mixed effect (LME) model:
+(Generalised) linear mixed effect model:
 $$Y_{i}(t_{ij})=X_{i}(t_{ij})+\epsilon_{i}(t_{ij})$$
 
 where:
@@ -377,7 +395,7 @@ Let:
 
 ## The longitudinal component
 
-(Generalised) linear mixed effect (LME) model:
+(Generalised) linear mixed effect model:
 $$Y_{i}(t_{ij})=X_{i}(t_{ij})+\epsilon_{i}(t_{ij})$$
 $X_{ij}$ is the trajectory function, and could be defined:
 $$\begin{gather}X_{i}(t_{ij})=\theta_{0i} + \theta_{1i}t_{ij} + \cdots + \theta_{pi}t_{ij}^p &, & \boldsymbol\theta_p \sim \mathcal{N}(\boldsymbol\mu_, \boldsymbol\Sigma)\end{gather}$$
@@ -387,7 +405,7 @@ $$\begin{gather}Y_{i}(t_{ij})=\theta_{0i}+\theta_{1i}t_{ij}+\gamma Z_i+\delta W_
 
 ## The longitudinal component
 
-(Generalised) linear mixed effect (LME) model:
+(Generalised) linear mixed effect model:
 $$Y_{i}(t_{ij})=\theta_{0i}+\theta_{1i}t_{ij}+\gamma Z_i+\delta W_i+\epsilon_{ij}$$
 
 where:
@@ -420,17 +438,21 @@ Where:
 
 ## Hypothesis testing
 
+<div class="centered">
 Null hypothesis: $\begin{cases}H_0&:& \theta=\theta_0\\H_1&:& \theta\neq\theta_0\end{cases}$
+</div>
 
 * __Likelihood Ratio Test__  
-    $LRT=-2\{\ell(\hat{\theta}_0)-\ell(\hat{\theta})\}$
+    $$LRT=-2\{\ell(\hat{\theta}_0)-\ell(\hat{\theta})\}$$
 
 *  __Wald Test__  
-    $W=(\hat{\theta}-\theta_0)^\top \mathcal{I}(\hat{\theta})(\hat{\theta}-\theta_0)$  
-    (univariate: $(\hat{\theta}_j-\theta_{0j})/\widehat{s.e.}(\hat{\theta}_j)$)
+    $$\begin{gather}
+    W=(\hat{\theta}-\theta_0)^\top \mathcal{I}(\hat{\theta})(\hat{\theta}-\theta_0)\\  
+    \left(\text{Univariate: }(\hat{\theta}_j-\theta_{0j})/\widehat{\text{s.e.}}(\hat{\theta}_j)\right)
+    \end{gather}$$
 
 * __Score Test__  
-  $U=S^\top(\hat{\theta}_0)\{\mathcal{I}(\hat{\theta}_0)\}^{-1}S(\hat{\theta}_0)$
+    $$U=S^\top(\hat{\theta}_0)\{\mathcal{I}(\hat{\theta}_0)\}^{-1}S(\hat{\theta}_0)$$
 
 
 # Is the Joint Model worth it? | Let's find out with simulations!
@@ -456,7 +478,7 @@ What if, we split the job in two?
 
 $\Rightarrow$ "Two-Step" [@tsiatis_modeling_1995]?
 
-1. (Generalised) linear mixed effect (LME) model  
+1. (Generalised) linear mixed effect model  
     $$\begin{align}
     Y_{i}(t)&=X_i(t)+ \epsilon_{i}(t)\\
     X^*_{i}(t)&=E\{X_{i}(t)|\bar{Y_i}(t), T_i\geq t\}
@@ -485,15 +507,19 @@ Let's keep it simple, i.e., without covariates:
 ## Set the parameters! {.flexbox .vcenter}
 
 <div class="columns-2">
+<div class="centered">
 ```{r, out.height = "360px", out.width = "360px"}
 include_graphics(path = "images/ng2385-F2.png")
 ```
 <p>@scott_large-scale_2012</p>
+</div>
 
+<div class="centered">
 ```{r, out.height = "360px", out.width = "360px"}
 include_graphics(path = "images/Yaghootkar.png")
 ```
 <p>@yaghootkar_recent_2013</p>
+</div>
 </div>
 
 
@@ -529,7 +555,10 @@ settings.table[, "Values"] <- c(
     format_scientific(jm_data$rawsettings$Epsilon_thetas[2, 2]), " \\end{bmatrix} \\right )$"
   ),
   signif(jm_data$rawsettings$gamma, digits = 3), 
-  signif(jm_data$rawsettings$alpha[2], digits = 3), 
+  paste0(
+    signif(jm_data$rawsettings$alpha[2], digits = 3),
+    " (OR=", signif(exp(jm_data$rawsettings$alpha[2]), digits = 3), ")"
+  ), 
   signif(jm_data$rawsettings$beta, digits = 3), 
   paste0("$\\sim\\mathcal{N}(0,", signif(jm_data$rawsettings$sigma, digits = 3), "^2)$")
 )
@@ -549,6 +578,318 @@ kable(
   ),
   table.attr = 'style="font-size:75%;"'
 )
+```
+
+
+## What could we expect?
+
+Let's do some power calculation [chen_sample_2011]:
+
+$$\begin{gather}
+  H_0:\ \beta\gamma+\alpha=0 \\
+  d=\frac{(z_{\tilde{\beta}}+z_{1-\tilde{\alpha}})^2}{f(1-f)(\beta\gamma+\alpha)^2} \\
+  z_{\tilde{\beta}}=\pm\sqrt{df(1-f)(\beta\gamma+\alpha)^2}+z_{1-\tilde{\alpha}}
+\end{gather}$$
+
+With:
+<div class="columns-2">
+* $d$, the incidence rate;
+* $f$, the allele frequency;
+
+* $\tilde{\alpha}$, the significance level;
+* $\tilde{\beta}_{\tilde{\alpha}}$, statistical power at $\tilde{\alpha}$.
+</div>
+
+<div class="centered">
+$\Rightarrow\tilde{\beta}_{\tilde{\alpha}}=46.56\%$ for _TCF7L2_ (rs17747324).
+</div>
+
+
+# Back to the simulations! | Let's see some (animated) pictures! {.flexbox .vcenter}
+
+```{r, out.height = "405px", out.width = "720px"}
+all_gif <- jm_data$simuDtaRMSE %>% 
+  mutate(
+    group = map_chr(.x = p, .f = function(.p) {
+      switch(
+        EXPR = .p,
+        "L.SNP" = {"## $\\gamma$: Association between $Z_{i}$ and $X_{i}(t)$"},
+        "S.Assoct" = {"## $\\beta$: Association between $X_{i}(t)$ and $S_{i}$"},
+        "S.SNP" = {"## $\\alpha$: Association beteen the $Z_{i}$ and $S_{i}$"}
+      )
+    }) %>% 
+      factor(
+        levels = c(
+          "## $\\beta$: Association between $X_{i}(t)$ and $S_{i}$", 
+          "## $\\gamma$: Association between $Z_{i}$ and $X_{i}(t)$", 
+          "## $\\alpha$: Association beteen the $Z_{i}$ and $S_{i}$"
+        )
+      )
+  ) %>% 
+  arrange(group) %>% 
+  mutate(
+    model = map_chr(.x = model, .f = function(.model) {
+      c("Joint Model", "Two Step", "Linear Mixed Model", "Cox Model with\ntime varying covariate")[c("JointModel", "TwoStep", "MixedModel", "SurvivalModelTime")%in%.model]
+    }),
+    model = factor(
+      x = model,
+      levels = c("Joint Model", "Two Step", "Linear Mixed Model", "Cox Model with\ntime varying covariate")
+    )
+  ) %>% 
+  group_by(group) %>% 
+  nest() %>% 
+  mutate(
+    RMSE = map(.x = data, .f = function(.data) {
+      p <- ggplot(data = .data, aes(x = maf, y = RMSE, fill = model)) +
+        geom_bar(stat = "identity", position = "dodge") +
+        theme(
+          axis.text.x = element_text(angle = 60, hjust = 1, vjust = 1),
+          panel.spacing.x = unit(0, "in"),
+          panel.grid.minor = element_blank()
+        ) +
+        labs(
+          title = "{closest_state}",
+          x = "Allele Frequency (f)",
+          y = switch(unique(.data[["p"]]),
+            "L.SNP" = {expression("RMSE" == sqrt(symbol(E)((hat(gamma) - gamma) ^ 2)))},
+            "S.Assoct" = {expression("RMSE" == sqrt(symbol(E)((hat(beta) - beta) ^ 2)))},
+            "S.SNP" = {expression("RMSE" == sqrt(symbol(E)((hat(alpha) - alpha) ^ 2)))}
+          )
+        ) +
+        scale_fill_viridis_d(name = NULL, drop = FALSE) +
+        facet_grid(rows = vars(d), cols = vars(measures))
+      if (unique(.data[["p"]])=="S.SNP") {
+        p <- p + scale_y_continuous(expand = expand_scale(mult = c(0, 0.05)), trans = "sqrt_zero", breaks = c(0, 1, 2.5, 5, 10))
+      } else {
+        p <- p + scale_y_continuous(expand = expand_scale(mult = c(0, 0.05)))
+      }
+      p +
+        transition_states(
+          states = n,
+          transition_length = 4,
+          state_length = 10
+        )
+    })
+  ) %>% 
+  mutate(
+    bias = map(.x = data, .f = function(.data) {
+      p <- ggplot(data = .data, aes(x = maf, y = Bias, fill = model)) +
+        geom_bar(stat = "identity", position = "dodge") +
+        theme(
+          axis.text.x = element_text(angle = 60, hjust = 1, vjust = 1),
+          panel.spacing.x = unit(0, "in"),
+          panel.grid.minor = element_blank()
+        ) +
+        labs(
+          title = "{closest_state}",
+          x = "Allele Frequency (f)",
+          y = switch(unique(.data[["p"]]),
+            "L.SNP" = {expression(Bias(hat(gamma)))},
+            "S.Assoct" = {expression(Bias(hat(beta)))},
+            "S.SNP" = {expression(Bias(hat(alpha)))}
+          )
+        ) +
+        scale_fill_viridis_d(name = NULL, drop = FALSE) +
+        facet_grid(rows = vars(d), cols = vars(measures))
+      if (unique(.data[["p"]])=="S.SNP") {
+        p <- p + scale_y_continuous(expand = expand_scale(mult = c(0.05, 0.05)), trans = "my", breaks = c(-1, 0, 1, 2.5, 5, 7.5))
+      } else {
+        p <- p + scale_y_continuous(expand = expand_scale(mult = c(0.05, 0.05)))
+      }
+      p +
+        transition_states(
+          states = n,
+          transition_length = 4,
+          state_length = 10
+        )
+    })
+  ) %>% 
+  mutate(
+    var = map(.x = data, .f = function(.data) {
+      p <- ggplot(data = .data, aes(x = maf, y = Var, fill = model)) +
+        geom_bar(stat = "identity", position = "dodge") +
+        theme(
+          axis.text.x = element_text(angle = 60, hjust = 1, vjust = 1),
+          panel.spacing.x = unit(0, "in"),
+          panel.grid.minor = element_blank()
+        ) +
+        labs(
+          title = "{closest_state}",
+          x = "Allele Frequency (f)",
+          y = switch(unique(.data[["p"]]),
+            "L.SNP" = {expression(Var(hat(gamma)))},
+            "S.Assoct" = {expression(Var(hat(beta)))},
+            "S.SNP" = {expression(Var(hat(alpha)))}
+          )
+        ) +
+        scale_fill_viridis_d(name = NULL, drop = FALSE) +
+        facet_grid(rows = vars(d), cols = vars(measures))
+      if (unique(.data[["p"]])=="S.SNP") {
+        p <- p + scale_y_continuous(expand = expand_scale(mult = c(0, 0.05)), trans = "sqrt_zero", breaks = c(0, 1, 10, 25, 50, 75))
+      } else {
+        p <- p + scale_y_continuous(expand = expand_scale(mult = c(0, 0.05)))
+      }
+      p +
+        transition_states(
+          states = n,
+          transition_length = 4,
+          state_length = 10
+        )
+    })
+  )
+
+for (igroup in all_gif[["group"]]) {
+  cat("\n")
+  cat(igroup, " {.flexbox .vcenter}\n")
+  cat("\n")
+  animate(
+    plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "RMSE"]],
+    width = 800*1.5,
+    height = 450*1.5,
+    res = 120,
+    bg = ggplot2::theme_get()$plot.background$colour,
+    renderer = gifski_renderer(
+      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.gif")
+    )
+  )
+  cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.gif", ")"))
+  cat("\n")
+  
+  cat("\n")
+  cat(igroup, " {.flexbox .vcenter}\n")
+  cat("\n")
+  animate(
+    plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "bias"]],
+    width = 800*1.5,
+    height = 450*1.5,
+    res = 120,
+    bg = ggplot2::theme_get()$plot.background$colour,
+    renderer = gifski_renderer(
+      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.gif")
+    )
+  )
+  cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.gif", ")"))
+  cat("\n")
+
+  cat("\n")
+  cat(igroup, " {.flexbox .vcenter}\n")
+  cat("\n")
+  animate(
+    plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "var"]],
+    width = 800*1.5,
+    height = 450*1.5,
+    res = 120,
+    bg = ggplot2::theme_get()$plot.background$colour,
+    renderer = gifski_renderer(
+      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.gif")
+    )
+  )
+  cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.gif", ")"))
+  cat("\n")
+}
+```
+
+
+## What about time?
+```{r}
+jm_data$sprof[, "mean.jm"] <- paste0(jm_data$sprof[, "mean.jm"], "(", jm_data$sprof[, "sd.jm"], ")")
+jm_data$sprof[, "mean.ts"] <- paste0(jm_data$sprof[, "mean.ts"], "(", jm_data$sprof[, "sd.ts"], ")")
+jm_data$sprof[, c("sd.jm", "sd.ts")] <- NULL
+jm_data$sprof <- jm_data$sprof[, c("n", "mean.jm", "mean.metabochip.jm", "mean.ts", "mean.metabochip.ts")]
+jm_data$sprof[, "mean.jm"] <- gsub("sec", "secs ", jm_data$sprof[, "mean.jm"])
+jm_data$sprof[, "mean.jm"] <- gsub("secs", "", jm_data$sprof[, "mean.jm"])
+jm_data$sprof[, "mean.ts"] <- gsub("sec", "secs ", jm_data$sprof[, "mean.ts"])
+jm_data$sprof[, "mean.ts"] <- gsub("secs", "", jm_data$sprof[, "mean.ts"])
+jm_data$sprof[, "mean.metabochip.jm"] <- gsub("days", "", jm_data$sprof[, "mean.metabochip.jm"])
+jm_data$sprof[, "mean.metabochip.ts"] <- gsub("days", "", jm_data$sprof[, "mean.metabochip.ts"])
+kable(
+  jm_data$sprof, 
+  align = "c",
+  col.names = c("Sample Size", "mean (sd)\\newline per SNP\\newline in seconds", "100K SNPs\\newline in days", "mean (sd)\\newline per SNP\\newline in seconds", "100K SNPs\\newline in days"), 
+  escape = FALSE,
+  table.attr = 'style="font-size:75%;"'
+) %>% 
+  add_header_above(c(" ", "Joint Model" = 2, "Two-Step Model" = 2))
+```
+
+
+# Few rounds with real data | The French cohort D.E.S.I.R.
+
+## Results
+```{r, out.height = "405px", out.width = "720px"}
+p <- ggplot(
+  data = bind_rows(
+    jm_data$p.estimateJM.sign$data %>% mutate(event = 0),
+    jm_data$p.estimateJM.sign$data %>% filter(InGWAS) %>% mutate(event = 100)
+  ),
+  mapping = aes(
+    x = gamma.estimate, 
+    y = exp(alpha.estimate), 
+    colour = GeneSymbol.Closest, 
+    fill = GeneSymbol.Closest, 
+    shape = GeneSymbol.Closest
+  )
+) +
+  theme(axis.text = element_text(size = rel(0.8), colour = "white"))+
+  geom_hline(yintercept = 1, linetype = 1, colour = "white") +
+  geom_vline(xintercept = 0, linetype = 1, colour = "white") +
+  geom_point(size = 2, colour = "white") +
+  scale_colour_viridis_d(name = "Gene Symbol") +
+  scale_fill_viridis_d(name = "Gene Symbol") +
+  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40)) +
+  scale_y_continuous(breaks = c(0.5, 1, 1.5, 2)) +
+  labs(
+    x = "Fasting plasma glucose per allele effect (mmol/L)",
+    y = expression(atop("Type 2 diabetes hazard ratio", paste("(fasting plasma glucose " >= "7.0mmol/L)")))
+  ) +
+  geom_label_repel(
+    data = jm_data$p.estimateJM.sign$data %>% 
+      filter(InGWAS) %>% 
+      filter(GeneSymbol.Closest=="TCF7L2") %>% 
+      summarise(
+        x = median(gamma.estimate), 
+        y = median(exp(alpha.estimate)),
+        GeneSymbol.Closest = unique(GeneSymbol.Closest)
+      ),
+    mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
+    nudge_x = -0.015, 
+    nudge_y = 0.35, 
+    segment.colour = "white", 
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  geom_label_repel(
+    data = jm_data$p.estimateJM.sign$data %>% 
+      filter(InGWAS) %>% 
+      filter(GeneSymbol.Closest=="MTNR1B") %>% 
+      summarise(
+        x = median(gamma.estimate), 
+        y = median(exp(alpha.estimate)),
+        GeneSymbol.Closest = unique(GeneSymbol.Closest)
+      ),
+    mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
+    nudge_x = 0.03, 
+    nudge_y = 0.5,
+    segment.colour = "white", 
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  theme(legend.position = "none") +
+  transition_states(states = event, transition_length = 1, state_length = 10)
+
+  animate(
+    plot = p,
+    width = 800*1.5,
+    height = 450*1.5,
+    res = 120,
+    bg = ggplot2::theme_get()$plot.background$colour,
+    renderer = gifski_renderer(
+      file = "./images/results_jm.gif"
+    )
+  )
+  cat("\n")
+  cat("![](./images/results_jm.gif)")
+  cat("\n")
 ```
 
 
@@ -575,10 +916,10 @@ kable(
     <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="https://github.com/mcanouil" target="_blank">mcanouil</a> 
 
 <span class="uk-icon-button" uk-icon="icon: twitter; ratio: 1"></span>
-    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="https://twitter.com/Coeos_" target="_blank">@ Coeos_</a> 
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="https://twitter.com/Coeos_" target="_blank">Coeos_</a> 
 
 </div>
 </div>
 
 
-# References {.smaller}
+# {.flexbox .vcenter .references}
