@@ -39,10 +39,12 @@ library(kableExtra)
 library(gganimate)
 options(gganimate.dev_args = list(width = 800, height = 450))
 library(ggrepel)
+library(ggraph)
 
 devtools::source_url('https://github.com/mcanouil/DEV/raw/master/Rfunctions/theme_black.R')
 devtools::source_url('https://github.com/mcanouil/DEV/raw/master/Rfunctions/pretty_kable.R')
 devtools::source_url('https://github.com/mcanouil/DEV/raw/master/Rfunctions/ggmanhattan.R')
+devtools::source_url('https://github.com/mcanouil/DEV/raw/master/Rscripts/jointModelSimulation.R')
 
 options("width" = 80)
 ### Set knitr rmarkdown chunk options
@@ -71,10 +73,26 @@ theme_set(theme_black(base_size = 14))
 
 # options(tibble.print_max = 3, tibble.print_min = 3)
 
-require(ggraph)
+
+
+### Get data
+# file.copy(
+#   from = "/disks/DATATMP/DESIR_longitudinal/ArticleR/MetaboChip_T2D.annot.Rdata", 
+#   to = "Routput/MetaboChip_T2D.annot.Rdata"
+# )
+load(file = "Routput/MetaboChip_T2D.annot.Rdata")
+
+# jm_data <- new.env()
+# load(file = "/disks/DATATMP/DESIR_longitudinal/ArticleR/DataArticle_20180417.Rdata", envir = jm_data)
+# rm(
+#   list = setdiff(ls(jm_data), c("rawsettings", "bestEffect", "simuDtaRMSE", "sprof", "p.estimateJM.sign")), 
+#   envir = jm_data
+# )
+# save(jm_data, file = "Routput/DataArticle_20180417.Rdata")
 load(file = "Routput/DataArticle_20180417.Rdata")
 
-"/disks/DATATMP/DESIR_longitudinal/ArticleR/simuDtaRMSE.Rdata"
+
+### Some functions
 format_scientific <- function(x, digits = 3) {
   y <- format(x, scientific = -1, digits = digits)
   if (length(grep("e", y)) != 0) {
@@ -98,6 +116,7 @@ my_trans <- function () {
     domain = c(-Inf, Inf)
   )
 }
+
 sqrt_zero_trans <- function() {
   trans_new(
     name = "sqrt_zero",
@@ -591,8 +610,6 @@ kable(
 ## How does our fake data looks like? {.flexbox .vcenter}
 
 ```{r, out.height = "432px", out.width = "768px"}
-devtools::source_url('https://github.com/mcanouil/DEV/raw/master/Rscripts/jointModelSimulation.R')
-library(MASS)
 oneSimulation <- function(sampleSize, settings, seed) {
   set.seed(seed)
   settings$alpha["(Intercept)"] <- uniroot(
@@ -919,7 +936,6 @@ kable(
 ## Small overview with a Manhattan plot {.flexbox .vcenter}
 
 ```{r, out.height = "432px", out.width = "768px"}
-load(file = "/disks/DATATMP/DESIR_longitudinal/ArticleR/MetaboChip_T2D.annot.Rdata")
 ggdta_T2D <- results.annot %>% 
   select(c(
     "chr", "position", "RSID", 
@@ -1099,6 +1115,17 @@ p <- ggdata_clean %>%
       na.rm = TRUE
     ) +
     transition_reveal(id = id, along = y_reveal, range = c(0, 90))
+
+animate(
+  plot = p,
+  width = 800*1.5,
+  height = 450*1.5,
+  res = 120,
+  bg = ggplot2::theme_get()$plot.background$colour,
+  renderer = gifski_renderer(
+    file = "./images/results_manhattan.gif"
+  )
+)
 ```
 
 
