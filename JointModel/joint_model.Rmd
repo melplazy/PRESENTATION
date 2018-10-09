@@ -59,7 +59,7 @@ opts_chunk$set(
   autodep = TRUE,
   dpi = 120,
   fig.path = "./images/",
-  cache = FALSE,
+  cache = TRUE,
   # cache.path = NULL,
   width = 80,
   comment = "#>",
@@ -132,28 +132,28 @@ sqrt_zero_trans <- function() {
 
 
 ## A lot of SNPs discovered ... {.flexbox .vcenter}
-```{r, out.height = "432px", out.width = "768px"}
+```{r t2dhistory, out.height = "432px", out.width = "768px"}
 include_graphics(path = "images/T2Dhistory.jpg")
 ```
 <p>@flannick_type_2016</p>
 
 
 ## Associated with T2D and traits ... {.flexbox .vcenter}
-```{r, out.height = "432px", out.width = "768px"}
+```{r prokopenko, out.height = "432px", out.width = "768px"}
 include_graphics(path = "images/ProkopenkoMetaboDiagram.png")
 ```
 <p>@marullo_insights_2014</p>
 
 
 ## But, weak correlation of the effects {.flexbox .vcenter}
-```{r, out.height = "432px", out.width = "432px"}
+```{r scott1, out.height = "432px", out.width = "432px"}
 include_graphics(path = "images/ng2385-F2.png")
 ```
 <p>@scott_large-scale_2012</p>
 
 
 ## But, weak correlation of the effects {.flexbox .vcenter}
-```{r, out.height = "432px", out.width = "768px"}
+```{r yaghootkar1, out.height = "432px", out.width = "768px"}
 include_graphics(path = "images/Yaghootkar.png")
 ```
 <p>@yaghootkar_recent_2013</p>
@@ -186,7 +186,7 @@ _"In all cases, the glucose-raising allele was associated with increased risk of
 </div>
 
 
-## Let's start with the Cox Model ... {.flexbox .vleft}
+## We can start with a Cox Model ... {.flexbox .vleft}
 
 (Extended) Cox model:
 $$\begin{align}
@@ -201,7 +201,7 @@ where:
 * $\beta$ measures the association between the trajectory function $Y_i(t)$ and the hazard function.
 
 
-## It works, but biomarkers ... {.flexbox .vleft}
+## It works, but biomarkers ... {.flexbox .vleft .build}
 
 1. are measured at determined time points ($t_{ij}$)
 2. can have missing values over time
@@ -240,14 +240,15 @@ Test simultaneously an effect on:
 
 A gain in statistical power to detect those effects,
 
-* if $\beta\neq0$  
-    (to detect a joint effect of $Z$: $\beta\gamma+\alpha\neq0$, @chen_sample_2011);
+* if $\beta\neq0$, to detect a joint effect of $Z$:  
+    $$\beta\gamma+\alpha\neq0$$
+    (@chen_sample_2011);
 * compared to the extended Cox model.
 
 
 ## What is a Joint Model? With a picture! {.flexbox .vleft}
 
-```{r, out.height = "432px", out.width = "768px"}
+```{r diagram_data, out.height = "432px", out.width = "768px"}
 data_arrows <- tribble(
   ~x, ~y, ~xend, ~yend, ~step,
   
@@ -359,9 +360,9 @@ p_init <- ggplot() +
 cat("\n")
 ```
 
-```{r, out.height = "432px", out.width = "768px"}
+```{r diagram_figs, out.height = "432px", out.width = "768px"}
 for (istep in 2:8) {
-  cat("\n## What is Joint Model? With a picture! {.flexbox .vcenter}\n")
+  cat("\n## What is a Joint Model? With a picture! {.flexbox .vcenter}\n")
   cat("\n")
   p <- p_init +
     geom_segment(
@@ -439,7 +440,7 @@ where:
 
 * $Y_{i}(t_{ij})$, the observed value;
 * $X_{i}(t_{ij})$, the true (unobserved) value of the longitudinal measurement at time $t_{ij}$ for individual $i$;
-* $\epsilon_{ij}$ is a random error term, usually: $\epsilon_{ij}\sim \mathcal{N}(0,\sigma^2)$;
+* $\epsilon_{ij}$,a random error term, usually: $\epsilon_{ij}\sim \mathcal{N}(0,\sigma^2)$;
 * $Z_i$, a vector denoting the genotype of individual $i$;
 * $W_i$, a set of adjusting covariates.
 
@@ -463,9 +464,9 @@ Where:
     \end{cases}$
 
 
-## Hypothesis testing {.flexbox .vleft}
+## Hypothesis testing
 
-Null hypothesis: $\begin{cases}H_0&:& \theta=\theta_0\\H_1&:& \theta\neq\theta_0\end{cases}$
+<div class="centered">Null hypothesis: $\begin{cases}H_0&:& \theta=\theta_0\\H_1&:& \theta\neq\theta_0\end{cases}$</div>
 
 * __Likelihood Ratio Test__  
     $$LRT=-2\{\ell(\hat{\theta}_0)-\ell(\hat{\theta})\}$$
@@ -497,11 +498,11 @@ Null hypothesis: $\begin{cases}H_0&:& \theta=\theta_0\\H_1&:& \theta\neq\theta_0
     ... in a reasonable time frame?
 
 
-## A more "naive" approach to compare to! {.flexbox .vleft}
+## A more "naive" approach! {.flexbox .vleft}
 
 What if, we split the job in two?
 
-$\Rightarrow$ "Two-Step" [@tsiatis_modeling_1995]?
+$\Rightarrow$ "Two-Step"? [@tsiatis_modeling_1995]
 
 1. (Generalised) linear mixed effect model  
     $$\begin{align}
@@ -533,14 +534,14 @@ Let's keep it simple, i.e., without covariates:
 
 <div class="columns-2">
 <div class="centered">
-```{r, out.height = "360px", out.width = "360px"}
+```{r scott2, out.height = "360px", out.width = "360px"}
 include_graphics(path = "images/ng2385-F2.png")
 ```
 <p>@scott_large-scale_2012</p>
 </div>
 
 <div class="centered">
-```{r, out.height = "360px", out.width = "360px"}
+```{r yaghootkar2, out.height = "360px", out.width = "360px"}
 include_graphics(path = "images/Yaghootkar.png")
 ```
 <p>@yaghootkar_recent_2013</p>
@@ -550,7 +551,7 @@ include_graphics(path = "images/Yaghootkar.png")
 
 ## Set the parameters! {.flexbox .vcenter}
 
-```{r}
+```{r parameters_table}
 settings.table <- data.frame(
   matrix(NA, nrow = 9, ncol = 2, dimnames = list(NULL, c("Parameters", "Values")))
 )
@@ -609,7 +610,7 @@ kable(
 
 ## How does our fake data looks like? {.flexbox .vcenter}
 
-```{r, out.height = "432px", out.width = "768px"}
+```{r simulations_data, out.height = "432px", out.width = "768px"}
 oneSimulation <- function(sampleSize, settings, seed) {
   set.seed(seed)
   settings$alpha["(Intercept)"] <- uniroot(
@@ -691,15 +692,15 @@ animate(
   res = 120,
   bg = ggplot2::theme_get()$plot.background$colour,
   renderer = gifski_renderer(
-    file = "./images/simulate_data.gif"
+    file = "./images/simulations_data.gif"
   )
 )
 ```
 
 
-## What could we expect with those parameters? {.flexbox .vleft}
+## What could we expect? {.flexbox .vleft}
 
-Let's do some power calculation [chen_sample_2011]:
+Let's do some power calculation (chen_sample_2011):
 
 $$\begin{gather}
   H_0:\ \beta\gamma+\alpha=0 \\
@@ -723,7 +724,7 @@ $\Rightarrow\tilde{\beta}_{\tilde{\alpha}}=46.56\%$ for _TCF7L2_ (rs17747324).
 
 # Back to the Simulations! | Let's see some (animated) pictures! {.flexbox .vcenter}
 
-```{r, out.height = "432px", out.width = "768px"}
+```{r simulations_results, out.height = "432px", out.width = "768px"}
 all_gif <- jm_data$simuDtaRMSE %>% 
   mutate(
     group = map_chr(.x = p, .f = function(.p) {
@@ -906,9 +907,9 @@ for (igroup in all_gif[["group"]]) {
 ```
 
 
-## What about computationtime? {.flexbox .vcenter}
+## What about computation time? {.flexbox .vcenter}
 
-```{r}
+```{r computation_time}
 jm_data$sprof[, "mean.jm"] <- paste0(jm_data$sprof[, "mean.jm"], "(", jm_data$sprof[, "sd.jm"], ")")
 jm_data$sprof[, "mean.ts"] <- paste0(jm_data$sprof[, "mean.ts"], "(", jm_data$sprof[, "sd.ts"], ")")
 jm_data$sprof[, c("sd.jm", "sd.ts")] <- NULL
@@ -935,7 +936,7 @@ kable(
 
 ## Small overview with a Manhattan plot {.flexbox .vcenter}
 
-```{r, out.height = "432px", out.width = "768px"}
+```{r manhattan, out.height = "432px", out.width = "768px"}
 ggdta_T2D <- results.annot %>% 
   select(c(
     "chr", "position", "RSID", 
@@ -1116,27 +1117,40 @@ p <- ggdata_clean %>%
     ) +
     transition_reveal(id = id, along = y_reveal, range = c(0, 90))
 
+# animate(
+#   plot = p,
+#   width = 800*1.5,
+#   height = 450*1.5,
+#   res = 120,
+#   bg = ggplot2::theme_get()$plot.background$colour,
+#   renderer = gifski_renderer(
+#     file = "./images/results_manhattan.gif"
+#   )
+# )
 animate(
   plot = p,
-  width = 800*1.5,
-  height = 450*1.5,
+  nframes = 1000,
+  fps = 25,
+  width = 800,
+  height = 450,
   res = 120,
   bg = ggplot2::theme_get()$plot.background$colour,
-  renderer = gifski_renderer(
-    file = "./images/results_manhattan.gif"
-  )
+  renderer = av_renderer(file = "./images/results_manhattan.mp4")
 )
 ```
 
 
-## Because effect size matters ... {.flexbox .vcenter}
+## Because, effect size matters ... {.flexbox .vcenter}
 
-```{r, out.height = "432px", out.width = "768px"}
-p <- ggplot(
-  data = bind_rows(
-    jm_data$p.estimateJM.sign$data %>% mutate(event = 0),
-    jm_data$p.estimateJM.sign$data %>% filter(InGWAS) %>% mutate(event = 100)
-  ),
+```{r effect_size1, out.height = "432px", out.width = "768px"}
+jm_data$p.estimateJM.sign$data <- jm_data$p.estimateJM.sign$data %>% 
+  mutate(GeneSymbol.Closest = factor(GeneSymbol.Closest))
+
+x_range <- range(jm_data$p.estimateJM.sign$data[, "gamma.estimate"])
+y_range <- range(exp(jm_data$p.estimateJM.sign$data[, "alpha.estimate"]))
+
+ggplot(
+  data = jm_data$p.estimateJM.sign$data,
   mapping = aes(
     x = gamma.estimate, 
     y = exp(alpha.estimate), 
@@ -1149,14 +1163,79 @@ p <- ggplot(
   geom_hline(yintercept = 1, linetype = 1, colour = "white") +
   geom_vline(xintercept = 0, linetype = 1, colour = "white") +
   geom_point(size = 4, colour = "white") +
-  scale_colour_viridis_d(name = "Gene Symbol") +
-  scale_fill_viridis_d(name = "Gene Symbol") +
-  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40)) +
+  scale_colour_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_fill_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40), drop = FALSE) +
   scale_y_continuous(breaks = c(0.5, 1, 1.5, 2)) +
+  coord_cartesian(xlim = x_range, ylim = y_range) +
   labs(
     x = "Fasting plasma glucose per allele effect (mmol/L)",
     y = expression(atop("Type 2 diabetes hazard ratio", paste("(fasting plasma glucose " >= "7.0mmol/L)")))
   ) +
+  theme(legend.position = "none")
+```
+
+
+## Because, effect size matters ... {.flexbox .vcenter}
+
+```{r effect_size2, out.height = "432px", out.width = "768px"}
+ggplot(
+  data = jm_data$p.estimateJM.sign$data %>% filter(InGWAS),
+  mapping = aes(
+    x = gamma.estimate, 
+    y = exp(alpha.estimate), 
+    colour = GeneSymbol.Closest, 
+    fill = GeneSymbol.Closest, 
+    shape = GeneSymbol.Closest
+  )
+) +
+  theme(axis.text = element_text(size = rel(0.8), colour = "white"))+
+  geom_hline(yintercept = 1, linetype = 1, colour = "white") +
+  geom_vline(xintercept = 0, linetype = 1, colour = "white") +
+  geom_point(size = 4, colour = "white") +
+  scale_colour_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_fill_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40), drop = FALSE) +
+  scale_y_continuous(breaks = c(0.5, 1, 1.5, 2)) +
+  coord_cartesian(xlim = x_range, ylim = y_range) +
+  labs(
+    x = "Fasting plasma glucose per allele effect (mmol/L)",
+    y = expression(atop("Type 2 diabetes hazard ratio", paste("(fasting plasma glucose " >= "7.0mmol/L)")))
+  ) +
+  theme(legend.position = "none")
+```
+
+
+## Because, effect size matters ... {.flexbox .vcenter}
+
+```{r effect_size3, out.height = "432px", out.width = "768px"}
+ggplot(
+  data = jm_data$p.estimateJM.sign$data %>% 
+    filter(InGWAS) %>% 
+    filter(GeneSymbol.Closest%in%c("TCF7L2", "MTNR1B", "G6PC2")),
+  mapping = aes(
+    x = gamma.estimate, 
+    y = exp(alpha.estimate), 
+    colour = GeneSymbol.Closest, 
+    fill = GeneSymbol.Closest, 
+    shape = GeneSymbol.Closest
+  )
+) +
+  theme(axis.text = element_text(size = rel(0.8), colour = "white"))+
+  geom_hline(yintercept = 1, linetype = 1, colour = "white") +
+  geom_vline(xintercept = 0, linetype = 1, colour = "white") +
+  geom_point(size = 4, colour = "white") +
+  scale_colour_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_fill_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40), drop = FALSE) +
+  scale_y_continuous(breaks = c(0.5, 1, 1.1, 1.4, 1.5, 2)) +
+  coord_cartesian(xlim = x_range, ylim = y_range) +
+  labs(
+    x = "Fasting plasma glucose per allele effect (mmol/L)",
+    y = expression(atop("Type 2 diabetes hazard ratio", paste("(fasting plasma glucose " >= "7.0mmol/L)")))
+  ) +
+  stat_ellipse(size = 1.5, colour = "white") +
+  stat_ellipse(size = 1) +
   geom_label_repel(
     data = jm_data$p.estimateJM.sign$data %>% 
       filter(InGWAS) %>% 
@@ -1167,8 +1246,8 @@ p <- ggplot(
         GeneSymbol.Closest = unique(GeneSymbol.Closest)
       ),
     mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
-    nudge_x = -0.015, 
-    nudge_y = 0.35, 
+    direction = "y", 
+    nudge_y = 0.5, 
     segment.colour = "white", 
     colour = "white",
     show.legend = FALSE
@@ -1183,28 +1262,129 @@ p <- ggplot(
         GeneSymbol.Closest = unique(GeneSymbol.Closest)
       ),
     mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
-    nudge_x = 0.03, 
+    direction = "y", 
     nudge_y = 0.5,
     segment.colour = "white", 
     colour = "white",
     show.legend = FALSE
   ) +
-  theme(legend.position = "none") +
-  transition_states(states = event, transition_length = 1, state_length = 10)
+  geom_label_repel(
+    data = jm_data$p.estimateJM.sign$data %>% 
+      filter(InGWAS) %>% 
+      filter(GeneSymbol.Closest=="G6PC2") %>% 
+      summarise(
+        x = median(gamma.estimate), 
+        y = median(exp(alpha.estimate)),
+        GeneSymbol.Closest = unique(GeneSymbol.Closest)
+      ),
+    mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
+    direction = "y", 
+    nudge_y = 0.5,
+    segment.colour = "white", 
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  theme(legend.position = "none")
+```
 
-animate(
-  plot = p,
-  width = 800*1.5,
-  height = 450*1.5,
-  res = 120,
-  bg = ggplot2::theme_get()$plot.background$colour,
-  renderer = gifski_renderer(
-    file = "./images/results_jm.gif"
+## Because, effect size matters ... {.flexbox .vcenter}
+
+```{r effect_size4, out.height = "432px", out.width = "768px"}
+ggplot(
+  data = jm_data$p.estimateJM.sign$data %>% 
+    filter(InGWAS) %>% 
+    filter(GeneSymbol.Closest%in%c("TCF7L2", "MTNR1B", "G6PC2")) %>% 
+    mutate(alpha.estimate = ifelse(GeneSymbol.Closest%in%c("MTNR1B"), abs(alpha.estimate/5), alpha.estimate)),
+  mapping = aes(
+    x = gamma.estimate, 
+    y = exp(alpha.estimate), 
+    colour = GeneSymbol.Closest, 
+    fill = GeneSymbol.Closest, 
+    shape = GeneSymbol.Closest
   )
-)
-# cat("\n")
-# cat("![](./images/results_jm.gif)")
-# cat("\n")
+) +
+  theme(axis.text = element_text(size = rel(0.8), colour = "white"))+
+  geom_hline(yintercept = 1, linetype = 1, colour = "white") +
+  geom_vline(xintercept = 0, linetype = 1, colour = "white") +
+  geom_point(size = 4, colour = "white") +
+  scale_colour_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_fill_viridis_d(name = "Gene Symbol", drop = FALSE) +
+  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40), drop = FALSE) +
+  scale_y_continuous(breaks = c(0.5, 1, 1.1, 1.4, 1.5, 2)) +
+  coord_cartesian(xlim = x_range, ylim = y_range) +
+  labs(
+    x = "Fasting plasma glucose per allele effect (mmol/L)",
+    y = expression(atop("Type 2 diabetes hazard ratio", paste("(fasting plasma glucose " >= "7.0mmol/L)")))
+  ) +
+  stat_ellipse(size = 1.5, colour = "white") +
+  stat_ellipse(size = 1) +
+  geom_label_repel(
+    data = jm_data$p.estimateJM.sign$data %>% 
+      filter(InGWAS) %>% 
+      filter(GeneSymbol.Closest=="TCF7L2") %>% 
+      summarise(
+        x = median(gamma.estimate), 
+        y = median(exp(alpha.estimate)),
+        GeneSymbol.Closest = unique(GeneSymbol.Closest)
+      ),
+    mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
+    direction = "y",  
+    nudge_y = -0.5, 
+    segment.colour = "white", 
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  geom_label_repel(
+    data = jm_data$p.estimateJM.sign$data %>% 
+      filter(InGWAS) %>% 
+      filter(GeneSymbol.Closest=="MTNR1B") %>% 
+      mutate(alpha.estimate = ifelse(GeneSymbol.Closest%in%c("MTNR1B"), abs(alpha.estimate/5), alpha.estimate)) %>% 
+      summarise(
+        x = median(gamma.estimate), 
+        y = median(exp(alpha.estimate)),
+        GeneSymbol.Closest = unique(GeneSymbol.Closest)
+      ),
+    mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
+    direction = "y",  
+    nudge_y = -0.5,
+    segment.colour = "white", 
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  geom_label_repel(
+    data = jm_data$p.estimateJM.sign$data %>% 
+      filter(InGWAS) %>% 
+      filter(GeneSymbol.Closest=="G6PC2") %>% 
+      summarise(
+        x = median(gamma.estimate), 
+        y = median(exp(alpha.estimate)),
+        GeneSymbol.Closest = unique(GeneSymbol.Closest)
+      ),
+    mapping = aes(x = x, y = y, label = GeneSymbol.Closest), 
+    direction = "y", 
+    nudge_y = -0.5,
+    segment.colour = "white", 
+    colour = "white",
+    show.legend = FALSE
+  )  +
+  theme(legend.position = "none")
+```
+
+
+```{r, eval = FALSE}
+jm_data$p.estimateJM.sign$data %>% 
+  filter(RSID%in%c("rs10830963", "rs17747324")) %>% 
+  select(
+    RSID, RiskAllele, strand,
+    alpha.estimate, alpha.p.value, 
+    gamma.estimate, gamma.p.value, 
+    beta.estimate, beta.p.value
+  ) %>% 
+  mutate(RiskAllele = map2_chr(.x = RiskAllele, .y = strand, .f = function(x, y) {
+    ifelse(y=="-", switch(EXPR = x, "G" = "C", "C" = "G", "T" = "A", "A" = "T"), x)
+  })) %>% 
+  unite(col = SNP, RSID, RiskAllele, sep = "_") %>% 
+  select(-strand)
 ```
 
 
