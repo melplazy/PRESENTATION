@@ -859,85 +859,49 @@ for (igroup in all_gif[["group"]]) {
   cat("\n")
   cat(igroup, " {.flexbox .vcenter}\n")
   cat("\n")
-  # animate(
-  #   plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "RMSE"]],
-  #   width = 800*1.5,
-  #   height = 450*1.5,
-  #   res = 120,
-  #   bg = ggplot2::theme_get()$plot.background$colour,
-  #   renderer = gifski_renderer(
-  #     file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.gif")
-  #   )
-  # )
   animate(
     plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "RMSE"]],
-    # nframes = 1000,
-    fps = 25,
-    width = 800,
-    height = 450,
+    width = 800*1.5,
+    height = 450*1.5,
     res = 120,
     bg = ggplot2::theme_get()$plot.background$colour,
-    renderer = av_renderer(
-      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.mp4")
+    renderer = gifski_renderer(
+      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.gif")
     )
   )
-  # cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.gif", ")"))
+  cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_RMSE.gif", ")"))
   cat("\n")
   
   cat("\n")
   cat(igroup, " {.flexbox .vcenter}\n")
   cat("\n")
-  # animate(
-  #   plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "bias"]],
-  #   width = 800*1.5,
-  #   height = 450*1.5,
-  #   res = 120,
-  #   bg = ggplot2::theme_get()$plot.background$colour,
-  #   renderer = gifski_renderer(
-  #     file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.gif")
-  #   )
-  # )
   animate(
     plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "bias"]],
-    # nframes = 1000,
-    fps = 25,
-    width = 800,
-    height = 450,
+    width = 800*1.5,
+    height = 450*1.5,
     res = 120,
     bg = ggplot2::theme_get()$plot.background$colour,
-    renderer = av_renderer(
-      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.mp4")
+    renderer = gifski_renderer(
+      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.gif")
     )
   )
-  # cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.gif", ")"))
+  cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_bias.gif", ")"))
   cat("\n")
 
   cat("\n")
   cat(igroup, " {.flexbox .vcenter}\n")
   cat("\n")
-  # animate(
-  #   plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "var"]],
-  #   width = 800*1.5,
-  #   height = 450*1.5,
-  #   res = 120,
-  #   bg = ggplot2::theme_get()$plot.background$colour,
-  #   renderer = gifski_renderer(
-  #     file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.gif")
-  #   )
-  # )
   animate(
     plot = all_gif %>% filter(group%in%!!igroup) %>% .[[1, "var"]],
-    # nframes = 1000,
-    fps = 25,
-    width = 800,
-    height = 450,
+    width = 800*1.5,
+    height = 450*1.5,
     res = 120,
     bg = ggplot2::theme_get()$plot.background$colour,
-    renderer = av_renderer(
-      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.mp4")
+    renderer = gifski_renderer(
+      file = paste0("./images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.gif")
     )
   )
-  # cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.gif", ")"))
+  cat(paste0("![](", "images/", gsub("## \\$\\\\([^$]*)\\$.*", "\\1", igroup), "_var.gif", ")"))
   cat("\n")
 }
 ```
