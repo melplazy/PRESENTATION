@@ -150,6 +150,9 @@ ul li ul pre {
   margin-left: -2em;
 }
 
+.table-striped > tbody > tr:nth-of-type(odd){
+  background-color:#f9f9f9
+}
 
 table.rmdtable th {
   color: white;
