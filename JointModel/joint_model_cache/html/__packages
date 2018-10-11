@@ -17,3 +17,5 @@ gganimate
 ggrepel
 ggraph
 bindrcpp
+viridisLite
+viridis
