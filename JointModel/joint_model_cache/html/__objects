@@ -10,7 +10,7 @@ parameters_table	settings.table
 simulations_data	default_settings	oneSimulation	p	simulated_data
 simulations_results	all_gif	igroup
 computation_time	jm_data	.joint_model_cache/html/computation_time_aaea2b95ff96467cfb2020906b79a88a_meta
-manhattan	genes_highlight	ggdata_clean	ggdta_T2D	p	x_breaks
+manhattan	genes_highlight	ggdata_clean	ggdta_T2D	knit_print.video_file	manhattan_video	p	x_breaks
 effect_size1	jm_data	x_range	y_range
 effect_size2	
 effect_size3	
