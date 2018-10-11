@@ -14,8 +14,8 @@ output:
     css: 'template/shiny-slides.css'
     logo: 'template/logo_UMR.png'
     smaller: false
-    self_contained: true
-    mathjax: default
+    self_contained: false
+    mathjax: local
     transition: 0.5
     incremental: false
 ---
@@ -1344,24 +1344,6 @@ ggplot(
 
 ## Because, effect size matters ... {.flexbox .vcenter}
 
-<div class="columns-2">
-<div class="centered">
-```{r scott3, out.height = "360px", out.width = "360px"}
-include_graphics(path = "images/ng2385-F2.png")
-```
-<p>@scott_large-scale_2012</p>
-</div>
-
-<div class="centered">
-```{r yaghootkar3, out.height = "360px", out.width = "360px"}
-include_graphics(path = "images/Yaghootkar.png")
-```
-<p>@yaghootkar_recent_2013</p>
-</div>
-</div>
-
-## Because, effect size matters ... {.flexbox .vcenter}
-
 ```{r effect_size4, out.height = "432px", out.width = "768px"}
 ggplot(
   data = jm_data$p.estimateJM.sign$data %>% 
@@ -1443,6 +1425,25 @@ ggplot(
   ) +
   theme(legend.position = "none", plot.caption = ggplot2::element_text(size = rel(0.5), vjust = 0))
 ```
+
+
+## Because, effect size matters ... {.flexbox .vcenter}
+
+<div class="columns-2">
+<div class="centered">
+```{r scott3, out.height = "360px", out.width = "360px"}
+include_graphics(path = "images/ng2385-F2.png")
+```
+<p>@scott_large-scale_2012</p>
+</div>
+
+<div class="centered">
+```{r yaghootkar3, out.height = "360px", out.width = "360px"}
+include_graphics(path = "images/Yaghootkar.png")
+```
+<p>@yaghootkar_recent_2013</p>
+</div>
+</div>
 
 
 ## Because, effect size matters ... {.flexbox .vcenter}
