@@ -14,8 +14,8 @@ output:
     css: 'template/shiny-slides.css'
     logo: 'template/logo_UMR.png'
     smaller: false
-    self_contained: false
-    mathjax: local
+    self_contained: true
+    mathjax: 'template/mathjax-local/MathJax.js'
     transition: 0.5
     incremental: false
 ---
