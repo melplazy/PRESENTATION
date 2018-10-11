@@ -17,7 +17,6 @@ output:
     self_contained: true
     mathjax: default
     incremental: true
-    transition: 0.1
 ---
 
 
@@ -1580,11 +1579,14 @@ tab[, -1] %>%
 
 # To summarise {.flexbox .vcenter}
 
+<br>
+<div class="auto-fadein">
 * The Joint Model is better than the "Two-Step" approach
 
 * The "Two-Step" approach is not that bad, especially regarding computation time
 
-* $\Rightarrow$ Use "Two-Step" as a screening approach and refine with The Joint Model
+* $\Rightarrow$ Use "Two-Step" as a screening approach and refine with a Joint Model
+</div>
 
 
 # <img src="http://mickael.canouil.fr/img/IDPhotoBWlight.png" height = "150px"></img>__*Me?*__ {.flexbox .vcenter}
