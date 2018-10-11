@@ -168,7 +168,7 @@ _"In all cases, the glucose-raising allele was associated with increased risk of
 </p>
 
 
-## What for? {.flexbox .vleft .build}
+## Why use a Joint Model? {.flexbox .vleft .build}
 
 * To identify biomarker relevant to a disease
 
