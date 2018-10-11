@@ -11,7 +11,6 @@ params:
   eval: TRUE
 output:
   ioslides_presentation:
-    lib_dir: 'template'
     css: 'template/shiny-slides.css'
     logo: 'template/logo_UMR.png'
     smaller: false
