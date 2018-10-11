@@ -11,11 +11,12 @@ params:
   eval: TRUE
 output:
   ioslides_presentation:
+    lib_dir: 'template'
     css: 'template/shiny-slides.css'
     logo: 'template/logo_UMR.png'
     smaller: false
     self_contained: true
-    mathjax: 'template/mathjax-local/MathJax.js'
+    mathjax: default
     transition: 0.5
     incremental: false
 ---
