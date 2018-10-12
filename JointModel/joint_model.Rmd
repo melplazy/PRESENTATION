@@ -1,11 +1,13 @@
 ---
 title: 'Jointly Modelling SNPs<br>with<br>Survival & Longitudinal Trait?'
 author: 'Mickaël CANOUIL, *Ph.D.*'
-date: 'Friday, 18<sup>th</sup> of October (2018)'
+date: 'Friday, 12<sup>th</sup> of October (2018)'
 monofont: 'Source Code Pro'
 monofontoptions: 'Scale=0.7'
 bibliography: [bib/Canouil_etal_2018.bib]
 biblio-style: apalike
+nocite: |
+  @rizopoulos_joint_2012, @elashoff_joint_2016
 csl: template/csl/apa.csl
 params:
   eval: TRUE
@@ -15,7 +17,6 @@ output:
     logo: 'template/logo_UMR.png'
     smaller: false
     self_contained: true
-    mathjax: default
     incremental: true
 ---
 
@@ -483,7 +484,7 @@ With:
 
 ## Estimators (& Computation time) {.flexbox .vleft}
 
-* Is Joint Model estimators good?  
+* Are Joint Model estimators good?  
     * Bias, variance and RMSE (Root-Mean Square Error)  
         $$\begin{align}
         \operatorname{MSE}(\hat\phi)&= \operatorname{Bias}(\hat\phi)^2 + \operatorname{Var}(\hat\phi)\\
@@ -1230,35 +1231,54 @@ ggplot(
 ```
 
 
-## Because, effect size matters ... {.flexbox .vcenter}
+<!-- ## Because, effect size matters ... {.flexbox .vcenter} -->
 
-```{r effect_size2, out.height = "432px", out.width = "768px"}
-ggplot(
-  data = jm_data$p.estimateJM.sign$data %>% filter(InGWAS),
-  mapping = aes(
-    x = gamma.estimate, 
-    y = exp(alpha.estimate), 
-    colour = GeneSymbol.Closest, 
-    fill = GeneSymbol.Closest, 
-    shape = GeneSymbol.Closest
-  )
-) +
-  theme(axis.text = element_text(size = rel(0.8), colour = "white"))+
-  geom_hline(yintercept = 1, linetype = 1, colour = "white") +
-  geom_vline(xintercept = 0, linetype = 1, colour = "white") +
-  geom_point(size = 4, colour = "white") +
-  scale_colour_viridis_d(name = "Gene Symbol", drop = FALSE) +
-  scale_fill_viridis_d(name = "Gene Symbol", drop = FALSE) +
-  scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40), drop = FALSE) +
-  scale_y_continuous(breaks = c(0.5, 1, 1.5, 2)) +
-  coord_cartesian(xlim = x_range, ylim = y_range) +
-  labs(
-    x = "FPG per allele effect (mmol/L)",
-    y = expression(atop("Type 2 diabetes hazard ratio", paste("(FPG " >= "7.0mmol/L)"))),
-    caption = "FPG = Fasting plasma glucose"
-  ) +
-  theme(legend.position = "none", plot.caption = ggplot2::element_text(size = rel(0.5), vjust = 0))
+<!-- ```{r effect_size2, out.height = "432px", out.width = "768px"} -->
+<!-- ggplot( -->
+<!--   data = jm_data$p.estimateJM.sign$data %>% filter(InGWAS), -->
+<!--   mapping = aes( -->
+<!--     x = gamma.estimate,  -->
+<!--     y = exp(alpha.estimate),  -->
+<!--     colour = GeneSymbol.Closest,  -->
+<!--     fill = GeneSymbol.Closest,  -->
+<!--     shape = GeneSymbol.Closest -->
+<!--   ) -->
+<!-- ) + -->
+<!--   theme(axis.text = element_text(size = rel(0.8), colour = "white"))+ -->
+<!--   geom_hline(yintercept = 1, linetype = 1, colour = "white") + -->
+<!--   geom_vline(xintercept = 0, linetype = 1, colour = "white") + -->
+<!--   geom_point(size = 4, colour = "white") + -->
+<!--   scale_colour_viridis_d(name = "Gene Symbol", drop = FALSE) + -->
+<!--   scale_fill_viridis_d(name = "Gene Symbol", drop = FALSE) + -->
+<!--   scale_shape_manual(name = "Gene Symbol", values = rep(c(21, 22, 23, 24, 25), 40), drop = FALSE) + -->
+<!--   scale_y_continuous(breaks = c(0.5, 1, 1.5, 2)) + -->
+<!--   coord_cartesian(xlim = x_range, ylim = y_range) + -->
+<!--   labs( -->
+<!--     x = "FPG per allele effect (mmol/L)", -->
+<!--     y = expression(atop("Type 2 diabetes hazard ratio", paste("(FPG " >= "7.0mmol/L)"))), -->
+<!--     caption = "FPG = Fasting plasma glucose" -->
+<!--   ) + -->
+<!--   theme(legend.position = "none", plot.caption = ggplot2::element_text(size = rel(0.5), vjust = 0)) -->
+<!-- ``` -->
+
+
+## What do we expect from the literature? {.flexbox .vcenter}
+
+<div class="columns-2">
+<div class="centered">
+```{r scott3, out.height = "360px", out.width = "360px"}
+include_graphics(path = "images/ng2385-F2.png")
 ```
+<p>@scott_large-scale_2012</p>
+</div>
+
+<div class="centered">
+```{r yaghootkar3, out.height = "360px", out.width = "360px"}
+include_graphics(path = "images/Yaghootkar.png")
+```
+<p>@yaghootkar_recent_2013</p>
+</div>
+</div>
 
 
 ## It seems great, isn't it? {.flexbox .vcenter}
@@ -1427,25 +1447,6 @@ ggplot(
   ) +
   theme(legend.position = "none", plot.caption = ggplot2::element_text(size = rel(0.5), vjust = 0))
 ```
-
-
-## Not exactly what we expected ... {.flexbox .vcenter}
-
-<div class="columns-2">
-<div class="centered">
-```{r scott3, out.height = "360px", out.width = "360px"}
-include_graphics(path = "images/ng2385-F2.png")
-```
-<p>@scott_large-scale_2012</p>
-</div>
-
-<div class="centered">
-```{r yaghootkar3, out.height = "360px", out.width = "360px"}
-include_graphics(path = "images/Yaghootkar.png")
-```
-<p>@yaghootkar_recent_2013</p>
-</div>
-</div>
 
 
 ## Does that make any sense?! {.flexbox .vcenter}
@@ -1618,4 +1619,4 @@ tab[, -1] %>%
 </div>
 
 
-# {.flexbox .vcenter .references}
+# {.references}
