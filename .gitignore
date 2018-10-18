@@ -1,6 +1,4 @@
 **.Rproj.user
-**.Rhistory
-**.Ruserdata
 
 **.glo
 **.ist
@@ -12,5 +10,6 @@
 **.aux
 **.toc
 **.snm
-**.vrb
-.Rproj.user
+**.fdb_latexmk
+**.fls
+**.log
