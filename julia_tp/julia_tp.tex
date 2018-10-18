@@ -1,5 +1,4 @@
-% cd /disks/PROJECT/Mickael/PRESENTATION/JULIA_TP/; pdflatex JULIA_TP.tex; bibtex JULIA_TP; pdflatex JULIA_TP.tex; pdflatex JULIA_TP.tex; gvfs-open JULIA_TP.pdf
-% pdflatex JULIA_TP.tex; gvfs-open JULIA_TP.pdf
+% pdflatex JULIA_TP.tex; bibtex JULIA_TP; pdflatex JULIA_TP.tex; pdflatex JULIA_TP.tex; 
 
 \input{Header_Beamer.tex}
 
@@ -14,7 +13,7 @@
 \title[\texorpdfstring{\raisebox{-0.5ex}{\includegraphics[height=0.25cm, keepaspectratio]{./Logos/logo_julia.pdf}}}{}]{\texorpdfstring{Initiation\\\vspace{-1.5ex}{\smallà}\\ \raisebox{-0.5ex}{\includegraphics[height=2cm, keepaspectratio]{./Logos/logo_julia.pdf}}}{}}
 
 
-\graphicspath{{/disks/PROJECT/Mickael/PRESENTATION/JULIA_PremiersPas/figures/}}
+% \graphicspath{{./images/}}
 
 
 
@@ -1833,7 +1832,7 @@ draw(PNG("plot1.png", 7.5cm, 6cm), p) # Ecriture de l'image
 \vspace{-2ex}
 \begin{center}
     \begin{figure}
-        \frame{\includegraphics[height=4cm, keepaspectratio]{./figures/plot1.png}}
+        \frame{\includegraphics[height=4cm, keepaspectratio]{./images/plot1.png}}
     \end{figure}
 \end{center}
 \end{frame}
@@ -1847,7 +1846,7 @@ p1 = plot(dta2, x = "statut", y = "x1", color = "statut")
 \vspace{-2ex}
 \begin{center}
     \begin{figure}
-        \frame{\includegraphics[height=4cm, keepaspectratio]{./figures/plot2.png}}
+        \frame{\includegraphics[height=4cm, keepaspectratio]{./images/plot2.png}}
     \end{figure}
 \end{center}
 \end{frame}
@@ -1863,7 +1862,7 @@ p2 = plot(
 \vspace{-2ex}
 \begin{center}
     \begin{figure}
-        \frame{\includegraphics[height=4cm, keepaspectratio]{./figures/plot3.png}}
+        \frame{\includegraphics[height=4cm, keepaspectratio]{./images/plot3.png}}
     \end{figure}
 \end{center}
 \end{frame}
@@ -1876,7 +1875,7 @@ surf(rand(30,40))
 \vspace{-2ex}
 \begin{center}
     \begin{figure}
-        \frame{\includegraphics[height=4cm, keepaspectratio]{./figures/plot4.png}}
+        \frame{\includegraphics[height=4cm, keepaspectratio]{./images/plot4.png}}
     \end{figure}
 \end{center}
 \end{frame}
@@ -2087,7 +2086,7 @@ Int32
 \section{Références}
 \begin{frame}{Références}
     \bibliographystyle{apalike}
-    \bibliography{./JULIA_biblio.bib}
+    \bibliography{./bib/julia_tp.bib}
     \nocite{*}
 \end{frame}
 
