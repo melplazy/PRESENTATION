@@ -1,13 +1,11 @@
 ---
-title: 'Créer et Exploiter<br>une<br>Base de Données<br>sous<br>![R](images/logo_R.png)'
+title: '![R](images/logo_R.png)&<br>Base de Données'
 author: 'Mickaël CANOUIL, *Ph.D.*'
 date: 'Jeudi 03 mai - Vendredi 04 mai'
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 params:
-  theme_dark: TRUE
-  dpi: 300
-  ggFontSize: 14
+  eval: FALSE
 output:
   ioslides_presentation:
     css: template/shiny-slides.css
@@ -26,19 +24,17 @@ library(grid)
 library(scales)
 library(broom)
 library(viridis)
-# library(readxl)
-# library(writexl)
-# library(cowplot)
 library(Hmisc)
 library(knitr)
 library(rmarkdown)
 library(kableExtra)
 
-source("theme_black.R")
+devtools::source_url('https://github.com/mcanouil/DEV/raw/master/R/theme_black.R')
 
 options("width" = 80)
 ### Set knitr rmarkdown chunk options
 opts_chunk$set(
+  eval = params$eval,
   include = TRUE,
   echo = TRUE,
   warning = TRUE,
@@ -46,22 +42,21 @@ opts_chunk$set(
   tidy = FALSE,
   crop = TRUE,
   autodep = FALSE,
-  dpi = params$dpi,
+  dpi = 120,
   fig.path = "./images/",
   cache = FALSE,
   cache.path = "./",
   width = 80,
   comment = "#>",
-  results = "hold"
+  results = "hold",
+  fig.height = 3.375, # floor(10/3 * 10)/10* 0.9, 
+  fig.width = 6 # floor(16/9 * 10/3 *10)/10 * 0.9
 )
 
 ### Define theme
 library(ggplot2)
-theme_dark <- params$theme_dark
-theme_set(theme_black(base_size = params$ggFontSize))
-plot_grid <- hijack(plot_grid, theme_dark = theme_dark)
-scale_colour_viridis <- hijack(scale_colour_viridis, option = "viridis", begin = 2/5, end = 1, direction = -1)
-scale_fill_viridis <- hijack(scale_fill_viridis, option = "viridis", begin = 2/5, end = 1, direction = -1)
+
+theme_set(theme_black(base_size = 14))
 
 options(tibble.print_max = 3, tibble.print_min = 3)
 ```
@@ -778,6 +773,7 @@ data.frame(
 
 ```{r read_benchmark, message = FALSE, echo = FALSE}
 filename <- "./materials/ratings.csv"
+require(microbenchmark)
 microbenchmark::microbenchmark(
   {dta <- utils::read.csv(filename)},
   {dta <- readr::read_csv(filename)},
@@ -804,6 +800,7 @@ microbenchmark::microbenchmark(
 
 ```{r write_benchmark, message = FALSE, echo = FALSE}
 filename <- paste0(tempdir(), "/ratings.csv")
+require(microbenchmark)
 microbenchmark::microbenchmark(
   {utils::write.csv(x = ratings, file = filename, row.names = FALSE)},
   {readr::write_csv(x = ratings, path = filename)},
