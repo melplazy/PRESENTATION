@@ -17,7 +17,7 @@ output:
     logo: 'template/logo_UMR.png'
     smaller: false
     self_contained: true
-    incremental: true
+    incremental: false
 ---
 
 
@@ -169,7 +169,7 @@ _"In all cases, the glucose-raising allele was associated with increased risk of
 </p>
 
 
-## Why use a Joint Model? {.flexbox .vleft .build}
+## Why use a Joint Model? {.flexbox .vleft}
 
 * To identify biomarker relevant to a disease
 
@@ -184,7 +184,7 @@ _"In all cases, the glucose-raising allele was associated with increased risk of
 </div>
 
 
-## We can start with a Cox Model ... {.flexbox .vleft .build}
+## We can start with a Cox Model ... {.flexbox .vleft}
 
 (Extended) Cox model:
 $$\begin{align}
@@ -212,7 +212,7 @@ Where:
     * $\Rightarrow$ Bias introduction
 
 
-## Hopefully, the Mixed Model is there! {.flexbox .vleft .build}
+## Hopefully, the Mixed Model is there! {.flexbox .vleft}
 
 (Generalised) linear mixed effect model:
 $$Y_{i}(t_{ij})=X_{i}(t_{ij})+\epsilon_{i}(t_{ij})$$
@@ -386,7 +386,7 @@ for (istep in 2:8) {
 ```
 
 
-## What can we do with a Joint Model? {.flexbox .vleft .build}
+## What can we do with a Joint Model? {.flexbox .vleft}
 
 Test simultaneously an effect on:
 
@@ -395,7 +395,7 @@ Test simultaneously an effect on:
 * a biomarker and an event ($\beta\gamma+\alpha$).
 
 
-## The best part? {.flexbox .vleft .build}
+## The best part? {.flexbox .vleft}
 
 A gain in statistical power to detect those effects
 
@@ -404,7 +404,7 @@ A gain in statistical power to detect those effects
 * compared to the extended Cox model.
 
 
-## What is a Joint Model? With equations! {.flexbox .vleft .build}
+## What is a Joint Model? With equations! {.flexbox .vleft}
 
 The standard (joint likelihood) formulation involves two components:
 
@@ -419,7 +419,7 @@ With:
 * $t_{ij}$, a time points ($j=1,\cdots,m_i$).
 
 
-## The longitudinal component {.flexbox .vleft .build}
+## The longitudinal component {.flexbox .vleft}
 
 (Generalised) linear mixed effect model:
 $$Y_{i}(t_{ij})=X_{i}(t_{ij})+\epsilon_{i}(t_{ij})$$
@@ -430,7 +430,7 @@ $$\begin{gather}X_{i}(t_{ij})=\theta_{0i} + \theta_{1i}t_{ij} + \cdots + \theta_
 For simplicity here, we assume linearity over time ($\theta_{0i}+\theta_{1i}t_{ij}$):
 $$\begin{gather}Y_{i}(t_{ij})=\theta_{0i}+\theta_{1i}t_{ij}+\gamma Z_i+\delta W_i+\epsilon_{ij} &, & \boldsymbol{\theta} \sim \mathcal{N}_2 (\boldsymbol{\mu},\boldsymbol{\Sigma})\end{gather}$$
 
-## The longitudinal component {.flexbox .vleft .build}
+## The longitudinal component {.flexbox .vleft}
 
 (Generalised) linear mixed effect model:
 $$Y_{i}(t_{ij})=\theta_{0i}+\theta_{1i}t_{ij}+\gamma Z_i+\delta W_i+\epsilon_{ij}$$
@@ -444,7 +444,7 @@ With:
 * $W_i$, a set of adjusting covariates.
 
 
-## The time-to-event component {.flexbox .vleft .build}
+## The time-to-event component {.flexbox .vleft}
 
 (Extended) Cox model (proportional hazards):
 $$\begin{align}
@@ -463,7 +463,7 @@ With:
     \end{cases}$
 
 
-## Hypothesis testing {.build}
+## Hypothesis testing {}
 
 <div class="centered">Null hypothesis: $\begin{cases}H_0&:& \theta=\theta_0\\H_1&:& \theta\neq\theta_0\end{cases}$</div>
 
@@ -497,7 +497,7 @@ With:
     ... in a reasonable time frame?
 
 
-## A more "naive" approach! {.flexbox .vleft .build}
+## A more "naive" approach! {.flexbox .vleft}
 
 What if, we split the job in two?
 
@@ -513,7 +513,7 @@ $\Rightarrow$ "Two-Step"? [@tsiatis_modeling_1995]
     $$h_i(t)=h_0(t) \exp\{\beta X^*_{i}(t)\}$$
 
 
-## Time to generate fake data! {.flexbox .vleft .build}
+## Time to generate fake data! {.flexbox .vleft}
 
 Let's keep it simple, i.e., without covariates:
 
@@ -699,7 +699,7 @@ animate(
 ```
 
 
-## What could we expect? {.flexbox .vleft .build}
+## What could we expect? {.flexbox .vleft}
 
 Let's do some power calculation (chen_sample_2011):  
 $$\begin{gather}
