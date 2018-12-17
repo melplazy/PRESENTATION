@@ -17,7 +17,7 @@ output:
 
 ```{r setup, include = FALSE}
 options(stringsAsFactors = FALSE)
-Sys.setlocale("LC_TIME", "english_united kingdom.1252")
+# Sys.setlocale("LC_TIME", "english_united kingdom.1252")
 
 ### Load packages and functions
 library(grid)
@@ -773,21 +773,20 @@ data.frame(
 
 ```{r read_benchmark, message = FALSE, echo = FALSE}
 filename <- "./materials/ratings.csv"
-require(microbenchmark)
-microbenchmark::microbenchmark(
+require(benchr)
+benchr::benchmark(
   {dta <- utils::read.csv(filename)},
   {dta <- readr::read_csv(filename)},
   {dta <- data.table::fread(filename)}
 ) %>% 
   as.data.frame() %>% 
   mutate(
-    t = microbenchmark:::convert_to_unit(time, "s"),
     expr = factor(
       gsub("\\{ *dta <- (.*)\\(.*", "\\1", expr),
       levels = c("utils::read.csv", "readr::read_csv", "data.table::fread")
     )
   ) %>% 
-    ggplot(aes(x = expr, y = t, fill = expr)) +
+    ggplot(aes(x = expr, y = time, fill = expr)) +
       geom_violin(colour = "white") +
       scale_fill_viridis(discrete = TRUE, guide = FALSE) +
       labs(y = "Time (s)", x = NULL) +
@@ -800,20 +799,19 @@ microbenchmark::microbenchmark(
 
 ```{r write_benchmark, message = FALSE, echo = FALSE}
 filename <- paste0(tempdir(), "/ratings.csv")
-require(microbenchmark)
-microbenchmark::microbenchmark(
+require(benchr)
+benchr::benchmark(
   {utils::write.csv(x = ratings, file = filename, row.names = FALSE)},
   {readr::write_csv(x = ratings, path = filename)},
   {data.table::fwrite(x = ratings, file = filename)}
 ) %>% 
   as.data.frame() %>% 
   mutate(
-    t = microbenchmark:::convert_to_unit(time, "s"),
     expr = factor(
       gsub("\\{ *(.*)\\(.*", "\\1", expr), 
       levels = c("utils::write.csv", "readr::write_csv", "data.table::fwrite"))
   ) %>% 
-    ggplot(aes(x = expr, y = t, fill = expr)) +
+    ggplot(aes(x = expr, y = time, fill = expr)) +
       geom_violin(colour = "white") +
       scale_fill_viridis(discrete = TRUE, guide = FALSE) +
       labs(y = "Time (s)", x = NULL) +
