@@ -1164,8 +1164,7 @@ knit_print.video_file <- function(x, options, autoplay = TRUE, ...) {
   }
   if (grepl("\\.(mp4)|(webm)|(ogg)$", x, ignore.case = TRUE)) {
     knitr::knit_print(htmltools::browsable(as_html_video(x, autoplay = autoplay)), options, ...)
-  }
-  else {
+  } else {
     warning("The video format doesn't support HTML", call. = FALSE)
     invisible(NULL)
   }
