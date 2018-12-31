@@ -78,9 +78,9 @@ theme_set(theme_black(base_size = 14))
 ### Get data
 # file.copy(
 #   from = "/disks/DATATMP/DESIR_longitudinal/ArticleR/MetaboChip_T2D.annot.Rdata", 
-#   to = "Routput/MetaboChip_T2D.annot.Rdata"
+#   to = "data/MetaboChip_T2D.annot.Rdata"
 # )
-load(file = "Routput/MetaboChip_T2D.annot.Rdata")
+load(file = "data/MetaboChip_T2D.annot.Rdata")
 
 # jm_data <- new.env()
 # load(file = "/disks/DATATMP/DESIR_longitudinal/ArticleR/DataArticle_20180417.Rdata", envir = jm_data)
@@ -88,8 +88,8 @@ load(file = "Routput/MetaboChip_T2D.annot.Rdata")
 #   list = setdiff(ls(jm_data), c("rawsettings", "bestEffect", "simuDtaRMSE", "sprof", "p.estimateJM.sign")), 
 #   envir = jm_data
 # )
-# save(jm_data, file = "Routput/DataArticle_20180417.Rdata")
-load(file = "Routput/DataArticle_20180417.Rdata")
+# save(jm_data, file = "data/DataArticle_20180417.Rdata")
+load(file = "data/DataArticle_20180417.Rdata")
 
 
 ### Some functions
@@ -1099,7 +1099,7 @@ p <- ggdata_clean %>%
       size = 1.5,
       shape = 21,
       show.legend = FALSE,
-      colour = viridis(n = 1, begin = 1, end = 1)
+      colour = viridis_pal(begin = 1, end = 1)(1)
     ) +
     geom_label_repel(
       data = ggdata_clean %>% 
@@ -1111,8 +1111,8 @@ p <- ggdata_clean %>%
         ),
       mapping = aes(label = label_repel), 
       fill = "grey20",
-      colour = viridis(n = 1, begin = 1, end = 1), 
-      segment.colour = viridis(n = 1, begin = 1, end = 1),
+      colour = viridis_pal(begin = 1, end = 1)(1), 
+      segment.colour = viridis_pal(begin = 1, end = 1)(1),
       min.segment.length = unit(0, "lines"),
       nudge_y = 2,
       na.rm = TRUE
@@ -1127,8 +1127,8 @@ p <- ggdata_clean %>%
         ),
       mapping = aes(label = label_repel), 
       fill = "grey20",
-      colour = viridis(n = 1, begin = 1, end = 1), 
-      segment.colour = viridis(n = 1, begin = 1, end = 1),
+      colour = viridis_pal(begin = 1, end = 1)(1), 
+      segment.colour = viridis_pal(begin = 1, end = 1)(1),
       min.segment.length = unit(0, "lines"),
       nudge_y = -2,
       na.rm = TRUE
