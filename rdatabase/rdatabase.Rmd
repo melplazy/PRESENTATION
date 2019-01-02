@@ -5,10 +5,10 @@ date: 'Jeudi 03 mai - Vendredi 04 mai'
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 params:
-  eval: FALSE
+  eval: TRUE
 output:
   ioslides_presentation:
-    css: template/shiny-slides.css
+    css: template/dark.css
     logo: template/logo_UMR.png
     smaller: true
     self_contained: true
@@ -1292,7 +1292,7 @@ Des connecteurs :
 * Identifier le pilote de connection.
     ```{r}
     odbcListDrivers() %>% 
-      filter(attribute=="DriverODBCVer") %>% 
+      filter(attribute=="Description") %>% 
       select(-attribute)
     ```
 

@@ -13,7 +13,7 @@ params:
   eval: TRUE
 output:
   ioslides_presentation:
-    css: 'template/shiny-slides.css'
+    css: 'template/dark.css'
     logo: 'template/logo_UMR.png'
     smaller: false
     self_contained: true
