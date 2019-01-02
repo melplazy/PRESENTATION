@@ -5,7 +5,7 @@ date: 'Jeudi 03 mai - Vendredi 04 mai'
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 params:
-  eval: TRUE
+  eval: FALSE
 output:
   ioslides_presentation:
     css: template/dark.css
