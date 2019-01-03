@@ -5,7 +5,7 @@ date: 'Jeudi 03 mai - Vendredi 04 mai'
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 params:
-  eval: FALSE
+  eval: TRUE
 output:
   ioslides_presentation:
     css: template/dark.css
@@ -13,11 +13,14 @@ output:
     smaller: true
     self_contained: true
     mathjax: null
+    fig_width: 5.94
+    fig_height: 3.30
+    transition: 0.5
+    incremental: false
 ---
 
 ```{r setup, include = FALSE}
 options(stringsAsFactors = FALSE)
-# Sys.setlocale("LC_TIME", "english_united kingdom.1252")
 
 ### Load packages and functions
 library(grid)
@@ -30,6 +33,7 @@ library(rmarkdown)
 library(kableExtra)
 
 devtools::source_url('https://github.com/mcanouil/DEV/raw/master/R/theme_black.R')
+devtools::source_url('https://github.com/mcanouil/DEV/raw/master/R/pretty_kable.R')
 
 options("width" = 80)
 ### Set knitr rmarkdown chunk options
@@ -59,6 +63,36 @@ library(ggplot2)
 theme_set(theme_black(base_size = 14))
 
 options(tibble.print_max = 3, tibble.print_min = 3)
+
+# readr::write_csv(
+#   x = readr::read_csv(file = "./materials/ratings.csv", locale = readr::locale(encoding = "Windows-1252")), 
+#   path = "./materials/ratings.csv"
+# )
+```
+
+```{sh, eval = FALSE, echo = FALSE, results = "hide"}
+sudo apt-get update
+sudo apt-get install postgresql-11 postgresql-client-11
+# ps -ef | grep postgre
+sudo service postgresql start
+sudo su postgres
+psql -d postgres -U postgres
+\password postgres
+\q
+exit
+```
+
+```{sh, eval = FALSE, echo = FALSE, results = "hide"}
+sudo su postgres;
+psql -d postgres -U postgres;
+DROP DATABASE test_data; 
+DROP ROLE test_user; 
+DROP DATABASE datawarehouse; 
+DROP ROLE data_user; 
+DROP DATABASE movies; 
+DROP ROLE imdb_user;
+\q;
+exit
 ```
 
 
@@ -131,7 +165,7 @@ tidyverse_update()
 library(tidyverse)
 ```
 
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -407,7 +441,7 @@ library(pryr)
 library(tidyverse)
 ```
 
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -563,7 +597,7 @@ library(readxl)
 library(tidyverse)
 ```
 
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -760,7 +794,7 @@ data.frame(
   Package = rev(c("__*haven*__", "__*readxl*__", "__*readr*__")),
   Alternatives = rev(c("foreign, sas7bdat, readstata13", "gdata, openxlsx, XLConnect, xlsx", "base, data.table"))
 ) %>% 
-  kable(font_size = 18, align = "c", row.names = FALSE)
+  pretty_kable(font_size = 18, align = "c", row.names = FALSE)
 ```
 
 
@@ -854,7 +888,7 @@ writexl::write_xlsx(x = ratings, path = "ratings.xlsx")
 library(tidyverse)
 ```
 
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -1225,7 +1259,7 @@ library(DBI)
 ```{r, message = FALSE}
 library(odbc)
 ```
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -1303,7 +1337,7 @@ Des connecteurs :
     ```{r}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       port = 5432,
       database = "postgres",
@@ -1316,7 +1350,7 @@ Des connecteurs :
     ```{r, eval = FALSE}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       port = 5432,
       database = "postgres",
@@ -1364,7 +1398,7 @@ Des connecteurs :
     ```{r}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "test_data",
       port = 5432,
@@ -1468,7 +1502,7 @@ options(tibble.print_max = 10, tibble.print_min = 10)
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "postgres",
       port = 5432,
@@ -1487,13 +1521,13 @@ options(tibble.print_max = 10, tibble.print_min = 10)
 * En tant qu'utilisateur "data_user", exportez le fichier "ratings.csv" vers la base.
     Enlevez les espaces dans les noms de colonnes.
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
-    ratings <- read_csv(file = "./materials/ratings.csv") %>% 
+    ratings <- read_csv(file = "./materials/ratings.csv", locale = locale(encoding = )) %>% 
       `colnames<-`(gsub(" ", "", colnames(.)))
     ```
     ```{r, warning = FALSE, message = FALSE, results = "hide"}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
@@ -1583,7 +1617,7 @@ library(tidyverse)
 ```{r, message = FALSE}
 library(dbplyr)
 ```
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -1599,7 +1633,7 @@ tidyverse_conflicts()
     ```{r}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
@@ -1875,7 +1909,7 @@ et en ajoutant une colonne constructeur "const".
     ```{r}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
@@ -2109,7 +2143,7 @@ dbDisconnect(con)
     ```{r, echo = FALSE}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "datawarehouse",
       port = 5432,
@@ -2117,13 +2151,13 @@ dbDisconnect(con)
       password = "data_pwd"
     )
     ```
-    ```{r, message = FALSE, warning = FALSE}
+    ```{r, eval = FALSE, message = FALSE, warning = FALSE}
     ### <b>
-    dbSendQuery(con, "CREATE SCHEMA nycflights13;")
+    dbSendQuery(con, 'CREATE SCHEMA nycflights13;')
     ### </b>
     dbWriteTable(con, SQL("nycflights13.flights"), flights)
     ```
-    ```{r, echo = FALSE}
+    ```{r, eval = FALSE, echo = FALSE}
     dbWriteTable(con, SQL("nycflights13.airports"), airports)
     dbWriteTable(con, SQL("nycflights13.planes"), planes)
     dbWriteTable(con, SQL("nycflights13.weather"), weather)
@@ -2155,10 +2189,10 @@ options(tibble.print_max = 5, tibble.print_min = 5)
 ## Schéma et table
 
 * Accéder à une table présente dans un schéma autre que celui par défaut.
-    ```{r}
+    ```{r, eval = FALSE}
     tbl(con, in_schema("nycflights13", "flights")) %>% head(1)
     ```
-    ```{r}
+    ```{r, eval = FALSE}
     tbl(con, in_schema("nycflights13", "weather")) %>% head(1)
     ```
     
@@ -2174,6 +2208,7 @@ dbDisconnect(con)
 * Le SQL en 10 étapes : [blog.jooq.org](https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/)
 
 * "Databases using R" : [db.rstudio.com](http://db.rstudio.com)
+
 
 
 # *rvest* | Extraction de contenus web {.flexbox .vcenter}
@@ -2234,11 +2269,13 @@ options(tibble.print_max = 5, tibble.print_min = 5)
 ```{r, message = FALSE}
 library(xml2)
 library(rvest)
+library(DBI)
+library(odbc)
 ```
 ```{r, message = FALSE}
 library(tidyverse)
 ```
-```{r}
+```{r, eval = FALSE}
 tidyverse_conflicts()
 ```
 
@@ -2318,20 +2355,22 @@ tidyverse_conflicts()
 
 * Reconstruction du tableau acteur/personnage.
     ```{r}
-    cast_tbl <- tibble(
-      Actor = read_html(rpo_cast_url) %>% 
-        html_nodes("td.itemprop") %>% 
-        html_nodes("span.itemprop") %>% 
-        html_text(),
-      Character = rpo_character_list %>% 
-        html_text() %>% 
+    cast_tbl <- rpo_cast_list %>% 
+      html_table() %>% 
+      .[[1]] %>% 
+      select(2, 4) %>% 
+      as_tibble() %>% 
+      rename(Actor = X2, Character = X4) %>% 
+      mutate(
+        Character = Character %>% 
         gsub("\n", "", .) %>% 
         gsub(" +", " ", .) %>% 
         gsub("^ (.*) $", "\\1", .)
-    )
+      ) %>% 
+      filter(!grepl("Rest of cast listed alphabetically:", Actor)) %>% 
+      filter(Actor!="")
     
-    cast_tbl %>% 
-      head(3)
+    head(cast_tbl, 3)
     ```
 
 
@@ -2355,7 +2394,7 @@ tidyverse_conflicts()
     ```{r, results = "hide", warning = FALSE}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "postgres",
       port = 5432,
@@ -2375,7 +2414,7 @@ tidyverse_conflicts()
     ```{r, results = "hide"}
     con <- dbConnect(
       drv = odbc(),
-      driver = "PostgreSQL ODBC Driver(UNICODE)",
+      driver = "PostgreSQL Unicode",
       server = "localhost",
       database = "movies",
       port = 5432,
@@ -2417,18 +2456,20 @@ tidyverse_conflicts()
 
 * Création d'un tableau casting.
     ```{r, results = "hide"}
-    cast_tbl <- tibble(
-      Actor = cast_list %>% 
-        html_nodes("td.itemprop") %>% 
-        html_nodes("span.itemprop") %>% 
-        html_text(),
-      Character = cast_list %>% 
-        html_nodes("td.character") %>% 
-        html_text() %>% 
+    cast_tbl <- rpo_cast_list %>% 
+      html_table() %>% 
+      .[[1]] %>% 
+      select(2, 4) %>% 
+      as_tibble() %>% 
+      rename(Actor = X2, Character = X4) %>% 
+      mutate(
+        Character = Character %>% 
         gsub("\n", "", .) %>% 
         gsub(" +", " ", .) %>% 
         gsub("^ (.*) $", "\\1", .)
-    )
+      ) %>% 
+      filter(!grepl("Rest of cast listed alphabetically:", Actor)) %>% 
+      filter(Actor!="")
     ```
 
 
@@ -2441,22 +2482,20 @@ tidyverse_conflicts()
         paste0(., "fullcredits/") %>% 
         read_html() %>% 
         html_nodes("table.cast_list") %>% 
-        (function(node) {
-          cast_tbl <- tibble(
-            URL = x,
-            Actor = node %>% 
-              html_nodes("td.itemprop") %>% 
-              html_nodes("span.itemprop") %>% 
-              html_text(),
-            Character = node %>% 
-              html_nodes("td.character") %>%
-              html_text() %>% 
-              gsub("\n", "", .) %>% 
-              gsub(" +", " ", .) %>% 
-              gsub("^ (.*) $", "\\1", .)
-          )
-        }) %>% 
-        return()
+        html_table() %>% 
+        .[[1]] %>% 
+        select(2, 4) %>% 
+        as_tibble() %>% 
+        rename(Actor = X2, Character = X4) %>% 
+        mutate(
+          Character = Character %>% 
+          gsub("\n", "", .) %>% 
+          gsub(" +", " ", .) %>% 
+          gsub("^ (.*) $", "\\1", .)
+        ) %>% 
+        filter(!grepl("Rest of cast listed alphabetically:", Actor)) %>% 
+        filter(Actor!="") %>% 
+        mutate(url = x)
     }
     ```
 
@@ -2585,7 +2624,7 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
 * Reconstituez une table contenant au minimum : le titre, le genre, la durée et la note ("étoile jaune").
     ```{r, eval = FALSE}
     get_movies_info <- function(x) {
-      c(
+      out <- c(
         x %>% html_nodes("h3.lister-item-header") %>% html_text() %>% gsub("\n", "", .) %>% 
           gsub(" [0-9]+.", "", .) %>% gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .),
       
@@ -2600,8 +2639,9 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
           html_text("span.ipl-rating-star__rating") %>% 
           gsub("\n", "", .) %>% gsub(" +", " ", .) %>% gsub("^ (.*) $", "\\1", .) %>% 
           as.numeric() %>%(function(.x) {if (length(.x)!=2) {c(NA, NA)} else {.x}})
-      ) %>% 
-        `names<-`(c("title", "genres", "runtime", "imdbrating", "userating"))
+      )
+      names(out) <- c("title", "genres", "runtime", "imdbrating", "userating")
+      return(data.frame(t(as.matrix(out))))
     }
     ```
 
@@ -2614,9 +2654,10 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
       read_html() %>% 
       html_nodes("div#ratings-container.lister-list") %>% 
       html_nodes("div.lister-item.mode-detail") %>% 
-      lapply(., get_movies_info) %>% 
-      do.call("bind_rows", .)
+      map_df(.f = get_movies_info)
     ```
+
+
 
 
 # *ggplot2* | The grammar of graphics {.flexbox .vcenter}
@@ -2627,78 +2668,6 @@ En utilisant le lien url : https://www.imdb.com/user/ur56341222/ratings.
 ## Simplifier et améliorer les figures {.flexbox .vcenter}
 
 <img src="images/xkcd_graph_quality.png" width="500"></img>
-
-
-## `ratings` en images 
-
-```{r, results = "hide", message = FALSE}
-ratings_agg <- read_csv("materials/ratings.csv") %>%
-  group_by(`Date Rated`) %>%
-  summarise(
-    avg_rating = mean(`Your Rating`),
-    n_rating = n()
-  ) %>%
-  right_join(
-    tibble(
-      "Date Rated" = seq(
-        from = as.Date("2016-01-01"), 
-        to = as.Date(paste0(lubridate::year(Sys.Date()), "-12-31")), 
-        by = 1
-      )
-    )
-  ) %>%
-  mutate(
-    Year = lubridate::year(`Date Rated`),
-    Month = lubridate::month(`Date Rated`, label = TRUE, abbr = FALSE),
-    wDay = lubridate::wday(`Date Rated`, label = TRUE, abbr = FALSE, week_start = 1),
-    wDay = factor(wDay, levels = rev(levels(wDay))),
-    Week = lubridate::isoweek(`Date Rated`),
-    n_rating = ifelse(is.na(n_rating), 0, n_rating)
-  ) %>% 
-  filter(Year == 2017)
-```
-
-
-## `ratings` en images
-
-```{r}
-x_labels <- ratings_agg %>% 
-  select(Week, Month) %>% 
-  distinct() %>% 
-  group_by(Month) %>% 
-  summarise(Week = min(Week)+2)
-```
-
-
-## `ratings` en images
-
-```{r, results = "hide", message = FALSE, warning = FALSE}
-p <- ratings_agg %>% 
-  ggplot(aes(x = Week, y = wDay, fill = avg_rating, label = n_rating)) +
-    geom_tile(colour = "grey20", size = 0.1) +
-    geom_text(colour = "white", fontface = "bold", size = 3) +
-    facet_wrap(~ Year, ncol = 1) +
-    scale_fill_viridis(name = "Average", limits = c(0, 10), na.value = "grey30") +
-    scale_y_discrete(expand = c(0, 0)) +
-    scale_x_continuous(
-      expand = c(0, 0), 
-      breaks = x_labels[["Week"]], 
-      labels = x_labels[["Month"]]
-    ) +
-    theme(
-      axis.ticks = element_blank(),
-      axis.text.x = element_text(angle = 45, hjust = 1),
-      axis.title = element_blank(),
-      panel.grid = element_blank()
-    )
-```
-
-
-## `ratings` en images {.flexbox .vcenter}
-
-```{r ratings_streak, echo = FALSE, message = FALSE, warning = FALSE}
-print(p)
-```
 
 
 ## `ratings` en images
@@ -2718,11 +2687,11 @@ p <- read_csv("materials/ratings.csv") %>%
       aes(y = ..count../sum(..count..)),
       binwidth = 0.5,
       colour = "white",
-      position = position_dodge(preserve = "single")
+      position = position_dodge2()
     ) +
     scale_x_continuous(name = "Rating", expand = c(0, 0), limits = c(0, 10), breaks = c(0, seq_len(10))) +
-    scale_y_continuous(expand = c(0, 0), labels = percent, limits = c(0, 0.30)) +
-    scale_fill_viridis(name = NULL, discrete = TRUE) +
+    scale_y_continuous(expand = expand_scale(mult = c(0, 0.05)), labels = percent) +
+    scale_fill_viridis_d(name = NULL) +
     labs(x = "Rating", y = "Proportion", title = "Distribution of Ratings") +
     theme(legend.position = c(0, 1), legend.justification = c(-0.05, 1.05))
 ```
@@ -2734,10 +2703,22 @@ p <- read_csv("materials/ratings.csv") %>%
 print(p)
 ```
 
+## `ratings` en images {.flexbox .vcenter}
+
+<img src="https://raw.githubusercontent.com/mcanouil/IMDbRating/master/images/Coeos_IMDb_03.gif"></img>
+
 
 ## `ratings` en images {.flexbox .vcenter}
 
-<img src="images/Coeos_IMDb-3.png"></img>
+```{r, eval = FALSE}
+devtools::source_gist("https://gist.github.com/mcanouil/2bb6df3817b01049d4f2a4541de5e6de")
+```
+<img src="https://raw.githubusercontent.com/mcanouil/IMDbRating/master/images/Coeos_IMDb_02.gif"></img>
+
+
+## `ratings` en images {.flexbox .vcenter}
+
+<img src="https://raw.githubusercontent.com/mcanouil/IMDbRating/master/images/2018_Coeos_IMDb.png"></img>
 
 
 ## Pour aller plus loin ...
@@ -2820,4 +2801,30 @@ Supporte :
     * [R Weekly](https://rweekly.org/)
 
 
-<!-- DROP DATABASE test_data; DROP ROLE test_user; DROP DATABASE datawarehouse; DROP ROLE data_user; DROP DATABASE movies; DROP ROLE imdb_user; -->
+# <img src="http://mickael.canouil.fr/img/IDPhotoBWlight.png" height = "150px"></img>__*Me?*__ {.flexbox .vcenter}
+
+<div class="auto-fadein">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
+<div class="columns-2">
+
+<span class="uk-icon-button" uk-icon="icon: receiver; ratio: 1"></span>
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="" target="_blank">+33 (0) 374 00 81 29</a> 
+    
+<span class="uk-icon-button" uk-icon="icon: mail; ratio: 1"></span>
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="mailto:mickael.canouil@cnrs.fr" target="_blank">mickael.canouil@cnrs.fr</a> 
+
+<span class="uk-icon-button" uk-icon="icon: home; ratio: 1"></span>
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="http://mickael.canouil.fr" target="_blank">mickael.canouil.fr</a> 
+
+<span class="uk-icon-button" uk-icon="icon: linkedin; ratio: 1"></span>
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="https://www.linkedin.com/in/mickael-canouil" target="_blank">mickael-canouil</a> 
+
+<span class="uk-icon-button" uk-icon="icon: github; ratio: 1"></span>
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="https://github.com/mcanouil" target="_blank">mcanouil</a> 
+
+<span class="uk-icon-button" uk-icon="icon: twitter; ratio: 1"></span>
+    <a style="border-bottom: none; font-size: 80%; vertical-align: text-top;" href="https://twitter.com/Coeos_" target="_blank">@Coeos_</a> 
+
+</div>
+</div>
