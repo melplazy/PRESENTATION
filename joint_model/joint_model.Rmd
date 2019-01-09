@@ -1,5 +1,5 @@
 ---
-title: 'Jointly Modelling SNPs<br>with<br>Survival & Longitudinal Trait?'
+title: 'Jointly Modelling SNPs<br>with<br>Survival & Longitudinal Trait'
 author: 'Mickaël CANOUIL, *Ph.D.*'
 date: 'Friday, 12<sup>th</sup> of October (2018)'
 monofont: 'Source Code Pro'
