@@ -1,7 +1,7 @@
 ---
 title: 'Jointly Modelling SNPs<br>with<br>Survival & Longitudinal Trait'
 author: 'Mickaël CANOUIL, *Ph.D.*'
-date: 'Friday, 12<sup>th</sup> of October (2018)'
+date: 'Tuesday, 21<sup>st</sup> of January (2019)'
 monofont: 'Source Code Pro'
 monofontoptions: 'Scale=0.7'
 bibliography: [bib/Canouil_etal_2018.bib]
@@ -176,12 +176,10 @@ _"In all cases, the glucose-raising allele was associated with increased risk of
 * To identify the effect of a treatment on a disease  
     (independently of the association between the disease and the biomarker)
 
-<div class="centered">
-*For example:*
+<i>For example:</i>
 
-  * __Biomarker__: fasting glucose
-  * __Event__: Type 2 Diabetes
-</div>
+* __Biomarker__: <b>fasting glucose</b>
+* __Event__: <b>Type 2 Diabetes</b>
 
 
 ## We can start with a Cox Model ... {.flexbox .vleft}
