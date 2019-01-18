@@ -2,6 +2,14 @@ t2dhistory	include_graphics
 prokopenko	include_graphics
 scott1	include_graphics
 yaghootkar1	include_graphics
+unnamed-chunk-1	coxph	Surv	Time	death	drug	aids.id
+unnamed-chunk-2	fitCOX	coxph	Surv	Time	death	drug	aids.id	pCOX	ggsurvplot	survfit	plot	theme_black	scale_colour_viridis_d	scale_fill_viridis_d	theme	c	print
+unnamed-chunk-3	coxph	Surv	Time	death	drug	aids.id
+unnamed-chunk-4	summary	coxph	Surv	Time	death	drug	aids.id
+unnamed-chunk-5	lme	sqrt	CD4	obstime	drug	patient	aids
+unnamed-chunk-6	fitLME	lme	sqrt	CD4	obstime	drug	patient	aids	pLME	ggplot	geom_line	aes	geom_point	Time	facet_grid	vars	scale_colour_viridis_d	scale_fill_viridis_d	print
+unnamed-chunk-7	lme	sqrt	CD4	obstime	drug	patient	aids
+unnamed-chunk-8	summary	lme	sqrt	CD4	obstime	drug	patient	aids
 diagram_data	data_arrows	tribble	x	y	xend	yend	step	data_labels	label	colour	p_init	ggplot	theme	element_blank	p	geom_segment	%>%	filter	aes	arrow	unit	geom_text	factor	scale_x_continuous	expand_scale	scale_y_continuous	scale_colour_viridis_d	coord_cartesian	c	print	cat
 diagram_figs	istep	cat	p	p_init	geom_segment	data_arrows	%>%	filter	step	aes	x	xend	y	yend	arrow	unit	geom_text	data_labels	label	factor	colour	scale_x_continuous	expand_scale	scale_y_continuous	scale_colour_viridis_d	coord_cartesian	c	print
 scott2	include_graphics
@@ -17,4 +25,8 @@ yaghootkar3	include_graphics
 effect_size3_fake	ggplot	jm_data	p.estimateJM.sign	data	%>%	filter	InGWAS	GeneSymbol.Closest	%in%	c	mutate	ifelse	abs	alpha.estimate	aes	gamma.estimate	exp	theme	element_text	rel	geom_hline	geom_vline	stat_ellipse	geom_label_repel	summarise	median	unique	x	y	geom_point	scale_colour_viridis_d	scale_fill_viridis_d	scale_shape_manual	rep	scale_y_continuous	coord_cartesian	x_range	y_range	labs	expression	atop	paste
 effect_size3_true	ggplot	jm_data	p.estimateJM.sign	data	%>%	filter	InGWAS	GeneSymbol.Closest	%in%	c	aes	gamma.estimate	exp	alpha.estimate	theme	element_text	rel	geom_hline	geom_vline	geom_label_repel	summarise	median	unique	x	y	stat_ellipse	geom_point	scale_colour_viridis_d	scale_fill_viridis_d	scale_shape_manual	rep	scale_y_continuous	coord_cartesian	x_range	y_range	labs	expression	atop	paste
 effect_size3_true_again	ggplot	jm_data	p.estimateJM.sign	data	%>%	filter	InGWAS	GeneSymbol.Closest	%in%	c	aes	gamma.estimate	exp	alpha.estimate	theme	element_text	rel	geom_hline	geom_vline	geom_label_repel	summarise	median	unique	x	y	stat_ellipse	geom_point	scale_colour_viridis_d	scale_fill_viridis_d	scale_shape_manual	rep	scale_y_continuous	coord_cartesian	x_range	y_range	labs	expression	atop	paste
-unnamed-chunk-1	tab	jm_data	p.estimateJM.sign	data	%>%	filter	RSID	%in%	c	select	GeneSymbol.Closest	RiskAllele	strand	alpha.estimate	alpha.p.value	gamma.estimate	gamma.p.value	beta.estimate	beta.p.value	mutate	map2_chr	ifelse	y	switch	x	unite	SNP	paste0	t	`colnames<-`	as.data.frame	rownames_to_column	gsub	rowname	separate	gather	Gene	value	parameter	type	spread	format	estimate	format_scientific	pvalue	rename	colnames	.	kable
+unnamed-chunk-9	fitCOX	coxph	Surv	Time	death	drug	aids.id	fitLME	lme	sqrt	CD4	obstime	patient	aids
+unnamed-chunk-10	fitJOINT	jointModel	fitLME	fitCOX
+unnamed-chunk-11	out	capture.output	summary	fitJOINT	cat
+unnamed-chunk-12	
+unnamed-chunk-13	tab	jm_data	p.estimateJM.sign	data	%>%	filter	RSID	%in%	c	select	GeneSymbol.Closest	RiskAllele	strand	alpha.estimate	alpha.p.value	gamma.estimate	gamma.p.value	beta.estimate	beta.p.value	mutate	map2_chr	ifelse	y	switch	x	unite	SNP	paste0	t	`colnames<-`	as.data.frame	rownames_to_column	gsub	rowname	separate	gather	Gene	value	parameter	type	spread	format	estimate	format_scientific	pvalue	rename	colnames	.	kable

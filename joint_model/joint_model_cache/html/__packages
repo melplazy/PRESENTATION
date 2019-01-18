@@ -1,6 +1,13 @@
 base
-tidyverse
+MASS
+nlme
+survival
+JM
 ggplot2
+magrittr
+ggpubr
+survminer
+tidyverse
 tibble
 tidyr
 readr
