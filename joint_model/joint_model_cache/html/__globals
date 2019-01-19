@@ -28,5 +28,5 @@ effect_size3_true_again	ggplot	jm_data	p.estimateJM.sign	data	%>%	filter	InGWAS	
 unnamed-chunk-9	fitCOX	coxph	Surv	Time	death	drug	aids.id	fitLME	lme	sqrt	CD4	obstime	patient	aids	fitJOINT	jointModel
 unnamed-chunk-10	out	capture.output	summary	fitJOINT	cat
 unnamed-chunk-11	
-unnamed-chunk-12	
+unnamed-chunk-12	tab	jm_data	p.estimateJM.sign	data	%>%	filter	RSID	%in%	c	select	GeneSymbol.Closest	RiskAllele	strand	alpha.estimate	alpha.p.value	gamma.estimate	gamma.p.value	beta.estimate	beta.p.value	mutate	map2_chr	ifelse	y	switch	x	unite	SNP	paste0	t	`colnames<-`	as.data.frame	rownames_to_column	gsub	rowname	separate	gather	Gene	value	parameter	type	spread	format	estimate	format_scientific	pvalue	rename	colnames	.	kable
 unnamed-chunk-13	tab	jm_data	p.estimateJM.sign	data	%>%	filter	RSID	%in%	c	select	GeneSymbol.Closest	RiskAllele	strand	alpha.estimate	alpha.p.value	gamma.estimate	gamma.p.value	beta.estimate	beta.p.value	mutate	map2_chr	ifelse	y	switch	x	unite	SNP	paste0	t	`colnames<-`	as.data.frame	rownames_to_column	gsub	rowname	separate	gather	Gene	value	parameter	type	spread	format	estimate	format_scientific	pvalue	rename	colnames	.	kable
