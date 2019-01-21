@@ -7,7 +7,7 @@ unnamed-chunk-2	fitCOX	coxph	Surv	Time	death	drug	aids.id	pCOX	ggsurvplot	survfi
 unnamed-chunk-3	coxph	Surv	Time	death	drug	aids.id
 unnamed-chunk-4	summary	coxph	Surv	Time	death	drug	aids.id
 unnamed-chunk-5	lme	sqrt	CD4	obstime	drug	patient	aids
-unnamed-chunk-6	fitLME	lme	sqrt	CD4	obstime	drug	patient	aids	pLME	ggplot	geom_line	aes	geom_point	Time	facet_grid	vars	scale_colour_viridis_d	scale_fill_viridis_d	print
+unnamed-chunk-6	fitLME	lme	sqrt	CD4	obstime	drug	patient	aids	pLME	ggplot	geom_line	aes	geom_point	%>%	filter	death	group_by	max	ungroup	Time	facet_grid	vars	scale_colour_viridis_d	scale_fill_viridis_d	print
 unnamed-chunk-7	lme	sqrt	CD4	obstime	drug	patient	aids
 unnamed-chunk-8	summary	lme	sqrt	CD4	obstime	drug	patient	aids
 diagram_data	data_arrows	tribble	x	y	xend	yend	step	data_labels	label	colour	p_init	ggplot	theme	element_blank	p	geom_segment	%>%	filter	aes	arrow	unit	geom_text	factor	scale_x_continuous	expand_scale	scale_y_continuous	scale_colour_viridis_d	coord_cartesian	c	print	cat

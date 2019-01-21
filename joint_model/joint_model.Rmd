@@ -264,12 +264,18 @@ lme(sqrt(CD4) ~ obstime*drug - drug, random = ~ 1|patient, data = aids)
 
 ```{r}
 fitLME <- lme(fixed = sqrt(CD4) ~ obstime*drug - drug, random = ~ 1 | patient, data = aids)
-pLME <- ggplot(data = aids) +
+pLME <- ggplot() +
   geom_line(
+    data = aids,
     mapping = aes(x = obstime, y = sqrt(CD4), colour = drug, group = patient), 
     show.legend = FALSE
   ) +
   geom_point(
+    data = aids %>% 
+      filter(death==1) %>% 
+      group_by(patient) %>% 
+      filter(obstime==max(obstime)) %>% 
+      ungroup(),
     mapping = aes(x = Time, y = sqrt(CD4), fill = drug, group = patient), 
     shape = 23, 
     colour = "white", 
@@ -290,6 +296,46 @@ lme(sqrt(CD4) ~ obstime*drug - drug, random = ~ 1|patient, data = aids)
 
 ```{r, results = "markup"}
 summary(lme(sqrt(CD4) ~ obstime*drug - drug, random = ~ 1 | patient, data = aids))
+```
+
+
+## Let's use a Joint Model {.flexbox .vleft}
+
+```{r, echo = TRUE, results = "hide"}
+fitCOX <- coxph(Surv(Time, death) ~ drug, data = aids.id, x = TRUE)
+fitLME <- lme(sqrt(CD4) ~ obstime*drug - drug, random = ~ 1 | patient, data = aids)
+### <b>
+fitJOINT <- jointModel(fitLME, fitCOX, timeVar = "obstime", method = "piecewise-PH-aGH")
+### </b>
+```
+```{r, results = "markup", include = FALSE, eval = FALSE}
+out <- capture.output(summary(fitJOINT))[20:44]
+cat(out, sep = "\n")
+```
+
+```{r, eval = FALSE, echo = TRUE}
+#> Variance Components:
+#>                StdDev
+#> (Intercept) 0.8793445
+#> Residual    0.4093577
+#>
+#> Coefficients:
+#> Longitudinal Process
+#>                   Value Std.Err  z-value p-value
+#> (Intercept)      2.5100  0.0434  57.8778 <0.0001
+### <b>
+#> obstime         -0.0362  0.0035 -10.3474 <0.0001
+#> obstime:drugddI  0.0045  0.0049   0.9173  0.3590
+### </b>
+#>
+#> Event Process
+#>             Value Std.Err z-value p-value                                  
+### <b>
+#> drugddI    0.3458  0.1523  2.2715  0.0231                                  
+#> Assoct    -1.0866  0.1184 -9.1786 <0.0001  
+### </b>
+#> log(xi.1) -1.6560  0.2529 -6.5475                                          
+#> log(xi.*)  ......  .....   ......
 ```
 
 
@@ -470,47 +516,6 @@ A gain in statistical power to detect those effects
 * if $\beta\neq0$, to detect a joint effect of $Z$: $\beta\gamma+\alpha\neq0$  
     (from @chen_sample_2011);
 * compared to the extended Cox model.
-
-
-## Let's get back to the `aids` dataset
-
-```{r, echo = TRUE, results = "hide"}
-fitCOX <- coxph(Surv(Time, death) ~ drug, data = aids.id, x = TRUE)
-fitLME <- lme(sqrt(CD4) ~ obstime*drug - drug, random = ~ 1 | patient, data = aids)
-fitJOINT <- jointModel(fitLME, fitCOX, timeVar = "obstime", method = "piecewise-PH-aGH")
-```
-```{r, results = "markup", include = FALSE, eval = FALSE}
-out <- capture.output(summary(fitJOINT))[20:44]
-cat(out, sep = "\n")
-```
-
-```{r, eval = FALSE, echo = TRUE}
-#> Variance Components:
-#>                StdDev
-#> (Intercept) 0.8793445
-#> Residual    0.4093577
-#>
-#> Coefficients:
-#> Longitudinal Process
-#>                   Value Std.Err  z-value p-value
-#> (Intercept)      2.5100  0.0434  57.8778 <0.0001
-### <b>
-#> obstime         -0.0362  0.0035 -10.3474 <0.0001
-#> obstime:drugddI  0.0045  0.0049   0.9173  0.3590
-### </b>
-#>
-#> Event Process
-#>             Value Std.Err z-value p-value                                  
-### <b>
-#> drugddI    0.3458  0.1523  2.2715  0.0231                                  
-#> Assoct    -1.0866  0.1184 -9.1786 <0.0001  
-### </b>
-#> log(xi.1) -1.6560  0.2529 -6.5475                                          
-#> log(xi.*)  ......  .....   ......
-```
-
-
-
 
 
 ## What is a Joint Model? With equations! {.flexbox .vleft}
