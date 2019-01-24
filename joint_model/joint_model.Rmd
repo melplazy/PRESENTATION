@@ -1159,7 +1159,7 @@ p <- ggdata_clean %>%
     y_reveal = abs(y_pval)
   ) %>% 
   # filter(y_reveal>4) %>% 
-  ggplot(aes(x = x_pos, y = y_pval, colour = colour)) +
+  ggplot(aes(x = x_pos, y = y_pval, colour = colour, group = id)) +
     geom_point(size = 1.5, shape = 21, na.rm = TRUE, show.legend = FALSE) +
     scale_colour_manual(
       values = c(
@@ -1247,7 +1247,7 @@ p <- ggdata_clean %>%
       nudge_y = -2,
       na.rm = TRUE
     ) +
-    transition_reveal(id = id, along = y_reveal, range = c(0, 90))
+    transition_reveal(along = y_reveal, range = c(0, 90))
 
 # animate(
 #   plot = p,
