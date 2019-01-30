@@ -886,8 +886,10 @@ all_gif <- jm_data$simuDtaRMSE %>%
             "L.SNP" = {expression("RMSE" == sqrt(symbol(E)((hat(gamma) - gamma) ^ 2)))},
             "S.Assoct" = {expression("RMSE" == sqrt(symbol(E)((hat(beta) - beta) ^ 2)))},
             "S.SNP" = {expression("RMSE" == sqrt(symbol(E)((hat(alpha) - alpha) ^ 2)))}
-          )
+          ),
+          caption = "Adapted from Canouil et al., 2018."
         ) +
+        theme(plot.caption = element_text(size = rel(0.5), hjust = 1)) +
         scale_fill_viridis_d(name = NULL, drop = FALSE) +
         facet_grid(rows = vars(d), cols = vars(measures))
       if (unique(.data[["p"]])=="S.SNP") {
@@ -923,8 +925,10 @@ all_gif <- jm_data$simuDtaRMSE %>%
             "L.SNP" = {expression(Bias(hat(gamma)))},
             "S.Assoct" = {expression(Bias(hat(beta)))},
             "S.SNP" = {expression(Bias(hat(alpha)))}
-          )
+          ),
+          caption = "Adapted from Canouil et al., 2018."
         ) +
+        theme(plot.caption = element_text(size = rel(0.5), hjust = 1)) +
         scale_fill_viridis_d(name = NULL, drop = FALSE) +
         facet_grid(rows = vars(d), cols = vars(measures))
       if (unique(.data[["p"]])=="S.SNP") {
@@ -956,8 +960,10 @@ all_gif <- jm_data$simuDtaRMSE %>%
             "L.SNP" = {expression(Var(hat(gamma)))},
             "S.Assoct" = {expression(Var(hat(beta)))},
             "S.SNP" = {expression(Var(hat(alpha)))}
-          )
+          ),
+          caption = "Adapted from Canouil et al., 2018."
         ) +
+        theme(plot.caption = element_text(size = rel(0.5), hjust = 1)) +
         scale_fill_viridis_d(name = NULL, drop = FALSE) +
         facet_grid(rows = vars(d), cols = vars(measures))
       if (unique(.data[["p"]])=="S.SNP") {
@@ -1160,7 +1166,7 @@ p <- ggdata_clean %>%
   ) %>% 
   # filter(y_reveal>4) %>% 
   ggplot(aes(x = x_pos, y = y_pval, colour = colour, group = id)) +
-    geom_point(size = 1.5, shape = 21, na.rm = TRUE, show.legend = FALSE) +
+    geom_point(size = 1.5, shape = 21, fill = NA, na.rm = TRUE, show.legend = FALSE) +
     scale_colour_manual(
       values = c(
         rep(viridis_pal(begin = 1/4, end = 3/4)(2), 11),
@@ -1212,6 +1218,7 @@ p <- ggdata_clean %>%
         ),
       size = 1.5,
       shape = 21,
+      fill = NA,
       show.legend = FALSE,
       colour = viridis_pal(begin = 1, end = 1)(1)
     ) +
@@ -1247,6 +1254,10 @@ p <- ggdata_clean %>%
       nudge_y = -2,
       na.rm = TRUE
     ) +
+    labs(
+      caption = "Adapted from Canouil et al., 2018."
+    ) +
+    theme(plot.caption = element_text(size = rel(0.5), hjust = 1)) +
     transition_reveal(along = y_reveal, range = c(0, 90))
 
 # animate(
