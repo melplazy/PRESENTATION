@@ -1,0 +1,31 @@
+---
+title: "Variants génétiques associés à la trajectoire de la glycémie à jeun et à l’incidence du diabète de type 2 : Une approche par modèle joint"
+output: word_document
+---
+
+
+Mickaël Canouil* (1), Philippe Froguel (1,2), Ghislain Rocheleau (1)  
+(1) Univ. Lille, CNRS, CHU Lille, Institut Pasteur de Lille, UMR 8199 - EGID, F-59000 Lille, France  
+(2) Department of Genomics of Common Disease, Imperial College London, London, United Kingdom
+
+
+# Introduction
+
+Dans le but d’optimiser l’utilisation des données phénotypiques existantes, nous proposons une approche statistique par modèle joint permettant l’identification de marqueurs génétiques simultanément associés à la trajectoire temporelle d’un trait phénotypique et à la survenue d’un événement. Nous illustrons l’application du modèle joint dans un contexte génétique des maladies métaboliques, en exploitant la forte association entre la trajectoire temporelle de la glycémie à jeun et l’incidence du diabète de type 2 (DT2).
+
+
+# Matériels et méthodes
+
+Le modèle proposé dans notre projet consiste en un modèle de régression linéaire mixte combiné à un modèle de survie dit de Cox à risque proportionnel. À partir des données de génotypage (Illumina Metabochip DNA arrays) obtenues pour près de 4 500 individus de la cohorte D.E.S.I.R. (Données Épidémiologiques sur le Syndrome d’Insulino-Résistance), nous avons analysé l’ensemble des variants génétiques disponibles (SNPs).  
+Une étude comparative de la puissance statistique de l’approche par modèle joint par rapport aux approches classiques utilisées dans les études d’associations pan-génomiques (GWAS) a été également réalisée.
+
+
+# Résultats
+
+Tel qu’attendu, nos résultats démontrent la forte association entre la glycémie à jeun et l’incidence du DT2 et confirment également l’association entre la glycémie et certains SNPs rapportés dans les études de type GWAS, tels que les SNPs situés dans les gènes G6PC2 ou encore TCF7L2. Les associations relevées ici sont pour la plupart nominales (p-valeur < 0,05), principalement en raison de la faible taille de notre cohorte en comparaison aux tailles d’effectifs utilisées en méta-analyse, et notamment en raison du nombre peu élevé de cas de DT2 incident (environ 5% dans la cohorte D.E.S.I.R.).  
+Notre analyse par modèle joint a révélé que les SNPs se situant près ou dans le gène MTNR1B pourraient ne pas avoir d’effet joint sur l’élévation de la glycémie à jeun et du risque de survenue du DT2.
+
+# Discussion 
+
+L’analyse par modèle joint a montré, d’une part, une grande cohérence avec les résultats des études de type GWAS, et d’autre part, semble indiquer un gain de puissance statistique pour détecter l’effet d’un SNP sur l’évolution de la glycémie à jeun et/ou sur la survenue du DT2. De plus, le résultat obtenu pour le gène MTNR1B, tend à montrer qu’une modélisation statistique simultanée des deux processus, à savoir l’évolution de la glycémie et du risque de DT2 au cours du temps, pourrait mener à une identification plus fine des variants génétiques associés à l’homéostasie du glucose sanguin ou à la physiopathologie du diabète.
+

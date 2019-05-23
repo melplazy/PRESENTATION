@@ -1,0 +1,101 @@
+% cd /disks/PROJECT/Mickael/COMMUNICATION/SFD2017/;
+% pdflatex Report_SFD2017.tex; bibtex Report_SFD2017; pdflatex Report_SFD2017.tex; pdflatex Report_SFD2017.tex;
+% evince Report_SFD2017.pdf &
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{casual}
+\moderncvcolor{blue}
+
+\usepackage[margin=2.5cm]{geometry}
+\setlength{\footskip}{40pt}
+
+\usepackage[french,english]{babel}
+\selectlanguage{french}
+
+\usepackage[super]{natbib}
+\usepackage{indentfirst}
+
+\newcommand\cmd[1]{{\texttt{\color{black}\textbf{#1}}}}
+
+\firstname{}
+\familyname{Détection de Nouveaux Variants Génomiques Simultanément Associés au Glucose Sanguin et à la Survenue du Diabète de Type 2.}
+\title{\small{\setlength{\parindent}{0cm}\textbf{\underline{Mickaël Canouil}}\textsuperscript{1}, Philippe Froguel\textsuperscript{1,2,\textasteriskcentered}, Ghislain Rocheleau\textsuperscript{1,\textdagger}\\
+\normalsize
+\textsuperscript{1}Université de Lille , CNRS, Institut Pasteur de Lille, UMR 8199 - EGID, Lille, France\\
+\textsuperscript{2}Department of Genomics of Common Disease, Imperial College London, London, United Kingdom\\
+\textsuperscript{\textasteriskcentered}Directeur de thèse. \textsuperscript{\textdagger}Co-Directeur de thèse.
+}}
+\address{EGID - UMR 8199 - Pôle Recherche - 1er étage Aile Ouest}{1, Place de Verdun, 59045 LILLE CEDEX, France}
+\phone{+33 (0) 374 00 81 29}
+\email{mickael.canouil@cnrs.fr}
+\homepage{mickael.canouil.fr}{mickael.canouil.fr} % The first argument is the url for the clickable link, the second argument is the url displayed in the template - this allows special characters to be displayed such as the tilde in this example
+
+\begin{document}
+\makecvtitle % Print the CV title
+
+\section{Avancées Principales}
+\par{\setlength{\parindent}{0.5cm}
+L’objectif principal de ce projet consiste en la découverte de nouveaux loci simultanément associés à la trajectoire temporelle du glucose sanguin et à l’incidence du diabète de type 2 (DT2),
+via l'implémentation d'une approche par modèle joint combinant des mesures longitudinales d’un même trait (glycémie à jeun)
+et des temps de survenue d’une maladie (temps au diagnostic du DT2) dans un modèle statistique unique\cite{ibrahim_basic_2010, tsiatis_joint_2004}.\newline
+Combiner des données longitudinales (p.ex., à l’aide d’un modèle linéaire mixte) et des données de survenue d’un événement (p.ex., à l’aide d’un modèle de risque proportionnel de Cox)
+représente une stratégie plus puissante puisqu’elle prend en compte la dépendance entre ces deux types de données.
+Par exemple, cette stratégie est plus efficace que des approches plus naïves telles que l’introduction des mesures longitudinales comme covariables variant dans le temps directement dans un modèle de Cox,
+ou encore l’utilisation d’une approche en deux étapes\cite{tsiatis_modeling_1995} où, dans une première étape, un modèle linéaire mixte est ajusté aux mesures longitudinales puis, dans une deuxième étape,
+la fonction résultante introduite comme covariable variant dans le temps dans un modèle de Cox.}
+\vspace{0.5em}
+\par{\setlength{\parindent}{0.5cm}
+Le déroulement de ce projet se décomposait principalement en deux tâches, consistant en l'implémentation d'un modèle joint et à l'application de ce modèle à un jeu de données réelles.
+% \vspace{0.25em}
+
+\begin{description}
+    \setlength{\itemsep}{0.5em}
+    \item[\textbf{Tâche 1:}] L'extension R: \cmd{JM} \cite{rizopoulos_jm_2010} a été implémentée via la parallélisation des modèles statistiques et des principales fonctions,
+        afin de réduire le temps de calcul et permettre l'application à l'échelle pan-génomique. Les approches plus naïves, modèle de Cox avec covariables dépendantes du temps et approche en deux étapes, ont également été implémentées.
+        Les performances statistiques et computationnelles de ces différentes approches ont été étudiées via simulation.
+
+    \item[\textbf{Tâche 2:}] Les \mbox{4 352} individus (167 DT2 incidents) de la cohorte D.E.S.I.R.\cite{balkau_epidemiologic_1996} et \mbox{101 165} SNPs (Illumina Metabochip\cite{voight_metabochip_2012}) ont été analysés par un modèle joint et par des approches transversales classiques,
+        telles que des régressions linéaires et logistiques pour tester l'effet des variants génétiques sur le niveau de glucose sanguin (à l'inclusion) et sur le risque de DT2 (DT2 à l'inclusion et incidents).
+        La puissance statistique, l'erreur de type 1 et le temps de calcul ont été mesurés, puis comparés entre notre approche et les approches transversales.
+\end{description}
+}
+\vspace{0.5em}
+\par{\setlength{\parindent}{0.5cm}
+La réalisation des \textbf{Tâche~1} et \textbf{Tâche~2} a permis l'obtention de résultats théoriques et appliqués démontrant les avantages des approches par modèle joint, 
+par rapport aux approches traditionnelles utilisées dans les études d'associations pan-génomiques.\newline
+Ainsi, nous avons pu montrer des résultats cohérents avec la littérature, notamment pour les loci au niveau de G6PC2/ABCB11, GCK/YKT6 et GCKR, avec un nombre d'individus plus faible par l'utilisation de mesures répétées. 
+La modélisation jointe a également permis d'identifier de façon plus fines les associations, par exemple, au niveau du locus MTNR1B (rs10830963\_G), où nos résultats indiquent que l'allèle à risque pourrait diminuer le risque de DT2, tout en augmentant la glycémie à jeun au cours du temps.\newline
+Les principaux résultats ont fait l'objet de présentations lors de congrès internationaux et feront l'objet d'une publication, dans les prochains mois, dans une revue scientifique à comité de lecture.
+}
+
+\clearpage
+\section{Communications}
+\subsection{Présentations Orales}
+\begin{itemize}
+    \setlength{\itemsep}{0.5em}
+    \item \textbf{Longitudinal Genetic Modelling: Revisiting Associations of SNPs Associated with Blood Fasting Glucose in Normoglycemic Individuals}
+        \newline \underline{Mickaël Canouil}, Ghislain Rocheleau, Loïc Yengo and Philippe Froguel
+        \newline \textit{Statistical Methods for Post Genomic Data - SMPGD, Lille, France (2016)}
+\end{itemize}
+
+\subsection{Présentations Poster}
+\begin{itemize}
+    \setlength{\itemsep}{0.5em}
+    \item \textbf{Application of Joint Models in Genetic Association Studies}
+        \newline Ghislain Rocheleau, \underline{Mickaël Canouil}, Loïc Yengo and Philippe Froguel
+        \newline \textit{International Genetic Epidemiology Society - IGES, Baltimore, États-Unis (2015)}
+    \item \textbf{Single Nucleotide Polymorphisms Associated With Fasting Blood Glucose Trajectory And Type 2 Diabetes Incidence: A Joint Modelling Approach}
+        \newline \underline{Mickaël Canouil}, Philippe Froguel and Ghislain Rocheleau
+        \newline \textit{International Genetic Epidemiology Society - IGES, Toronto, Canada (2016)}
+    \item \textbf{Single Nucleotide Polymorphisms Associated With Fasting Blood Glucose Trajectory And Type 2 Diabetes Incidence: A Joint Modelling Approach}
+        \newline \underline{Mickaël Canouil}, Philippe Froguel and Ghislain Rocheleau
+        \newline \textit{4th Symposium European Genomic Institute for Diabetes (E.g.i.d), Lille, France (2016)}
+    \item \textbf{Variants Génétiques Associés à la Trajectoire de la Glycémie à Jeun et à l’Incidence du Diabète de Type 2: Une Approche par Modèle Joint} (CA-075)
+        \newline \underline{Mickaël Canouil}, Philippe Froguel and Ghislain Rocheleau
+        \newline \textit{Congrès Annuel de la Société Francophone du Diabète (SFD), Lille, France (2017)}
+\end{itemize}
+
+\bibliographystyle{apalike}
+\bibliography{Mickael_Thesis.bib}
+
+\end{document}
