@@ -14,10 +14,10 @@ Presentation
 
 ## Poster
 
-* [SFD2015](https://github.com/mcanouil/PRESENTATION/tree/master/IGES2016) Poster for the "Société Francophone du Diabète" (SFD) annual meeting (2015)
+* [SFD2015](https://github.com/mcanouil/PRESENTATION/tree/master/SFD2015) Poster for the "Société Francophone du Diabète" (SFD) annual meeting (2015)
 
 * [IGES2015](https://github.com/mcanouil/PRESENTATION/tree/master/IGES2015) Poster for the International Genetic Epidemiology Society (IGES) annual meeting (2015)
 
 * [IGES2016](https://github.com/mcanouil/PRESENTATION/tree/master/IGES2016) Poster for the International Genetic Epidemiology Society (IGES) annual meeting (2016)
 
-* [SFD2017](https://github.com/mcanouil/PRESENTATION/tree/master/IGES2016) Poster for the "Société Francophone du Diabète" (SFD) annual meeting (2017)
+* [SFD2017](https://github.com/mcanouil/PRESENTATION/tree/master/SFD2017) Poster for the "Société Francophone du Diabète" (SFD) annual meeting (2017)
