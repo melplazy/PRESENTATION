@@ -1,7 +1,7 @@
 Presentation
 ============
 
-## Communications
+## Slides
 
 * [SMPGD2016](https://github.com/mcanouil/PRESENTATION/tree/master/SMPGD2016) Slides for the Statistical Methods for Post Genomic Data (SMPGD) annual meeting (2016)
 
