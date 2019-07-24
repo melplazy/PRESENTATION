@@ -1,32 +1,3 @@
----
-title: "A Web Application"
-subtitle: "The Shiny Package"
-author:
- - name: "Mickaël Canouil, *Ph.D.*"
-   affiliation: "Université de Lille, CNRS, Institut Pasteur de Lille, UMR 8199 - EGID, F-59000, Lille, France."
-   email: "mickael.canouil@cnrs.fr"
-monofont: "Source Code Pro"
-monofontoptions: "Scale=0.7"
-output:
-  bookdown::html_document2:
-    theme: simplex
-    toc: true
-    toc_depth: 2
-    toc_float: 
-      collapsed: false
-    fig_width: 6.3
-    fig_height: 4.7
-    number_sections: true
-    self_contained: true
-    mathjax: default
-    df_print: kable
-    keep_md: true
----
-
-
-
-
-
 # Introduction
 
 Shiny is an R package that makes it easy to build interactive 
@@ -127,9 +98,3 @@ runExample("01_hello")
 #> shinyApp(ui = ui, server = server)
 ```
 
-
----
-title: "rshiny.R"
-author: "mcanouil"
-date: "2019-07-24"
----
