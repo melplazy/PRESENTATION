@@ -20,6 +20,7 @@
 #'     self_contained: true
 #'     mathjax: default
 #'     df_print: kable
+#'     keep_md: true
 #' ---
 #' 
 #+ setup, include = FALSE
