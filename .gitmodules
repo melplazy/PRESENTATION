@@ -2,3 +2,7 @@
 	path = rshiny
 	url = https://github.com/mcanouil/rshiny.git
 	branch = master
+[submodule "rdatabase"]
+	path = rdatabase
+	url = https://github.com/mcanouil/rdatabase.git
+	branch = master
