@@ -6,3 +6,7 @@
 	path = rdatabase
 	url = https://github.com/mcanouil/rdatabase.git
 	branch = master
+[submodule "joint_model"]
+	path = joint_model
+	url = https://github.com/mcanouil/joint_model.git
+	branch = master
