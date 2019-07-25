@@ -1,0 +1,4 @@
+[submodule "rshiny"]
+	path = rshiny
+	url = https://github.com/mcanouil/rshiny.git
+	branch = master
