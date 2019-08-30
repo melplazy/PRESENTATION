@@ -10,3 +10,6 @@
 	path = joint_model
 	url = https://github.com/mcanouil/joint_model.git
 	branch = master
+[submodule "NACHO_slides"]
+	path = NACHO_slides
+	url = https://github.com/mcanouil/NACHO_slides
